@@ -1,20 +1,12 @@
-import { app, BrowserWindow } from "electron";
-import * as path from "path";
-import * as url from "url";
+import { app } from "electron";
+import { mainWindow, createMainWindow } from "./electron/window";
 
-let mainWindow: Electron.BrowserWindow;
+const indexFile: string = "./dist/index.html";
 
-function createWindow() {
-  mainWindow = new BrowserWindow();
-  mainWindow.loadFile("./dist/index.html");
-  mainWindow.setMenuBarVisibility(false);
-  mainWindow.webContents.openDevTools();
-  mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
-}
-
-app.on("ready", createWindow);
+app.allowRendererProcessReuse = true;
+app.on("ready", () => {
+  createMainWindow(indexFile);
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -22,6 +14,8 @@ app.on("window-all-closed", () => {
 });
 app.on("activate", () => {
   if (mainWindow === null) {
-    createWindow();
+    createMainWindow(indexFile);
   }
 });
+
+export { indexFile };
