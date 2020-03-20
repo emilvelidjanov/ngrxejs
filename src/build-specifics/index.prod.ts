@@ -1,5 +1,5 @@
-const exportModules = [
+const buildSpecificModules = [
     /** empty */
 ];
 
-export { exportModules };
+export { buildSpecificModules };
