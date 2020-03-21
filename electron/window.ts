@@ -6,6 +6,7 @@ function createMainWindow(loadFile: string) {
   mainWindow = new BrowserWindow();
   mainWindow.loadFile(loadFile);
   mainWindow.webContents.openDevTools();
+  mainWindow.removeMenu();
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
