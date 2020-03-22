@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron": "tsc main.ts && ng build --base-href ./ && electron .",
-    "electron-ngprod": "tsc main.ts && ng build --prod=true --base-href ./ && electron ."
+    "electron": "tsc main.ts && ng build && electron .",
+    "electron-ngprod": "tsc main.ts && ng build --prod=true && electron ."
   },
   "private": true,
   "dependencies": {

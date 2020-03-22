@@ -1,1 +1,4 @@
-<div class="bg-success">menu works!</div>
+<nav>
+    <a href="#"><img *ngIf="menu.logo" [src]="menu.logo" />{{menu.title}}</a>
+    <app-menu-item *ngFor="let menuItem of menu.menuItems" [menuItem]="menuItem"></app-menu-item>
+</nav>
