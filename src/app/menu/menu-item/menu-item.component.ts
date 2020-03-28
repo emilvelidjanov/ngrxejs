@@ -16,4 +16,8 @@ export class MenuItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public click($event: MouseEvent): void {
+    if (this.menuItem.click) this.menuItem.click($event);
+  }
+
 }

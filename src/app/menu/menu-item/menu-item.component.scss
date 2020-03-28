@@ -1,0 +1,17 @@
+@import "src/mixins.scss";
+
+.menuItem {
+    position: relative;
+    cursor: pointer;
+}
+
+.nestedMenuItems {
+    @include hide;
+    position: absolute;
+    left: 0px;
+}
+
+.menuItem:hover > .nestedMenuItems,
+.nestedMenuItems:hover {
+    @include show(block);
+}
