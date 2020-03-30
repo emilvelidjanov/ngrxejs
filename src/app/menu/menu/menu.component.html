@@ -1,5 +1,5 @@
 <nav class="bg-dark">
-    <div class="d-inline-block">
+    <div *ngIf="menu.logo || menu.title" class="d-inline-block">
         <button class="btn btn-dark text-nowrap px-2">
             <img *ngIf="menu.logo" [src]="menu.logo" height="20"/>
             {{menu.title}}
