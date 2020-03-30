@@ -1,0 +1,8 @@
+<div class="menuItem">
+    <button class="btn btn-dark text-nowrap text-left px-2 w-100" (click)="click($event)">
+        {{menuItem.label}}
+    </button>
+    <span *ngIf="menuItem.nestedMenuItems.length" class="nestedMenuItems bg-dark rounded-bottom">
+        <app-menu-item *ngFor="let nestedMenuItem of menuItem.nestedMenuItems" [menuItem]="nestedMenuItem"></app-menu-item>
+    </span>
+</div>

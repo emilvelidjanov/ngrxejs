@@ -2,9 +2,9 @@ import { BrowserWindow } from 'electron';
 
 let mainWindow: BrowserWindow;
 
-function createMainWindow(loadFile: string) {
+function createMainWindow(loadFilename: string) {
   mainWindow = new BrowserWindow();
-  mainWindow.loadFile(loadFile);
+  mainWindow.loadFile(loadFilename);
   mainWindow.webContents.openDevTools();
   mainWindow.removeMenu();
   mainWindow.on('closed', () => {

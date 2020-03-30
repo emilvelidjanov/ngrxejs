@@ -2,7 +2,7 @@ import { app } from 'electron';
 import { mainWindow, createMainWindow } from './electron/window';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 
-const indexFile: string = './dist/index.html';
+const indexFile: string = 'dist/index.html';
 
 app.allowRendererProcessReuse = true;
 

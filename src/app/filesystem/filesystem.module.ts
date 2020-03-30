@@ -11,6 +11,7 @@ import { FilesystemComponent } from './filesystem/filesystem.component';
   exports: [FilesystemComponent]
 })
 export class FilesystemModule { 
+  
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FilesystemModule,

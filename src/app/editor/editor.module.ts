@@ -11,6 +11,7 @@ import { EditorComponent } from './editor/editor.component';
   exports: [EditorComponent]
 })
 export class EditorModule { 
+  
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: EditorModule,
