@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-filesystem',
-  templateUrl: './filesystem.component.html',
-  styleUrls: ['./filesystem.component.scss'],
+  selector: 'app-file-tree',
+  templateUrl: './file-tree.component.html',
+  styleUrls: ['./file-tree.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesystemComponent implements OnInit {
+export class FileTreeComponent implements OnInit {
 
   constructor() { }
 

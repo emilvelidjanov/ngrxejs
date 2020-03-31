@@ -1,14 +1,14 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FilesystemComponent } from './filesystem/filesystem.component';
+import { FileTreeComponent } from './file-tree/file-tree.component';
 
 @NgModule({
-  declarations: [FilesystemComponent],
+  declarations: [FileTreeComponent],
   imports: [
     CommonModule
   ],
   providers: [],
-  exports: [FilesystemComponent]
+  exports: [FileTreeComponent]
 })
 export class FilesystemModule { 
   
