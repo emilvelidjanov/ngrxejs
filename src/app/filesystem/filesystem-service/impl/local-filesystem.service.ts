@@ -10,6 +10,6 @@ export class LocalFilesystemService implements FilesystemService {
 
   doSomething(): void {
     this.counter++;
-    console.log("LocalFilesystemService! #" + this.counter);
+    console.log(`LocalFilesystemService! #${this.counter}`);
   }
 }

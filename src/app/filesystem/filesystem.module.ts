@@ -8,7 +8,7 @@ import { filesystemServiceProvider } from './filesystem-service/filesystem.servi
   imports: [
     CommonModule
   ],
-  providers: [],
+  providers: [filesystemServiceProvider],
   exports: [FileTreeComponent]
 })
 export class FilesystemModule { 

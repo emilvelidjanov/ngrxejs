@@ -1,4 +1,4 @@
 export interface FilesystemService {
 
-    doSomething(): void;
+  doSomething(): void;
 }

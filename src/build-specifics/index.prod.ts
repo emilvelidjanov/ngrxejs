@@ -1,5 +1,5 @@
 const buildSpecificModules = [
-    /** empty */
+  /** empty */
 ];
 
 export { buildSpecificModules };
