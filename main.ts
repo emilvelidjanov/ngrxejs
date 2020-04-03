@@ -8,7 +8,7 @@ app.allowRendererProcessReuse = true;
 
 app.on('ready', () => {
   createMainWindow(indexFile);
-  installExtension(REDUX_DEVTOOLS)
+  installExtension(REDUX_DEVTOOLS)  // adds extension on prod too?
     .then((name) => console.info(`Added Extension: ${name}`))
     .catch((err) => console.error('An error occurred: ', err));
 });
