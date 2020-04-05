@@ -1,5 +1,6 @@
 import { MenuItem } from '../menu-item/menu-item';
 
+
 export class Menu {
 
     public title?: string = '';

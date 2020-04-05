@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Menu } from './menu';
 
+
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',

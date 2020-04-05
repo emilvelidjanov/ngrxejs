@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Menu } from './menu/menu/menu';
-import { MenuItem } from './menu/menu-item/menu-item';
+import { Menu } from './menu/components/menu/menu';
+import { MenuItem } from './menu/components/menu-item/menu-item';
+
 
 @Component({
   selector: 'app-root',
