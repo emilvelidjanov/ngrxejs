@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Menu } from './menu/components/menu/menu';
 import { MenuItem } from './menu/components/menu-item/menu-item';
+import { Store } from '@ngrx/store';
+import { AppState } from './state/app.state';
+import * as MenuActions from './menu/actions/menu.actions';
 
 
 @Component({
@@ -13,9 +16,15 @@ export class AppComponent implements OnInit {
 
   public mainMenu: Menu;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
+    this.store.dispatch(MenuActions.setMenu({
+      title: "ngrxejs2",
+      logo: "",
+      menuItems: []
+    }));
+
     // Test menu, no actual state yet
     this.mainMenu = new Menu({
       title: 'ngrxejs',

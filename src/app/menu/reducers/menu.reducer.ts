@@ -1,11 +1,13 @@
-import { Action, createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on, State } from '@ngrx/store';
 import { MenuState, initialState } from '../state/menu.state';
-import { getMenu } from "../actions/menu.actions";
+import * as MenuActions from '../actions/menu.actions';
 
 
 const menuReducer = createReducer(
   initialState,
-  on(getMenu, state => state)
+  on(MenuActions.setMenu, (state: MenuState, menu: MenuState) => {
+    return {...menu};
+  })
 );
 
 export function reducer(state: MenuState | undefined, action: Action) {

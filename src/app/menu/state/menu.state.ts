@@ -9,6 +9,6 @@ export interface MenuState {
 
 export const initialState: MenuState = {
   title: '',
-  logo: undefined,
+  logo: '',
   menuItems: []
 };
