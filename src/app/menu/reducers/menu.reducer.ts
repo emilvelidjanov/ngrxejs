@@ -5,7 +5,7 @@ import * as MenuActions from '../actions/menu.actions';
 
 const menuReducer = createReducer(
   initialState,
-  on(MenuActions.setMenu, (state: MenuState, menu: MenuState) => {
+  on(MenuActions.setMenu, (_state: MenuState, menu: MenuState) => {
     return {...menu};
   })
 );
