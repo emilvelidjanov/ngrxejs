@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FileTreeComponent } from './file-tree/file-tree.component';
 import { filesystemServiceProvider } from './filesystem-service/filesystem.service.provider';
 
+
 @NgModule({
   declarations: [FileTreeComponent],
   imports: [
