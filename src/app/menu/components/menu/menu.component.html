@@ -5,7 +5,7 @@
             {{menu.title}}
         </button>
     </div>
-    <div *ngIf="menu.menuItems.length" class="d-inline-block">
+    <div *ngIf="menu.menuItems" class="d-inline-block">
         <app-menu-item *ngFor="let menuItem of menu.menuItems" [menuItem]="menuItem" class="d-inline-block"></app-menu-item>
     </div>
 </nav>

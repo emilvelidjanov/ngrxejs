@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron';
 
+
 let mainWindow: BrowserWindow;
 
 function createMainWindow(loadFilename: string) {

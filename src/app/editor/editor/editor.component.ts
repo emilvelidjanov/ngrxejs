@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',

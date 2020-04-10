@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "tsc main.ts && ng build && electron .",
-    "electron-ngprod": "tsc main.ts && ng build --prod=true && electron ."
+    "electron-prod": "tsc main.ts && ng build --prod=true && electron . --prod"
   },
   "private": true,
   "dependencies": {
@@ -22,8 +22,8 @@
     "@angular/platform-browser": "^9.1.0",
     "@angular/platform-browser-dynamic": "^9.1.0",
     "@angular/router": "^9.1.0",
+    "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^8.6.0",
-    "@ngrx/entity": "^9.0.0",
     "@ngrx/router-store": "^8.6.0",
     "@ngrx/store": "^8.6.0",
     "@ngrx/store-devtools": "^8.6.0",
