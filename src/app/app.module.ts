@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
-import { StoreRouterConnectingModule } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
 import { buildSpecificModules } from "src/build-specifics/index";
 import { AppComponent } from './app.component';
 import { MenuModule } from './menu/menu.module';
@@ -22,10 +22,14 @@ import { reducers, metaReducers } from './reducers';
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true,
+        strictStateSerializability: true,
+        strictActionSerializability: true
       }
     }),
     EffectsModule.forRoot([]),
-    StoreRouterConnectingModule.forRoot({}),
+    StoreRouterConnectingModule.forRoot({
+      routerState: RouterState.Minimal
+    }),
     buildSpecificModules,
     MenuModule.forRoot(),
     FilesystemModule.forRoot(),
