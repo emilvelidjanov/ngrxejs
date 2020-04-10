@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "tsc main.ts && ng build && electron .",
-    "electron-ngprod": "tsc main.ts && ng build --prod=true && electron ."
+    "electron-prod": "tsc main.ts && ng build --prod=true && electron . --prod"
   },
   "private": true,
   "dependencies": {
