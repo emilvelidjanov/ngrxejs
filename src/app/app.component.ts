@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AppState } from './state/app.state';
-import * as MenuActions from './menu/actions/menu.actions';
+import { setMenu } from './menu/actions/menu.actions';
 import mainMenuConfig from '../config/mainMenu.json';
 import { MenuState, clone } from './menu/state/menu.state';
 import { MenuItemState } from './menu/state/menu-item.state';
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.store.dispatch(MenuActions.setMenu(mainMenuConfig));
+    this.store.dispatch(setMenu(mainMenuConfig));
     this.mainMenu$ = this.store.pipe(select(selectMenu));
     this.mainMenu$.subscribe((mainMenu: MenuState) => {
       this.mainMenu = clone(mainMenu);

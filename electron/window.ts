@@ -1,10 +1,15 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 
 
-let mainWindow: BrowserWindow;
+export let mainWindow: BrowserWindow;
+export let mainWindowOptions: BrowserWindowConstructorOptions = {
+  webPreferences: {
+    nodeIntegration: true
+  }
+};
 
-function createMainWindow(loadFilename: string) {
-  mainWindow = new BrowserWindow();
+export function createMainWindow(loadFilename: string) {
+  mainWindow = new BrowserWindow(mainWindowOptions);
   mainWindow.loadFile(loadFilename);
   mainWindow.webContents.openDevTools();
   mainWindow.removeMenu();
@@ -12,5 +17,3 @@ function createMainWindow(loadFilename: string) {
     mainWindow = null;
   });
 }
-
-export { mainWindow, createMainWindow };

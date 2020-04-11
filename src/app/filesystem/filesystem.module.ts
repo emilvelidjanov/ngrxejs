@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileTreeComponent } from './file-tree/file-tree.component';
 import { filesystemServiceProvider } from './filesystem-service/filesystem.service.provider';
+import { ElectronService } from './electron-service/electron.service';
 
 
 @NgModule({
@@ -9,7 +10,7 @@ import { filesystemServiceProvider } from './filesystem-service/filesystem.servi
   imports: [
     CommonModule
   ],
-  providers: [filesystemServiceProvider],
+  providers: [filesystemServiceProvider, ElectronService],
   exports: [FileTreeComponent]
 })
 export class FilesystemModule { 

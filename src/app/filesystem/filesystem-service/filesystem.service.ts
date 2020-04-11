@@ -1,4 +1,8 @@
 export interface FilesystemService {
 
-  doSomething(): void;
+  debugCounter: number;
+  debug(): void;
+
+  //TODO?: fix options typing (web & electron)
+  openSelectDialog(options?: any): void;
 }

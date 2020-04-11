@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
 import { FilesystemService } from '../filesystem.service';
+import { OpenDialogOptions } from "electron";
+import { IpcChannel } from 'electron/ipc-channel';
+import { ElectronService } from 'src/app/filesystem/electron-service/electron.service';
+
 
 @Injectable()
 export class LocalFilesystemService implements FilesystemService {
 
-  private counter: number = 0;
+  debugCounter: number = 0;
 
-  constructor() { }
+  constructor(private electronService: ElectronService) { }
 
-  doSomething(): void {
-    this.counter++;
-    console.log(`LocalFilesystemService! #${this.counter}`);
+  debug(): void {
+    this.debugCounter++;
+    console.log(`LocalFilesystemService: #${this.debugCounter}`);
+  }
+
+  openSelectDialog(options?: OpenDialogOptions): void {
+    if (!options) options = {};
+    this.electronService.ipcRenderer.send(IpcChannel.OPEN_SELECT_DIALOG, options);
   }
 }

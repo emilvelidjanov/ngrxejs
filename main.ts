@@ -1,10 +1,11 @@
 import { app } from 'electron';
 import { mainWindow, createMainWindow } from './electron/window';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
+import { registerIpcEvents } from './electron/filesystem';
 
 
-const indexFile: string = 'dist/index.html';
-const isProd: boolean = app.commandLine.hasSwitch('prod');
+export const indexFile: string = 'dist/index.html';
+export const isProd: boolean = app.commandLine.hasSwitch('prod');
 
 app.allowRendererProcessReuse = true;
 
@@ -29,4 +30,4 @@ app.on('activate', () => {
   }
 });
 
-export { indexFile };
+registerIpcEvents();

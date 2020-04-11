@@ -18,7 +18,8 @@ export class FileTreeComponent implements OnInit {
   }
 
   public runFilesystemService(): void {
-    this.filesystemService.doSomething();
+    this.filesystemService.debug();
+    this.filesystemService.openSelectDialog();
   }
 
 }
