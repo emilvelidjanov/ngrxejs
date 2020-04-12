@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { MenuItemState } from '../../state/menu-item.state';
 
 
-
 @Component({
   selector: 'app-menu-item[menuItem]',
   templateUrl: './menu-item.component.html',

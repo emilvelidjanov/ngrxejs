@@ -2,34 +2,36 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from '../electron-service/electron.service';
 import { IpcRenderer } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
+import { Observable, fromEvent } from 'rxjs';
+import { map } from "rxjs/operators";
 
 
 @Injectable()
 export class IpcService {
 
-  private ipcr?: IpcRenderer;
+  private ipcRenderer?: IpcRenderer;
 
   constructor(private electronService: ElectronService) { }
 
-  //TODO: Promise to Observable
-  public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Promise<ReturnType> {
-    if (!this.ipcr) {
+  public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
+    if (!this.ipcRenderer) {
       this.initializeIpcRenderer();
     }
     if (!request.responseChannel) {
       request.responseChannel = `${channel}_response_${new Date().getTime()}`
     }
-    const icpr = this.ipcr;
-    icpr.send(channel, request);
-    return (new Promise(resolve => {
-      icpr.once(request.responseChannel, (_event, response) => resolve(response));
-    }));
+    const ipcRenderer = this.ipcRenderer;
+    ipcRenderer.send(channel, request);
+    return fromEvent<any[]>(ipcRenderer, request.responseChannel)
+    .pipe(
+      map((value: any[]) => value[1])
+    );
   }
 
   private initializeIpcRenderer() {
     if (!this.electronService.isElectron()) {
       throw new Error("Unable to initialize IpcRenderer.");
     }
-    this.ipcr = window.require('electron').ipcRenderer;
+    this.ipcRenderer = window.require('electron').ipcRenderer;
   }
 }

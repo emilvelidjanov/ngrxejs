@@ -1,5 +1,5 @@
-import { IpcChannel, IpcRequest } from '../ipc';
-import { IpcMainEvent, OpenDialogOptions, dialog, BrowserWindow, OpenDialogReturnValue, app } from 'electron';
+import { IpcChannel, IpcRequest, IpcChannelName } from '../ipc';
+import { IpcMainEvent, OpenDialogOptions, dialog, BrowserWindow, OpenDialogReturnValue } from 'electron';
 
 export class OpenSelectDialogChannel implements IpcChannel {
 
@@ -10,7 +10,7 @@ export class OpenSelectDialogChannel implements IpcChannel {
   }
   
   getName(): string {
-    return 'open-select-dialog'
+    return IpcChannelName.OPEN_SELECT_DIALOG;
   }
 
   handle(event: IpcMainEvent, request: IpcRequest<OpenDialogOptions>): void {
@@ -19,7 +19,7 @@ export class OpenSelectDialogChannel implements IpcChannel {
     }
     dialog.showOpenDialog(this.window, request.params)
     .then((value: OpenDialogReturnValue) => {
-      event.sender.send(request.responseChannel, value);
+      event.reply(request.responseChannel, value);
     })
     .catch((error: any) => {
       console.error(error);

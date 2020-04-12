@@ -1,8 +1,6 @@
+import { Observable } from 'rxjs';
+
 export interface FilesystemService {
 
-  debugCounter: number;
-  debug(): void;
-
-  //TODO?: fix typing (web & electron)
-  openSelectDialog(options?: any): any;
+  openSelectDialog(options?: any): Observable<any>;
 }

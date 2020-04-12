@@ -11,3 +11,7 @@ export interface IpcRequest<ParamType> {
   responseChannel?: string;
   params?: ParamType;
 }
+
+export enum IpcChannelName {
+  OPEN_SELECT_DIALOG = 'open-select-dialog'
+}
