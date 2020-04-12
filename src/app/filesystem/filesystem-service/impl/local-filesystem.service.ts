@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FilesystemService } from '../filesystem.service';
-import { OpenDialogOptions } from "electron";
-import { IpcChannel } from 'electron/ipc-channel';
-import { ElectronService } from 'src/app/filesystem/electron-service/electron.service';
+import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
+import { IpcService } from '../../ipc-service/ipc.service';
+import { IpcRequest } from 'electron/ipc/ipc';
 
 
 @Injectable()
@@ -10,15 +10,18 @@ export class LocalFilesystemService implements FilesystemService {
 
   debugCounter: number = 0;
 
-  constructor(private electronService: ElectronService) { }
+  constructor(private ipcService: IpcService) { }
 
   debug(): void {
     this.debugCounter++;
     console.log(`LocalFilesystemService: #${this.debugCounter}`);
   }
 
-  openSelectDialog(options?: OpenDialogOptions): void {
-    if (!options) options = {};
-    this.electronService.ipcRenderer.send(IpcChannel.OPEN_SELECT_DIALOG, options);
+  async openSelectDialog(options?: OpenDialogOptions): Promise<OpenDialogReturnValue> {
+    let request: IpcRequest<OpenDialogOptions> = {};
+    if (options) request.params = options;
+    const t = await this.ipcService.send<OpenDialogOptions, OpenDialogReturnValue>('open-select-dialog', request);  //TODO: enum for channel string??
+    console.log("Result:", t);
+    return t;
   }
 }

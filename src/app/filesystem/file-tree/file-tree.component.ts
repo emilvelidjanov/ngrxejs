@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/cor
 import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { filesystemServiceToken } from "../filesystem-service/filesystem.service.provider";
 
+
 @Component({
   selector: 'app-file-tree',
   templateUrl: './file-tree.component.html',

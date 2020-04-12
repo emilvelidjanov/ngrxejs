@@ -1,17 +1,10 @@
 import { Injectable } from '@angular/core';
-import { IpcRenderer } from 'electron';
 
 
 @Injectable()
 export class ElectronService {
-  ipcRenderer: IpcRenderer;
 
-  constructor() {
-    if (this.isElectron()) {
-      let electron: typeof Electron = window.require('electron');
-      this.ipcRenderer = electron.ipcRenderer;
-    }
-  }
+  constructor() { }
 
   public isElectron() {
     if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {

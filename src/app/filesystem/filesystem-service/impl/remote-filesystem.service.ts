@@ -14,7 +14,7 @@ export class RemoteFilesystemService implements FilesystemService {
     console.log(`RemoteFilesystemService: #${this.debugCounter}`);
   }
   
-  openSelectDialog(_options?: any): void {
+  openSelectDialog(_options?: any): any {
     throw new Error("RemoteFilesystemService#openSelectDialog not implemented.");
   }
 }
