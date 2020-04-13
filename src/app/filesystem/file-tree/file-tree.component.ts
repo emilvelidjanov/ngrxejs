@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { FilesystemService, SelectDialogResult } from '../filesystem-service/filesystem.service';
-import { filesystemServiceToken } from "../filesystem-service/filesystem.service.provider";
+import { filesystemServiceDep } from "../filesystem-service/filesystem.service.dependency";
 
 
 @Component({
@@ -12,7 +12,7 @@ import { filesystemServiceToken } from "../filesystem-service/filesystem.service
 export class FileTreeComponent implements OnInit {
 
   constructor(
-    @Inject(filesystemServiceToken) private filesystemService: FilesystemService
+    @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService
   ) { }
 
   ngOnInit(): void {
