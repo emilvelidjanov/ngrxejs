@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FilesystemService } from '../filesystem-service/filesystem.service';
+import { FilesystemService, SelectDialogResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceToken } from "../filesystem-service/filesystem.service.provider";
 
 
@@ -19,7 +19,9 @@ export class FileTreeComponent implements OnInit {
   }
 
   public runFilesystemService(): void {
-    this.filesystemService.openSelectDialog();
+    this.filesystemService.openSelectDialog().subscribe((data: SelectDialogResult) => {
+      console.log(data);
+    });
   }
 
 }
