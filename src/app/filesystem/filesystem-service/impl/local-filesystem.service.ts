@@ -1,15 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { FilesystemService } from '../filesystem.service';
 import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import { IpcService } from '../../../core/electron/ipc-service/ipc.service';
 import { IpcRequest, IpcChannelName } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
+import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
+import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 
 
 @Injectable()
 export class LocalFilesystemService implements FilesystemService {
 
-  constructor(private ipcService: IpcService) { }
+  constructor(
+    @Inject(ipcServiceDep.getToken()) private ipcService: IpcService
+  ) { }
 
   openSelectDialog(options?: OpenDialogOptions): Observable<OpenDialogReturnValue> {
     let request: IpcRequest<OpenDialogOptions> = {};

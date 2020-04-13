@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from '../electron-service/electron.service';
+import { ElectronService } from '../../electron-service/electron.service';
 import { IpcRenderer } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { Observable, fromEvent } from 'rxjs';
 import { map } from "rxjs/operators";
+import { IpcService } from '../ipc-service';
 
 
 @Injectable()
-export class IpcService {
+export class DefaultIpcService implements IpcService {
 
   private ipcRenderer?: IpcRenderer;
 
