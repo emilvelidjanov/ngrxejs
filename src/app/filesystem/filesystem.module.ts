@@ -1,9 +1,9 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileTreeComponent } from './file-tree/file-tree.component';
+import { ElectronService } from './electron/electron-service/electron.service';
+import { IpcService } from './electron/ipc-service/ipc.service';
 import { filesystemServiceProvider } from './filesystem-service/filesystem.service.provider';
-import { ElectronService } from './electron-service/electron.service';
-import { IpcService } from './ipc-service/ipc.service';
 
 
 @NgModule({
@@ -11,7 +11,6 @@ import { IpcService } from './ipc-service/ipc.service';
   imports: [
     CommonModule
   ],
-  providers: [filesystemServiceProvider, ElectronService, IpcService],
   exports: [FileTreeComponent]
 })
 export class FilesystemModule { 
@@ -19,7 +18,7 @@ export class FilesystemModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FilesystemModule,
-      providers: [filesystemServiceProvider, ElectronService, IpcService]
+      providers: [ElectronService, IpcService, filesystemServiceProvider]
     }
   }
 }
