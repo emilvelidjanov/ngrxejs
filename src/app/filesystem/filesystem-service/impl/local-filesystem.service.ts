@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FilesystemService } from '../filesystem.service';
 import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import { IpcService } from '../../electron/ipc-service/ipc.service';
+import { IpcService } from '../../../core/electron/ipc-service/ipc.service';
 import { IpcRequest, IpcChannelName } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
 

@@ -1,9 +1,9 @@
 import { InjectionToken, Provider } from "@angular/core";
 import { FilesystemService } from './filesystem.service';
 import { LocalFilesystemService } from './impl/local-filesystem.service';
-import { ElectronService } from 'src/app/filesystem/electron/electron-service/electron.service';
+import { ElectronService } from 'src/app/core/electron/electron-service/electron.service';
 import { RemoteFilesystemService } from './impl/remote-filesystem.service';
-import { IpcService } from '../electron/ipc-service/ipc.service';
+import { IpcService } from '../../core/electron/ipc-service/ipc.service';
 
 export const filesystemServiceToken: InjectionToken<FilesystemService> = new InjectionToken('FilesystemService');
 

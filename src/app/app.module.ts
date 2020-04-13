@@ -10,6 +10,7 @@ import { MenuModule } from './menu/menu.module';
 import { FilesystemModule } from './filesystem/filesystem.module';
 import { EditorModule } from './editor/editor.module';
 import { reducers, metaReducers } from './reducers';
+import { CoreModule } from './core/core.module';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { reducers, metaReducers } from './reducers';
       routerState: RouterState.Minimal
     }),
     buildSpecificModules,
+    CoreModule.forRoot(),
     MenuModule.forRoot(),
     FilesystemModule.forRoot(),
     EditorModule.forRoot(),
