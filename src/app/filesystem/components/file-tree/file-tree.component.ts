@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FilesystemService, SelectDialogResult } from '../filesystem-service/filesystem.service';
-import { filesystemServiceDep } from "../filesystem-service/filesystem.service.dependency";
-import { filesystemFacadeDep } from '../filesystem-facade/filesystem.facade.dependency';
-import { FilesystemFacade } from '../filesystem-facade/filesystem.facade';
+import { filesystemServiceDep } from '../../services/filesystem-service/filesystem.service.dependency';
+import { FilesystemService, SelectDialogResult } from '../../services/filesystem-service/filesystem.service';
+import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
+import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
+
 
 
 @Component({

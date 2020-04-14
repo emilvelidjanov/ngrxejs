@@ -1,10 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FileTreeComponent } from './file-tree/file-tree.component';
-import { filesystemServiceDep } from './filesystem-service/filesystem.service.dependency';
-import { filesystemFacadeDep } from './filesystem-facade/filesystem.facade.dependency';
 import { StoreModule } from '@ngrx/store';
 import { filesystemFeatureKey, reducers, metaReducers } from './reducers';
+import { FileTreeComponent } from './components/file-tree/file-tree.component';
+import { filesystemServiceDep } from './services/filesystem-service/filesystem.service.dependency';
+import { filesystemFacadeDep } from './services/filesystem-facade/filesystem.facade.dependency';
 
 
 @NgModule({
