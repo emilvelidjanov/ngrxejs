@@ -14,3 +14,5 @@ export const reducers: ActionReducerMap<State> = {
   fileTree: reducer
 };
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
+
+export const selectFileTree = (state: State) => state.fileTree;
