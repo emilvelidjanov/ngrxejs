@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FilesystemService } from '../filesystem.service';
+import { FilesystemService, SelectDialogResult } from '../filesystem.service';
 
 
 @Injectable()
@@ -9,5 +9,9 @@ export class RemoteFilesystemService implements FilesystemService {
   
   openSelectDialog(options?: any): any {
     throw new Error("RemoteFilesystemService#openSelectDialog not implemented.");
+  }
+
+  setLoadedDirectory(selectDialogResult: SelectDialogResult): void {
+    throw new Error("RemoteFilesystemService#setLoadedDirectory not implemented.");
   }
 }

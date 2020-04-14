@@ -6,3 +6,8 @@ export const setFileTree = createAction(
   '[FileTree] Set FileTree',
   props<FileTreeState>()
 )
+
+export const setLoadedDirectory = createAction(
+  '[FileTree] Set LoadedDirectory',
+  props<{loadedDirectory: string}>()
+)

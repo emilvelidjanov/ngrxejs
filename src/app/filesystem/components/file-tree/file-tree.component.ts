@@ -5,7 +5,6 @@ import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem
 import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 
 
-
 @Component({
   selector: 'app-file-tree',
   templateUrl: './file-tree.component.html',
@@ -29,7 +28,7 @@ export class FileTreeComponent implements OnInit {
   }
 
   public runFilesystemFacade(): void {
-    this.filesystemFacade.openProject();
+    this.filesystemFacade.openProjectDirectory();
   }
 
 }

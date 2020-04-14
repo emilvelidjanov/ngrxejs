@@ -1,5 +1,5 @@
 export interface FileTreeState {
-  loadedDirectory: string
+  loadedDirectory: string,
 }
 
 export const initialState: FileTreeState = {

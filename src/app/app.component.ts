@@ -2,12 +2,12 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { setMenu } from './menu/actions/menu.actions';
-import mainMenuConfig from '../config/mainMenu.json';
+import mainMenuConfig from '../config/menu/mainMenu.json';
 import { MenuState, clone } from './menu/state/menu.state';
 import { MenuItemState } from './menu/state/menu-item.state';
 import { selectMenu, selectFileTree } from './reducers';
 import { Observable } from 'rxjs';
-import { setFileTree } from './filesystem/actions/filesystem.actions';
+import { setFileTree } from './filesystem/actions/file-tree.actions';
 import { FileTreeState } from './filesystem/state/file-tree.state';
 
 
@@ -39,15 +39,6 @@ export class AppComponent implements OnInit {
           nestedMenuItem.click = ($event: MouseEvent) => console.log(`MenuItem clicked: ${nestedMenuItem.label}`, $event);
         });
       }
-    });
-
-    this.store.dispatch(setFileTree({
-      loadedDirectory: "test"
-    }));
-    this.fileTree$ = this.store.pipe(select(selectFileTree));
-    this.fileTree$.subscribe((fileTree: FileTreeState) => {
-      console.log("New filesystem store:", fileTree);
-      this.fileTree = fileTree;
     });
   }
 }

@@ -1,4 +1,4 @@
 export interface FilesystemFacade {
 
-  openProject(): void;
+  openProjectDirectory(): void;
 }
