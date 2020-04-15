@@ -5,9 +5,8 @@ import { setMenu } from './menu/actions/menu.actions';
 import mainMenuConfig from '../config/menu/mainMenu.json';
 import { MenuState, clone } from './menu/state/menu.state';
 import { MenuItemState } from './menu/state/menu-item.state';
-import { selectMenu, selectFileTree } from './reducers';
+import { selectMenu } from './reducers';
 import { Observable } from 'rxjs';
-import { setFileTree } from './filesystem/actions/file-tree.actions';
 import { FileTreeState } from './filesystem/state/file-tree.state';
 
 

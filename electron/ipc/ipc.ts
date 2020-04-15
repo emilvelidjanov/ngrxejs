@@ -1,9 +1,10 @@
 import {IpcMainEvent} from 'electron';
 
-export interface IpcChannel {
+
+export interface IpcChannel<ParamType> {
 
   getName(): string;
-  handle<ParamType>(event: IpcMainEvent, request: IpcRequest<ParamType>): void;
+  handle(event: IpcMainEvent, request: IpcRequest<ParamType>): void;
 }
 
 export interface IpcRequest<ParamType> {
@@ -13,5 +14,6 @@ export interface IpcRequest<ParamType> {
 }
 
 export enum IpcChannelName {
-  OPEN_SELECT_DIALOG = 'open-select-dialog'
+  OPEN_DIALOG = 'open-dialog',
+  LOAD_DIRECTORY = 'load-directory'
 }

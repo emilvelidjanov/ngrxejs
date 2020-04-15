@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { filesystemServiceDep } from '../../services/filesystem-service/filesystem.service.dependency';
-import { FilesystemService, SelectDialogResult } from '../../services/filesystem-service/filesystem.service';
+import { FilesystemService, OpenDialogResult } from '../../services/filesystem-service/filesystem.service';
 import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
 import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 
@@ -22,13 +22,13 @@ export class FileTreeComponent implements OnInit {
   }
 
   public runFilesystemService(): void {
-    this.filesystemService.openSelectDialog().subscribe((data: SelectDialogResult) => {
+    this.filesystemService.openDialog().subscribe((data: OpenDialogResult) => {
       console.log("FilesystemService:", data);
     });
   }
 
   public runFilesystemFacade(): void {
-    this.filesystemFacade.openProjectDirectory();
+    this.filesystemFacade.openProject();
   }
 
 }

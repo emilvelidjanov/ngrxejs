@@ -2,11 +2,12 @@ import { Observable } from 'rxjs';
 
 export interface FilesystemService {
 
-  openSelectDialog(options?: any): Observable<SelectDialogResult>;
-  setLoadedDirectory(SelectDialogResult: SelectDialogResult): void;
+  openDialog(options?: any): Observable<OpenDialogResult>;
+  loadDirectoryFromOpenDialogResult(openDialogResult: OpenDialogResult): Observable<string[]>;
+  loadDirectory(path: string): Observable<string[]>;  //TODO: return type interface?
 }
 
-export interface SelectDialogResult {
+export interface OpenDialogResult {
   canceled: boolean,
   filePaths: string[]
 }

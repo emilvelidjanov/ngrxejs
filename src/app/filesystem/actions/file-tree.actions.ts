@@ -1,5 +1,6 @@
 import { FileTreeState } from '../state/file-tree.state';
 import { createAction, props } from '@ngrx/store';
+import { FileItemState } from '../state/file-item.state';
 
 
 export const setFileTree = createAction(
@@ -7,7 +8,10 @@ export const setFileTree = createAction(
   props<FileTreeState>()
 )
 
-export const setLoadedDirectory = createAction(
-  '[FileTree] Set LoadedDirectory',
-  props<{loadedDirectory: string}>()
+export const loadProject = createAction(
+  '[FileTree] Load Project',
+  props<{
+    loadedDirectory: string,
+    files: FileItemState[]
+  }>()
 )

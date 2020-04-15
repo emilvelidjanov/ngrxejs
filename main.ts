@@ -1,11 +1,12 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent } from 'electron';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { IpcChannel, IpcRequest } from "./electron/ipc/ipc";
-import { OpenSelectDialogChannel } from './electron/ipc/impl/open-select-dialog-channel';
+import { OpenDialogChannel } from './electron/ipc/impl/open-dialog-channel';
+import { LoadDirectoryChannel } from './electron/ipc/impl/load-directory-channel';
 
 
 class Main {
-  
+
   static PROD_SWITCH: string = 'prod';
 
   private mainWindow: BrowserWindow;
@@ -32,12 +33,12 @@ class Main {
 
   private onReady(): void {
     this.createMainWindow(this.indexFile);
-    let channels: IpcChannel[] = this.createIpcChannels();
+    let channels: IpcChannel<any>[] = this.createIpcChannels();
     this.registerIpcChannels(channels);
     if (!this.isProd) {
       installExtension(REDUX_DEVTOOLS)
-      .then((name: string) => console.info(`Added Extension: ${name}`))
-      .catch((error: any) => console.error('An error occurred: ', error));
+        .then((name: string) => console.info(`Added Extension: ${name}`))
+        .catch((error: any) => console.error('An error occurred: ', error));
     }
   }
 
@@ -49,10 +50,12 @@ class Main {
     this.mainWindow.on('closed', this.windowOnClosed);
   }
 
-  private createIpcChannels(): IpcChannel[] {
-    let openSelectDialogChannel: OpenSelectDialogChannel = new OpenSelectDialogChannel(this.mainWindow);
-    let channels: IpcChannel[] = [
-      openSelectDialogChannel
+  private createIpcChannels(): IpcChannel<any>[] {
+    let openDialogChannel: OpenDialogChannel = new OpenDialogChannel(this.mainWindow);
+    let loadDirectoryChannel: LoadDirectoryChannel = new LoadDirectoryChannel();
+    let channels: IpcChannel<any>[] = [
+      openDialogChannel,
+      loadDirectoryChannel
     ]
     return channels;
   }
@@ -73,8 +76,12 @@ class Main {
     }
   }
 
-  public registerIpcChannels(ipcChannels: IpcChannel[]): void {
-    ipcChannels.forEach((channel: IpcChannel) => ipcMain.on(channel.getName(), (event, request) => channel.handle(event, request)));
+  public registerIpcChannels(ipcChannels: IpcChannel<any>[]): void {
+    ipcChannels.forEach((channel: IpcChannel<any>) => {
+      ipcMain.on(channel.getName(), (event: IpcMainEvent, request: IpcRequest<any>) => {
+        channel.handle(event, request);
+      });
+    });
   }
 }
 

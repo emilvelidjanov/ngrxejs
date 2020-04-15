@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { FilesystemService, SelectDialogResult } from '../filesystem.service';
+import { FilesystemService, OpenDialogResult } from '../filesystem.service';
 import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
 import { IpcRequest, IpcChannelName } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
@@ -7,7 +7,6 @@ import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dep
 import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/filesystem/reducers';
-import { setLoadedDirectory } from 'src/app/filesystem/actions/file-tree.actions';
 
 
 @Injectable()
@@ -18,18 +17,22 @@ export class LocalFilesystemService implements FilesystemService {
     @Inject(ipcServiceDep.getToken()) private ipcService: IpcService
   ) { }
 
-  openSelectDialog(options?: OpenDialogOptions): Observable<OpenDialogReturnValue> {
+  openDialog(options?: OpenDialogOptions): Observable<OpenDialogReturnValue> {
     let request: IpcRequest<OpenDialogOptions> = {};
     if (options) request.params = options;
-    return this.ipcService.send<OpenDialogOptions, OpenDialogReturnValue>(IpcChannelName.OPEN_SELECT_DIALOG, request); 
+    return this.ipcService.send<OpenDialogOptions, OpenDialogReturnValue>(IpcChannelName.OPEN_DIALOG, request); 
   }
 
-  setLoadedDirectory(selectDialogResult: SelectDialogResult): void {
-    if (!selectDialogResult.canceled) {
-      let path: string = selectDialogResult.filePaths[0];
-      this.store.dispatch(setLoadedDirectory({
-        loadedDirectory: path
-      }));
+  loadDirectoryFromOpenDialogResult(openDialogResult: OpenDialogResult): Observable<string[]> {
+    if (!openDialogResult.canceled) {
+      let path: string = openDialogResult.filePaths[0];
+      return this.loadDirectory(path);
     }
+  }
+
+  loadDirectory(path: string): Observable<string[]> {
+    let request: IpcRequest<string> = {};
+    if (path) request.params = path;
+    return this.ipcService.send<string, string[]>(IpcChannelName.LOAD_DIRECTORY, request);
   }
 }

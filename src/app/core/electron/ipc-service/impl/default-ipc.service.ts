@@ -19,7 +19,7 @@ export class DefaultIpcService implements IpcService {
       this.initializeIpcRenderer();
     }
     if (!request.responseChannel) {
-      request.responseChannel = `${channel}_response_${new Date().getTime()}`
+      request.responseChannel = `${channel}_response_${new Date().getTime()}`;
     }
     const ipcRenderer = this.ipcRenderer;
     ipcRenderer.send(channel, request);
