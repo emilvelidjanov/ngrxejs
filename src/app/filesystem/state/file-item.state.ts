@@ -1,6 +1,5 @@
-//TODO: File Level instead?
 export interface FileItemState {
-  path: string;
+  path: string; //TODO: set it on parent only?
   name: string;
   isDirectory: boolean;
   children: FileItemState[];

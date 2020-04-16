@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
+import { FileItemState } from '../../state/file-item.state';
 
 export interface FilesystemService {
 
   openDialog(options?: any): Observable<OpenDialogResult>;
-  loadDirectoryFromOpenDialogResult(openDialogResult: OpenDialogResult): Observable<string[]>;
-  loadDirectory(path: string): Observable<string[]>;  //TODO: return type interface?
+  loadDirectoryFromOpenDialogResult(openDialogResult: OpenDialogResult): Observable<FileItemState[]>;
+  loadDirectory(path: string): Observable<FileItemState[]>;
 }
 
 export interface OpenDialogResult {
