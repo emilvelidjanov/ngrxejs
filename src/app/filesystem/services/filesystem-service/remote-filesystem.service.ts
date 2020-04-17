@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FilesystemService, OpenDialogResult } from '../filesystem.service';
+import { FilesystemService, OpenDialogResult } from './filesystem.service';
 import { Observable } from 'rxjs';
 import { FileItemState } from 'src/app/filesystem/store/state/file-item.state';
 

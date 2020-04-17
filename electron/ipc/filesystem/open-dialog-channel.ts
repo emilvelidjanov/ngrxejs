@@ -1,6 +1,6 @@
 import { IpcChannel, IpcRequest, IpcChannelName } from '../ipc';
 import { IpcMainEvent, OpenDialogOptions, dialog, BrowserWindow, OpenDialogReturnValue } from 'electron';
-import { OpenDialogResult } from './../../../src/app/filesystem/services/filesystem-service/filesystem.service';
+import { OpenDialogResult } from '../../../src/app/filesystem/services/filesystem-service/filesystem.service';
 
 
 export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {

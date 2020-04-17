@@ -1,8 +1,8 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent } from 'electron';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { IpcChannel, IpcRequest } from "./electron/ipc/ipc";
-import { OpenDialogChannel } from './electron/ipc/impl/open-dialog-channel';
-import { LoadDirectoryChannel } from './electron/ipc/impl/load-directory-channel';
+import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel';
+import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
 
 
 class Main {

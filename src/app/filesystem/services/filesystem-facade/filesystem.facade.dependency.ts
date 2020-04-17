@@ -2,7 +2,7 @@ import { DependencyConfigurer } from 'src/app/core/dependency-configurer/depende
 import { FilesystemFacade } from './filesystem.facade';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { FilesystemService } from '../filesystem-service/filesystem.service';
-import { DefaultFilesystemFacade } from './impl/default-filesystem.facade';
+import { DefaultFilesystemFacade } from './default-filesystem.facade';
 import { Store } from '@ngrx/store';
 import { State } from '../../store/reducers';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
-import { IpcService } from '../ipc-service';
+import { IpcService } from './ipc-service';
 
 
 @Injectable()

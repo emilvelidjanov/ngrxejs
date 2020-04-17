@@ -1,8 +1,8 @@
 import { DependencyConfigurer } from '../../dependency-configurer/dependency-configurer';
 import { IpcService } from './ipc-service';
 import { ElectronService } from '../electron-service/electron.service';
-import { DefaultIpcService } from './impl/default-ipc.service';
-import { DummyIpcService } from './impl/dummy-ipc.service';
+import { DefaultIpcService } from './default-ipc.service';
+import { DummyIpcService } from './dummy-ipc.service';
 
 
 export const ipcServiceDep: DependencyConfigurer<IpcService> = new DependencyConfigurer<IpcService>({

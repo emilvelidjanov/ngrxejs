@@ -1,9 +1,9 @@
 import { IpcChannel, IpcRequest, IpcChannelName } from '../ipc';
 import { IpcMainEvent } from 'electron';
-import { FsUtils } from './../../utils/fs.utils';
+import { FsUtils } from '../../utils/fs.utils';
 import { Dirent } from 'fs';
 import { FileItemState } from '../../../src/app/filesystem/store/state/file-item.state';
-import { PathUtils } from './../../utils/path.utils';
+import { PathUtils } from '../../utils/path.utils';
 
 
 export class LoadDirectoryChannel implements IpcChannel<string> {

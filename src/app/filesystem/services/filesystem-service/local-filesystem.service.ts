@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { FilesystemService, OpenDialogResult } from '../filesystem.service';
+import { FilesystemService, OpenDialogResult } from './filesystem.service';
 import { OpenDialogOptions } from "electron";
 import { IpcRequest, IpcChannelName } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
