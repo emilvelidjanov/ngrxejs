@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { StoreModule } from "@ngrx/store";
-import { EffectsModule } from "@ngrx/effects";
 import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
 import { buildSpecificModules } from "src/build-specifics/index";
 import { AppComponent } from './app.component';
@@ -27,7 +26,6 @@ import { CoreModule } from './core/core.module';
         strictActionSerializability: true
       }
     }),
-    EffectsModule.forRoot([]),
     StoreRouterConnectingModule.forRoot({
       routerState: RouterState.Minimal
     }),
