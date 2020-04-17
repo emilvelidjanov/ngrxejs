@@ -4,7 +4,7 @@ import { filesystemServiceDep } from '../filesystem-service/filesystem.service.d
 import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { DefaultFilesystemFacade } from './impl/default-filesystem.facade';
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
+import { State } from '../../store/reducers';
 
 
 export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new DependencyConfigurer<FilesystemFacade>({

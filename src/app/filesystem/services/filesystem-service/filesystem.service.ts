@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { FileItemState } from '../../state/file-item.state';
+import { FileItemState } from '../../store/state/file-item.state';
 
 export interface FilesystemService {
 

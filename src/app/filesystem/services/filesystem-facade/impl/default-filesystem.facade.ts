@@ -3,8 +3,8 @@ import { FilesystemFacade } from '../filesystem.facade';
 import { FilesystemService, OpenDialogResult } from '../../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../../filesystem-service/filesystem.service.dependency';
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
-import { FileItemState } from 'src/app/filesystem/state/file-item.state';
-import { State } from 'src/app/filesystem/reducers';
+import { FileItemState } from 'src/app/filesystem/store/state/file-item.state';
+import { State } from 'src/app/filesystem/store/reducers';
 import { Store } from '@ngrx/store';
 
 

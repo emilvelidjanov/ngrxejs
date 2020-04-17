@@ -1,5 +1,5 @@
 export interface FileItemState {
-  path: string; //TODO: set it on parent only?
+  path: string;
   name: string;
   isDirectory: boolean;
   children: FileItemState[];

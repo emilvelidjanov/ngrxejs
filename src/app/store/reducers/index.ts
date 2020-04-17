@@ -1,8 +1,8 @@
 import { ActionReducerMap, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { AppState } from '../state/app.state';
-import * as fromMenu from '../menu/reducers';
-import * as fromFilesystem from '../filesystem/reducers';
+import * as fromMenu from '../../menu/store/reducers';
+import * as fromFilesystem from '../../filesystem/store/reducers';
 
 
 export const reducers: ActionReducerMap<AppState> = {};

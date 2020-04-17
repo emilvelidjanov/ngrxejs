@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
 import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 import { first } from 'rxjs/operators';
-import { FileItemState } from 'src/app/filesystem/state/file-item.state';
+import { FileItemState } from 'src/app/filesystem/store/state/file-item.state';
 
 
 @Injectable()

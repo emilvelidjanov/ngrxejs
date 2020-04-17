@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { AppState } from './state/app.state';
-import { setMenu } from './menu/actions/menu.actions';
+import { AppState } from './store/state/app.state';
+import { setMenu } from './menu/store/actions/menu.actions';
 import mainMenuConfig from '../config/menu/mainMenu.json';
-import { MenuState, clone } from './menu/state/menu.state';
-import { MenuItemState } from './menu/state/menu-item.state';
-import { selectMenu } from './reducers';
+import { MenuState, clone } from './menu/store/state/menu.state';
+import { MenuItemState } from './menu/store/state/menu-item.state';
+import { selectMenu } from './store/reducers';
 import { Observable } from 'rxjs';
-import { FileTreeState } from './filesystem/state/file-tree.state';
+import { FileTreeState } from './filesystem/store/state/file-tree.state';
 
 
 @Component({
