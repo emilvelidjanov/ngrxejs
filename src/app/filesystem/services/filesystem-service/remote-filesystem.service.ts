@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FilesystemService, OpenDialogResult } from './filesystem.service';
 import { Observable } from 'rxjs';
-import { FileItemState } from 'src/app/filesystem/store/state/file-item.state';
+import { File } from '../../store/state/file.state';
 
 
 @Injectable()
@@ -12,12 +12,8 @@ export class RemoteFilesystemService implements FilesystemService {
   openDialog(options?: any): Observable<OpenDialogResult> {
     throw new Error("RemoteFilesystemService#openDialog not implemented.");
   }
-
-  loadDirectoryFromOpenDialogResult(openDialogResult: OpenDialogResult): Observable<FileItemState[]> {
-    throw new Error("RemoteFilesystemService#loadDirectoryFromOpenDialogResult not implemented.");
-  }
-
-  loadDirectory(path: string): Observable<FileItemState[]> {
-    throw new Error("RemoteFilesystemService#setLoadedDirectory not implemented.");
+  
+  loadDirectory(path: string): Observable<File[]> {
+    throw new Error("RemoteFilesystemService#loadDirectory not implemented.");
   }
 }

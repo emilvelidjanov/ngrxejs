@@ -1,19 +1,15 @@
 import { setFileTree } from '../actions/file-tree.actions';
 import { createReducer, on, Action } from '@ngrx/store';
-import { initialState, FileTreeState } from '../state/file-tree.state';
-import { loadProject } from '../actions/file-tree.actions';
+import { fileTreeInitialState, FileTree } from '../state/file-tree.state';
 
 
-const fileTreeReducer = createReducer(
-  initialState,
-  on(setFileTree, (state: FileTreeState, fileTree: FileTreeState) => {
+const reducer = createReducer(
+  fileTreeInitialState,
+  on(setFileTree, (state: FileTree, fileTree: FileTree) => {
     return {...state, fileTree};
-  }),
-  on(loadProject, (state: FileTreeState, action) => {
-    return {...state, ...action};
   })
 );
 
-export function reducer(state: FileTreeState | undefined, action: Action) {
-  return fileTreeReducer(state, action);
+export function fileTreeReducer(state: FileTree | undefined, action: Action) {
+  return reducer(state, action);
 }

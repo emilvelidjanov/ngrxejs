@@ -1,12 +1,7 @@
-import { FileItemState } from './file-item.state';
-
-
-export interface FileTreeState {
-  loadedDirectory: string,
-  items: FileItemState[]
+export interface FileTree {
+  fileItemIds: number[],
 }
 
-export const initialState: FileTreeState = {
-  loadedDirectory: '',
-  items: []
+export const fileTreeInitialState: FileTree = {
+  fileItemIds: [],
 }

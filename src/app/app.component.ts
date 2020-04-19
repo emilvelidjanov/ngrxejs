@@ -7,7 +7,7 @@ import { MenuState, clone } from './menu/store/state/menu.state';
 import { MenuItemState } from './menu/store/state/menu-item.state';
 import { selectMenu } from './store/reducers';
 import { Observable } from 'rxjs';
-import { FileTreeState } from './filesystem/store/state/file-tree.state';
+import { FileTree } from './filesystem/store/state/file-tree.state';
 
 
 @Component({
@@ -20,9 +20,6 @@ export class AppComponent implements OnInit {
 
   public mainMenu$: Observable<MenuState>;
   public mainMenu: MenuState;
-
-  public fileTree$: Observable<FileTreeState>;
-  public fileTree: FileTreeState;
 
   constructor(private store: Store<AppState>) { }
 
