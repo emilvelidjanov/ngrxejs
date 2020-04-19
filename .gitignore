@@ -7,6 +7,7 @@
 main.js
 /src/**/*.js
 /electron/**/*.js
+/tsc-build
 # Only exists if Bazel was run
 /bazel-out
 
