@@ -7,7 +7,6 @@ import { MenuState, clone } from './menu/store/state/menu.state';
 import { MenuItemState } from './menu/store/state/menu-item.state';
 import { selectMenu } from './store/reducers';
 import { Observable } from 'rxjs';
-import { FileTree } from './filesystem/store/state/file-tree.state';
 
 
 @Component({

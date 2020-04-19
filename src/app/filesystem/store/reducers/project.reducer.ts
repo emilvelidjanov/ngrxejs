@@ -1,15 +1,11 @@
-import { Project, projectInitialState } from '../state/project.state';
-import { Action, createReducer, on } from '@ngrx/store';
-import { setProject } from '../actions/project.actions';
+import { projectsInitialState, Projects } from '../state/project.state';
+import { Action, createReducer } from '@ngrx/store';
 
 
 const reducer = createReducer(
-  projectInitialState,
-  on(setProject, (state: Project, action: Project) => {
-    return {...state, ...action};
-  })
+  projectsInitialState,
 );
 
-export function projectReducer(state: Project | undefined, action: Action) {
+export function projectsReducer(state: Projects | undefined, action: Action) {
   return reducer(state, action);
 }

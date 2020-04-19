@@ -2,6 +2,7 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 
 export interface Files extends EntityState<File> {
+  selectedFileIds: number[],
 }
 
 export interface File {
@@ -13,4 +14,6 @@ export interface File {
 }
 
 export const fileAdapter: EntityAdapter<File> = createEntityAdapter<File>();
-export const filesInitialState: Files = fileAdapter.getInitialState();
+export const filesInitialState: Files = fileAdapter.getInitialState({
+  selectedFileIds: [],
+});

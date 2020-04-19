@@ -24,7 +24,6 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
     });
   }
 
-  //TODO: optional mapping logic in service?
   private toResponse(file: Dirent, path: string): File {
     let fullPath: string = PathUtils.joinPath(path, file.name);
     let extension: string = PathUtils.getExtension(fullPath);

@@ -14,4 +14,5 @@ export const selectMenu = createSelector(selectMenuFeature, fromMenu.selectMenu)
 
 // Filesystem
 export const selectFilesystemFeature = createFeatureSelector<fromFilesystem.State>(fromFilesystem.filesystemFeatureKey);
-export const selectFileTree = createSelector(selectFilesystemFeature, fromFilesystem.selectFileTree);
+export const selectProjects = createSelector(selectFilesystemFeature, fromFilesystem.selectProjects);
+export const selectFiles = createSelector(selectFilesystemFeature, fromFilesystem.selectFiles);
