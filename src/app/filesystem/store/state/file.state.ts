@@ -6,6 +6,7 @@ export interface Files extends EntityState<File> {
 }
 
 export interface File {
+  id: number,
   path: string,
   name: string,
   extension: string,

@@ -5,8 +5,9 @@ export interface Projects extends EntityState<Project>{
 }
 
 export interface Project {
-  directory: string,
+  id: number,
   name: string,
+  directory: string,
   fileIds: number[],
 }
 

@@ -24,10 +24,12 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
     });
   }
 
+  //TODO: Remove File dependency, move build logic into FileService
   private toResponse(file: Dirent, path: string): File {
     let fullPath: string = PathUtils.joinPath(path, file.name);
     let extension: string = PathUtils.getExtension(fullPath);
     return {
+      id: undefined,
       name: file.name,
       path: fullPath,
       extension: extension,

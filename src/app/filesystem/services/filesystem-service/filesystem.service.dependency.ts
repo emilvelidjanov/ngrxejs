@@ -9,8 +9,14 @@ import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 
 export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new DependencyConfigurer<FilesystemService>({
   tokenDescription: 'FilesystemService',
-  dependencies: [ElectronService, ipcServiceDep.getToken()],
-  factory: (electronService: ElectronService, ipcService: IpcService) => {
+  dependencies: [
+    ElectronService,
+    ipcServiceDep.getToken()
+  ],
+  factory: (
+    electronService: ElectronService,
+    ipcService: IpcService,
+  ) => {
     let isElectron: boolean = electronService.isElectron();
     let filesystemService: FilesystemService = isElectron ? 
       new LocalFilesystemService(ipcService) : 
