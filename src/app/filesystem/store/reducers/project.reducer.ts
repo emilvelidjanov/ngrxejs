@@ -1,6 +1,6 @@
-import { projectsInitialState, Projects, projectAdapter, Project } from '../state/project.state';
+import { projectsInitialState, Projects, projectAdapter } from '../state/project.state';
 import { Action, createReducer, on } from '@ngrx/store';
-import * as ProjectActions from '../actions/file.action';
+import * as ProjectActions from './../actions/project.action';
 
 
 const reducer = createReducer(
@@ -13,15 +13,3 @@ const reducer = createReducer(
 export function projectsReducer(state: Projects | undefined, action: Action) {
   return reducer(state, action);
 }
-
-const {
-  selectAll,
-  selectEntities,
-  selectIds,
-  selectTotal
-} = projectAdapter.getSelectors();
-
-export const selectAllProjects = selectAll;
-export const selectProjectEntities = selectEntities;
-export const selectProjectIds = selectIds;
-export const selectProjectTotal = selectTotal;

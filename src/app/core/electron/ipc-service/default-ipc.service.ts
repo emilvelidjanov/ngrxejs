@@ -24,9 +24,7 @@ export class DefaultIpcService implements IpcService {
     const ipcRenderer = this.ipcRenderer;
     ipcRenderer.send(channel, request);
     return fromEvent<any[]>(ipcRenderer, request.responseChannel)
-    .pipe(
-      map((value: any[]) => value[1])
-    );
+    .pipe(map((value: any[]) => value[1]));
   }
 
   private initializeIpcRenderer() {

@@ -1,12 +1,13 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityState } from '@ngrx/entity';
+import { Entity } from 'src/app/core/ngrx/entity';
+import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 
 export interface Files extends EntityState<File> {
   selectedFileIds: number[],
 }
 
-export interface File {
-  id: number,
+export interface File extends Entity {
   path: string,
   name: string,
   extension: string,
@@ -14,7 +15,11 @@ export interface File {
   fileIds: number[],
 }
 
-export const fileAdapter: EntityAdapter<File> = createEntityAdapter<File>();
-export const filesInitialState: Files = fileAdapter.getInitialState({
+const initialState: Files = {
+  ids: [],
+  entities: {},
   selectedFileIds: [],
-});
+}
+export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
+  initialState,
+);

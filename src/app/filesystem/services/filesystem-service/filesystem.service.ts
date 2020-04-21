@@ -1,14 +1,20 @@
 import { Observable } from 'rxjs';
-import { File } from '../../store/state/file.state';
 
 
 export interface FilesystemService {
 
   openDialog(options?: any): Observable<OpenDialogResult>;
-  loadDirectory(path: string): Observable<File[]>;
+  loadDirectory(path: string): Observable<LoadDirectoryResult[]>;
 }
 
 export interface OpenDialogResult {
   canceled: boolean,
   filePaths: string[]
+}
+
+export interface LoadDirectoryResult {
+  name: string,
+  path: string,
+  extension: string,
+  isDirectory: boolean
 }

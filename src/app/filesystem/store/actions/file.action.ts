@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Project } from '../state/project.state';
+import { File } from '../state/file.state';
 
 
-export const addProject = createAction('[Project] Add Project', props<{project: Project}>());
+export const addFile = createAction('[File] Add File', props<{file: File}>());
+export const addFiles = createAction('[File] Add Files', props<{files: File[]}>());

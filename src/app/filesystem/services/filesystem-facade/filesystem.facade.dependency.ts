@@ -1,12 +1,12 @@
-import { DependencyConfigurer } from 'src/app/core/dependency-configurer/dependency-configurer';
+import { DependencyConfigurer } from 'src/app/core/angular/dependency-configurer';
 import { FilesystemFacade } from './filesystem.facade';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { DefaultFilesystemFacade } from './default-filesystem.facade';
 import { Store } from '@ngrx/store';
-import { State } from '../../store/reducers';
-import { numberIdGeneratorServiceDep } from 'src/app/core/id-generator-service/id-generator.service.dependency';
-import { IdGeneratorService } from 'src/app/core/id-generator-service/id-generator.service';
+import { FilesystemState } from '../../store/reducers';
+import { fileServiceDep } from '../file-service/file.service.dependency';
+import { FileService } from '../file-service/file.service';
 
 
 export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new DependencyConfigurer<FilesystemFacade>({
@@ -14,13 +14,13 @@ export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new D
   dependencies: [
     Store,
     filesystemServiceDep.getToken(),
-    numberIdGeneratorServiceDep.getToken()
+    fileServiceDep.getToken(),
   ],
   factory: (
-    store: Store<State>,
+    store: Store<FilesystemState>,
     filesystemService: FilesystemService,
-    idGeneratorServiceDep: IdGeneratorService
+    fileService: FileService,
   ) => {
-    return new DefaultFilesystemFacade(store, filesystemService, idGeneratorServiceDep);
+    return new DefaultFilesystemFacade(store, filesystemService, fileService);
   }
 });

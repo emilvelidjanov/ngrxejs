@@ -1,54 +1,50 @@
 import { Injectable, Inject } from '@angular/core';
 import { FilesystemFacade } from './filesystem.facade';
-import { FilesystemService, OpenDialogResult } from '../filesystem-service/filesystem.service';
+import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
-import { State } from 'src/app/filesystem/store/reducers';
-import { Store, select } from '@ngrx/store';
+import { FilesystemState } from 'src/app/filesystem/store/reducers';
+import { Store } from '@ngrx/store';
 import { forkJoin, of, Observable } from 'rxjs';
-import { switchMap, first } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
+import { fileServiceDep } from '../file-service/file.service.dependency';
+import { FileService } from '../file-service/file.service';
 import { File } from '../../store/state/file.state';
-import { Project } from '../../store/state/project.state';
-import { addProject } from '../../store/actions/file.action';
-import { numberIdGeneratorServiceDep } from 'src/app/core/id-generator-service/id-generator.service.dependency';
-import { IdGeneratorService } from 'src/app/core/id-generator-service/id-generator.service';
+import { addFiles } from '../../store/actions/file.action';
 
 
 @Injectable()
 export class DefaultFilesystemFacade implements FilesystemFacade {
 
   constructor(
-    private store: Store<State>,
+    private store: Store<FilesystemState>,
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
-    @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
+    @Inject(fileServiceDep.getToken()) private fileService: FileService,
   ) { }
 
   openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions);  //TODO: config service?
     const loadDirectory$ = openDialog$.pipe(
-      switchMap((openDialogResult: OpenDialogResult) => this.loadDirectoryOfOpenedProject(openDialogResult))
+      switchMap((openDialogResult: OpenDialogResult) => this.loadDirectoryOfOpenedProject(openDialogResult)),
     );
     forkJoin({
       openedDialog: openDialog$,
       loadedDirectory: loadDirectory$
-    }).subscribe((result) => {
+    }).pipe(take(1)).subscribe((result) => {
+      console.log("Result", result);
       if (!result.openedDialog.canceled) {
-        let project: Project = {
-          id: this.idGeneratorService.nextId([1, 2, 4]),
-          name: "Test Project",
-          directory: result.openedDialog.filePaths[0],
-          fileIds: [],
-        }
-        this.store.dispatch(addProject({project}));
+        let files: File[] = this.fileService.createFiles(result.loadedDirectory);
+        this.store.dispatch(addFiles({files}));
       }
     }, (error: any) => console.error(error));
   }
 
-  private loadDirectoryOfOpenedProject(openDialogResult: OpenDialogResult): Observable<File[]> {
+  private loadDirectoryOfOpenedProject(openDialogResult: OpenDialogResult): Observable<LoadDirectoryResult[]> {
+    let result: Observable<LoadDirectoryResult[]> = of([]);
     if (!openDialogResult.canceled) {
       let path: string = openDialogResult.filePaths[0];
-      return this.filesystemService.loadDirectory(path);
+      result = this.filesystemService.loadDirectory(path);
     }
-    return of([]).pipe(first());
+    return result;
   }
 }

@@ -1,4 +1,4 @@
-import { DependencyConfigurer } from '../../dependency-configurer/dependency-configurer';
+import { DependencyConfigurer } from '../../angular/dependency-configurer';
 import { IpcService } from './ipc-service';
 import { ElectronService } from '../electron-service/electron.service';
 import { DefaultIpcService } from './default-ipc.service';

@@ -3,7 +3,7 @@ import { IpcMainEvent } from 'electron';
 import { FsUtils } from '../../utils/fs.utils';
 import { Dirent } from 'fs';
 import { PathUtils } from '../../utils/path.utils';
-import { File } from './../../../src/app/filesystem/store/state/file.state';
+import { LoadDirectoryResult } from './../../../src/app/filesystem/services/filesystem-service/filesystem.service';
 
 
 export class LoadDirectoryChannel implements IpcChannel<string> {
@@ -17,24 +17,21 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
   handle(event: IpcMainEvent, request: IpcRequest<string>): void {
     let path: string = request.params;
     FsUtils.readDirectory(path).subscribe((files: Dirent[]) => {
-      let response: File[] = files.map((file: Dirent) => this.toResponse(file, path));
+      let response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
       event.reply(request.responseChannel, response);
     }, (error: any) => {
-      console.log(error);
+      console.error(error);
     });
   }
 
-  //TODO: Remove File dependency, move build logic into FileService
-  private toResponse(file: Dirent, path: string): File {
+  private toResponse(file: Dirent, path: string): LoadDirectoryResult {
     let fullPath: string = PathUtils.joinPath(path, file.name);
     let extension: string = PathUtils.getExtension(fullPath);
     return {
-      id: undefined,
       name: file.name,
       path: fullPath,
       extension: extension,
       isDirectory: file.isDirectory(),
-      fileIds: [],
     }
   }
 }
