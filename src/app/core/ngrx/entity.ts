@@ -1,4 +1,6 @@
 export interface Entity {
 
-  id: number | string;
+  id: Id;
 }
+
+export type Id = number | string;

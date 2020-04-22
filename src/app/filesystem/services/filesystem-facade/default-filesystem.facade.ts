@@ -31,7 +31,6 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       openedDialog: openDialog$,
       loadedDirectory: loadDirectory$
     }).pipe(take(1)).subscribe((result) => {
-      console.log("Result", result);
       if (!result.openedDialog.canceled) {
         let files: File[] = this.fileService.createFiles(result.loadedDirectory);
         this.store.dispatch(addFiles({files}));

@@ -1,5 +1,8 @@
+import { Id } from '../../entity';
+
+
 export interface IdGeneratorService {
 
-  nextId(...args: any[]): number | string;
-  nextNIds(n: number, ...args: any[]): number[] | string[];
+  nextId(...args: any[]): Id;
+  nextNIds(n: number, ...args: any[]): Id[];
 }

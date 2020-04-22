@@ -1,10 +1,10 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity } from 'src/app/core/ngrx/entity';
+import { Entity, Id } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 
 export interface Files extends EntityState<File> {
-  selectedFileIds: number[],
+  selectedFileIds: Id[],
 }
 
 export interface File extends Entity {
@@ -12,7 +12,7 @@ export interface File extends Entity {
   name: string,
   extension: string,
   isDirectory: boolean,
-  fileIds: number[],
+  fileIds: Id[],
 }
 
 const initialState: Files = {

@@ -6,26 +6,26 @@ import { Inject } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { fileSelectors } from '../../store/file/file.selector';
-
+import { Id } from 'src/app/core/ngrx/entity';
 
 
 export class DefaultFileService implements FileService {
 
-  private usedIds: number[] | string[];
+  private usedIds: Id[];
 
   constructor(
     private store: Store<Files>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
-    this.store.pipe(select(fileSelectors.selectIds)).subscribe((usedIds: number[] | string[]) => {
+    this.store.pipe(select(fileSelectors.selectIds)).subscribe((usedIds: Id[]) => {
       this.usedIds = usedIds;
     });
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): File[] {
     let size: number = loadDirectoryResults.length;
-    let ids: (number | string)[] = this.idGeneratorService.nextNIds(size, this.usedIds);
-    let files: File[] = ids.map((id: number | string, index: number) => {
+    let ids: Id[] = this.idGeneratorService.nextNIds(size, this.usedIds);
+    let files: File[] = ids.map((id: Id, index: number) => {
       return {
         id: id,
         fileIds: [],
