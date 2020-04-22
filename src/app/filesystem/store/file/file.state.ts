@@ -21,5 +21,6 @@ const initialState: Files = {
   selectedFileIds: [],
 }
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
+  "File",
   initialState,
 );

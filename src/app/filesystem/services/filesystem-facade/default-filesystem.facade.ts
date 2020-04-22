@@ -10,7 +10,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { File } from '../../store/file/file.state';
-import { addFiles } from '../../store/file/file.action';
+import { fileActions } from '../../store/file/file.action';
 
 
 @Injectable()
@@ -33,7 +33,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     }).pipe(take(1)).subscribe((result) => {
       if (!result.openedDialog.canceled) {
         let files: File[] = this.fileService.createFiles(result.loadedDirectory);
-        this.store.dispatch(addFiles({files}));
+        this.store.dispatch(fileActions.addMany({entities: files}));
       }
     }, (error: any) => console.error(error));
   }

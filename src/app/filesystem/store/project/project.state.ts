@@ -17,5 +17,6 @@ const initialState: Projects = {
   entities: {},
 }
 export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(
+  "Project",
   initialState,
 );

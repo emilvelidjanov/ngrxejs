@@ -1,6 +1,6 @@
 import { Projects, projectStoreConfig } from './project.state';
 import { Action, createReducer, on } from '@ngrx/store';
-import * as ProjectActions from './project.action';
+import { projectActions } from './project.action';
 
 
 const projectsInitialState = projectStoreConfig.getInitialState();
@@ -8,8 +8,8 @@ const projectAdapter = projectStoreConfig.getAdapter();
 
 const reducer = createReducer(
   projectsInitialState,
-  on(ProjectActions.addProject, (state: Projects, {project}) => {
-    return projectAdapter.addOne(project, state);
+  on(projectActions.addOne, (state: Projects, {entity}) => {
+    return projectAdapter.addOne(entity, state);
   }),
 );
 

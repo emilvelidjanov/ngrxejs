@@ -1,6 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import { File } from './file.state';
+import { fileStoreConfig } from './file.state';
 
 
-export const addFile = createAction('[File] Add File', props<{file: File}>());
-export const addFiles = createAction('[File] Add Files', props<{files: File[]}>());
+export const fileActions = {
+  ...fileStoreConfig.getActions(),
+};
