@@ -1,6 +1,6 @@
-import { Files, fileStoreConfig } from '../state/file.state';
+import { Files, fileStoreConfig } from './file.state';
 import { createReducer, Action, on } from '@ngrx/store';
-import * as FileActions from './../actions/file.action';
+import * as FileActions from './file.action';
 
 
 const filesInitialState = fileStoreConfig.getInitialState();

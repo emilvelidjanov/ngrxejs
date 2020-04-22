@@ -1,7 +1,10 @@
-import { projectsInitialState, Projects, projectAdapter } from '../state/project.state';
+import { Projects, projectStoreConfig } from './project.state';
 import { Action, createReducer, on } from '@ngrx/store';
-import * as ProjectActions from './../actions/project.action';
+import * as ProjectActions from './project.action';
 
+
+const projectsInitialState = projectStoreConfig.getInitialState();
+const projectAdapter = projectStoreConfig.getAdapter();
 
 const reducer = createReducer(
   projectsInitialState,

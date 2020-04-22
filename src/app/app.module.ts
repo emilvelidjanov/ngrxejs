@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { MenuModule } from './menu/menu.module';
 import { FilesystemModule } from './filesystem/filesystem.module';
 import { EditorModule } from './editor/editor.module';
-import { reducers, metaReducers } from './store/reducers';
+import { reducers, metaReducers } from './store';
 import { CoreModule } from './core/core.module';
 
 

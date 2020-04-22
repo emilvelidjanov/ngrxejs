@@ -4,7 +4,7 @@ import { filesystemServiceDep } from '../filesystem-service/filesystem.service.d
 import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { DefaultFilesystemFacade } from './default-filesystem.facade';
 import { Store } from '@ngrx/store';
-import { FilesystemState } from '../../store/reducers';
+import { FilesystemState } from '../../store';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 

@@ -3,14 +3,14 @@ import { FilesystemFacade } from './filesystem.facade';
 import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
-import { FilesystemState } from 'src/app/filesystem/store/reducers';
+import { FilesystemState } from 'src/app/filesystem/store';
 import { Store } from '@ngrx/store';
 import { forkJoin, of, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
-import { File } from '../../store/state/file.state';
-import { addFiles } from '../../store/actions/file.action';
+import { File } from '../../store/file/file.state';
+import { addFiles } from '../../store/file/file.action';
 
 
 @Injectable()

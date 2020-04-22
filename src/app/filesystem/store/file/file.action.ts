@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { File } from '../state/file.state';
+import { File } from './file.state';
 
 
 export const addFile = createAction('[File] Add File', props<{file: File}>());

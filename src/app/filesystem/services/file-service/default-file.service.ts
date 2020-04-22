@@ -1,11 +1,12 @@
 import { FileService } from './file.service';
-import { File, Files } from '../../store/state/file.state';
+import { File, Files } from '../../store/file/file.state';
 import { LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { Store, select } from '@ngrx/store';
 import { Inject } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
-import { selectIds } from '../../store/reducers';
+import { fileSelectors } from '../../store/file/file.selector';
+
 
 
 export class DefaultFileService implements FileService {
@@ -16,7 +17,7 @@ export class DefaultFileService implements FileService {
     private store: Store<Files>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
-    this.store.pipe(select(selectIds)).subscribe((usedIds: number[] | string[]) => {
+    this.store.pipe(select(fileSelectors.selectIds)).subscribe((usedIds: number[] | string[]) => {
       this.usedIds = usedIds;
     });
   }
