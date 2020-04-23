@@ -12,7 +12,7 @@ export class NumberIdGeneratorService implements IdGeneratorService {
         break;
       }
     }
-    if (!sortedUsedIds) {
+    if (!sortedUsedIds.length) {
       lowest = 0;
     }
     if (lowest === undefined) {

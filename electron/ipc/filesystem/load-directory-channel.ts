@@ -27,8 +27,9 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
   private toResponse(file: Dirent, path: string): LoadDirectoryResult {
     let fullPath: string = PathUtils.joinPath(path, file.name);
     let extension: string = PathUtils.getExtension(fullPath);
+    let name: string = PathUtils.getFilename(file.name);
     return {
-      name: file.name,
+      name: name,
       path: fullPath,
       extension: extension,
       isDirectory: file.isDirectory(),

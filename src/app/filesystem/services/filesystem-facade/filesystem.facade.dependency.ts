@@ -7,6 +7,8 @@ import { Store } from '@ngrx/store';
 import { FilesystemState } from '../../store';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
+import { projectServiceDep } from '../project-service/project.service.dependency';
+import { ProjectService } from '../project-service/project.service';
 
 
 export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new DependencyConfigurer<FilesystemFacade>({
@@ -15,12 +17,14 @@ export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new D
     Store,
     filesystemServiceDep.getToken(),
     fileServiceDep.getToken(),
+    projectServiceDep.getToken(),
   ],
   factory: (
     store: Store<FilesystemState>,
     filesystemService: FilesystemService,
     fileService: FileService,
+    projectService: ProjectService,
   ) => {
-    return new DefaultFilesystemFacade(store, filesystemService, fileService);
+    return new DefaultFilesystemFacade(store, filesystemService, fileService, projectService);
   }
 });

@@ -10,4 +10,8 @@ export class PathUtils {
   static getExtension(path: string): string {
     return nodePath.extname(path);
   }
+
+  static getFilename(path: string): string {
+    return nodePath.basename(path, nodePath.extname(path));
+  }
 }

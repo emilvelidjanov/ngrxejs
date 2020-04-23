@@ -9,7 +9,8 @@ export interface FilesystemService {
 
 export interface OpenDialogResult {
   canceled: boolean,
-  filePaths: string[]
+  filePaths: string[],
+  filenames: string[],
 }
 
 export interface LoadDirectoryResult {
