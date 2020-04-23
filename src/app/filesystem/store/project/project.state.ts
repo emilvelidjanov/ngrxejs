@@ -16,6 +16,7 @@ const initialState: Projects = {
   ids: [],
   entities: {},
 }
+
 export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(
   "Project",
   initialState,

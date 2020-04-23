@@ -15,7 +15,7 @@ export class FileTreeComponent implements OnInit {
 
   constructor(
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
-    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade
+    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
   ) { }
 
   ngOnInit(): void {

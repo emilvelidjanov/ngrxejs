@@ -20,6 +20,7 @@ const initialState: Files = {
   entities: {},
   selectedFileIds: [],
 }
+
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
   "File",
   initialState,
