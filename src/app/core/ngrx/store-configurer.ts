@@ -46,18 +46,18 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
 
   private initActions(): DefaultActions<EntityType> {
     return {
-      addOne: createAction(`[${this.entityName}] Add One`, props<{entity: EntityType}>()),
-      addMany: createAction(`[${this.entityName}] Add Many`, props<{entities: EntityType[]}>()),
-      setOne: createAction(`[${this.entityName}] Set One`, props<{entity: EntityType}>()),
-      setAll: createAction(`[${this.entityName}] Set All`, props<{entities: EntityType[]}>()),
-      removeOne: createAction(`[${this.entityName}] Remove One`, props<{id: Id}>()),
-      removeMany: createAction(`[${this.entityName}] Remove Many`, props<{ids: Id[]}>()),
-      removeByPredicate: createAction(`[${this.entityName}] Remove By Predicate`, props<{predicate: Predicate<EntityType>}>()),
+      addOne: createAction(`[${this.entityName}] Add One`, props<PropEntity<EntityType>>()),
+      addMany: createAction(`[${this.entityName}] Add Many`, props<PropEntities<EntityType>>()),
+      setOne: createAction(`[${this.entityName}] Set One`, props<PropEntity<EntityType>>()),
+      setAll: createAction(`[${this.entityName}] Set All`, props<PropEntities<EntityType>>()),
+      removeOne: createAction(`[${this.entityName}] Remove One`, props<PropId>()),
+      removeMany: createAction(`[${this.entityName}] Remove Many`, props<PropIds>()),
+      removeByPredicate: createAction(`[${this.entityName}] Remove By Predicate`, props<PropPredicate<EntityType>>()),
       removeAll: createAction(`[${this.entityName}] Remove All`),
-      updateOne: createAction(`[${this.entityName}] Update One`, props<{update: Update<EntityType>}>()),
-      updateMany: createAction(`[${this.entityName}] Update Many`, props<{updates: Update<EntityType>[]}>()),
-      upsertOne: createAction(`[${this.entityName}] Upsert One`, props<{entity: EntityType}>()),
-      upsertMany: createAction(`[${this.entityName}] Upsert Many`, props<{entities: EntityType[]}>()),
+      updateOne: createAction(`[${this.entityName}] Update One`, props<PropUpdate<EntityType>>()),
+      updateMany: createAction(`[${this.entityName}] Update Many`, props<PropUpdates<EntityType>>()),
+      upsertOne: createAction(`[${this.entityName}] Upsert One`, props<PropEntity<EntityType>>()),
+      upsertMany: createAction(`[${this.entityName}] Upsert Many`, props<PropEntities<EntityType>>()),
       map: createAction(`[${this.entityName}] Map`, props<{entityMap: EntityMap<EntityType>}>()),
     }
   }

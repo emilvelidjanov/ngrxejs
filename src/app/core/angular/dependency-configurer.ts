@@ -1,7 +1,8 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-export class DependencyConfigurer<DependencyType> {
 
+export class DependencyConfigurer<DependencyType> {
+  
   private token: InjectionToken<DependencyType>;
   private provider: Provider;
 
@@ -24,7 +25,6 @@ export class DependencyConfigurer<DependencyType> {
 }
 
 export interface DependencyConfiguration {
-  
   tokenDescription: string,
   dependencies: any[],
   factory: Function

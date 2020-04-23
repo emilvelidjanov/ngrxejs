@@ -10,7 +10,7 @@ import { IpcService } from './ipc-service';
 @Injectable()
 export class DefaultIpcService implements IpcService {
 
-  private ipcRenderer?: IpcRenderer;
+  private ipcRenderer: IpcRenderer;
 
   constructor(private electronService: ElectronService) { }
 

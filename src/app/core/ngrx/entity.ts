@@ -1,5 +1,4 @@
 export interface Entity {
-
   id: Id;
 }
 

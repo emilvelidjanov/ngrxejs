@@ -17,6 +17,7 @@ export const reducers: ActionReducerMap<FilesystemState> = {
   projects: projectsReducer,
   files: filesReducer,
 };
+
 export const metaReducers: MetaReducer<FilesystemState>[] = !environment.production ? [] : [];
 
 export const selectFilesystemFeature = createFeatureSelector<FilesystemState>(filesystemFeatureKey);

@@ -23,7 +23,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   ) { }
 
   openProject(): void {
-    const openDialog$ = this.filesystemService.openDialog(openProjectOptions);  //TODO: config service?
+    const openDialog$ = this.filesystemService.openDialog(openProjectOptions);
     const loadDirectory$ = openDialog$.pipe(
       switchMap((openDialogResult: OpenDialogResult) => this.loadDirectoryOfOpenedProject(openDialogResult)),
     );

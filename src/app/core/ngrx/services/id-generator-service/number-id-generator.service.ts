@@ -1,5 +1,6 @@
 import { IdGeneratorService } from './id-generator.service';
 
+
 export class NumberIdGeneratorService implements IdGeneratorService {
   
   nextId(usedIds: number[]): number {
