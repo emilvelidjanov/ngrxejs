@@ -15,6 +15,8 @@ export interface File extends Entity {
   fileIds: Id[],
 }
 
+export const entityName: string = "File";
+
 const initialState: Files = {
   ids: [],
   entities: {},
@@ -22,6 +24,6 @@ const initialState: Files = {
 }
 
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
-  "File",
+  entityName,
   initialState,
 );

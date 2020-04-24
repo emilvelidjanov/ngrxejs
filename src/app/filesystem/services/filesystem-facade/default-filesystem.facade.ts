@@ -37,7 +37,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       loadedDirectory: loadDirectory$
     }).pipe(take(1)).subscribe((result) => {
       if (!result.openedDialog.canceled) {
-        this.createAndDispatchProject(result.openedDialog, result.loadedDirectory);
+        this.createAndDispatchOpenProject(result.openedDialog, result.loadedDirectory);
       }
     }, (error: any) => console.error(error));
   }
@@ -51,10 +51,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return result;
   }
 
-  private createAndDispatchProject(openDialogResult: OpenDialogResult, loadDirectoryResult: LoadDirectoryResult[]) {
+  private createAndDispatchOpenProject(openDialogResult: OpenDialogResult, loadDirectoryResult: LoadDirectoryResult[]) {
     let files: File[] = this.fileService.createFiles(loadDirectoryResult);
     this.store.dispatch(fileActions.setAll({entities: files}));
     let project: Project = this.projectService.createProject(openDialogResult, files);
     this.store.dispatch(projectActions.setAll({entities: [project]}));
+    this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
   }
 }

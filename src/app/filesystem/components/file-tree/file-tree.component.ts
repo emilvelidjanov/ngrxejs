@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { filesystemServiceDep } from '../../services/filesystem-service/filesystem.service.dependency';
-import { FilesystemService, OpenDialogResult } from '../../services/filesystem-service/filesystem.service';
-import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
-import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { FilesystemState } from '../../store';
+import { projectSelectors } from '../../store/project/project.selector';
+import { Observable } from 'rxjs';
+import { Project } from '../../store/project/project.state';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -13,22 +15,14 @@ import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.fa
 })
 export class FileTreeComponent implements OnInit {
 
+  private openProject$: Observable<Project>;
+
   constructor(
-    @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
-    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
-  ) { }
+    private store: Store<FilesystemState>
+  ) {
+    this.openProject$ = this.store.pipe(select(projectSelectors.selectOpenProject));
+  }
 
   ngOnInit(): void {
   }
-
-  public runFilesystemService(): void {
-    this.filesystemService.openDialog().subscribe((data: OpenDialogResult) => {
-      console.log("FilesystemService:", data);
-    });
-  }
-
-  public runFilesystemFacade(): void {
-    this.filesystemFacade.openProject();
-  }
-
 }

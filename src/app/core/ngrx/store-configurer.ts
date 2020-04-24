@@ -44,21 +44,30 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
     return this.initialState;
   }
 
+  public getEntityName(): string {
+    return this.entityName;
+  }
+
+  public getActionType(type: string) {
+    const actionType = `[${this.entityName}] ${type}`;
+    return actionType;
+  }
+
   private initActions(): DefaultActions<EntityType> {
     return {
-      addOne: createAction(`[${this.entityName}] Add One`, props<PropEntity<EntityType>>()),
-      addMany: createAction(`[${this.entityName}] Add Many`, props<PropEntities<EntityType>>()),
-      setOne: createAction(`[${this.entityName}] Set One`, props<PropEntity<EntityType>>()),
-      setAll: createAction(`[${this.entityName}] Set All`, props<PropEntities<EntityType>>()),
-      removeOne: createAction(`[${this.entityName}] Remove One`, props<PropId>()),
-      removeMany: createAction(`[${this.entityName}] Remove Many`, props<PropIds>()),
-      removeByPredicate: createAction(`[${this.entityName}] Remove By Predicate`, props<PropPredicate<EntityType>>()),
-      removeAll: createAction(`[${this.entityName}] Remove All`),
-      updateOne: createAction(`[${this.entityName}] Update One`, props<PropUpdate<EntityType>>()),
-      updateMany: createAction(`[${this.entityName}] Update Many`, props<PropUpdates<EntityType>>()),
-      upsertOne: createAction(`[${this.entityName}] Upsert One`, props<PropEntity<EntityType>>()),
-      upsertMany: createAction(`[${this.entityName}] Upsert Many`, props<PropEntities<EntityType>>()),
-      map: createAction(`[${this.entityName}] Map`, props<{entityMap: EntityMap<EntityType>}>()),
+      addOne: createAction(this.getActionType("Add One"), props<PropEntity<EntityType>>()),
+      addMany: createAction(this.getActionType("Add Many"), props<PropEntities<EntityType>>()),
+      setOne: createAction(this.getActionType("Set One"), props<PropEntity<EntityType>>()),
+      setAll: createAction(this.getActionType("Set All"), props<PropEntities<EntityType>>()),
+      removeOne: createAction(this.getActionType("Remove One"), props<PropId>()),
+      removeMany: createAction(this.getActionType("Remove Many"), props<PropIds>()),
+      removeByPredicate: createAction(this.getActionType("Remove By Predicate"), props<PropPredicate<EntityType>>()),
+      removeAll: createAction(this.getActionType("Remove All")),
+      updateOne: createAction(this.getActionType("Update One"), props<PropUpdate<EntityType>>()),
+      updateMany: createAction(this.getActionType("Update Many"), props<PropUpdates<EntityType>>()),
+      upsertOne: createAction(this.getActionType("Upsert One"), props<PropEntity<EntityType>>()),
+      upsertMany: createAction(this.getActionType("Upsert Many"), props<PropEntities<EntityType>>()),
+      map: createAction(this.getActionType("Map"), props<{entityMap: EntityMap<EntityType>}>()),
     }
   }
 
@@ -128,34 +137,34 @@ export interface DefaultActions<T> {
   map: ActionCreator<string, (props: PropEntityMap<T>) => PropEntityMap<T> & TypedAction<string>>,
 }
 
-interface PropEntity<T> {
+export interface PropEntity<T> {
   entity: T,
 }
 
-interface PropEntities<T> {
+export interface PropEntities<T> {
   entities: T[],
 }
 
-interface PropId {
+export interface PropId {
   id: Id,
 }
 
-interface PropIds {
+export interface PropIds {
   ids: Id[],
 }
 
-interface PropPredicate<T> {
+export interface PropPredicate<T> {
   predicate: Predicate<T>,
 }
 
-interface PropUpdate<T> {
+export interface PropUpdate<T> {
   update: Update<T>,
 }
 
-interface PropUpdates<T> {
+export interface PropUpdates<T> {
   updates: Update<T>[],
 }
 
-interface PropEntityMap<T> {
+export interface PropEntityMap<T> {
   entityMap: EntityMap<T>,
 }

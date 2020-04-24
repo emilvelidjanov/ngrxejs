@@ -4,6 +4,7 @@ import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 
 export interface Projects extends EntityState<Project>{
+  openProjectId: Id;
 }
 
 export interface Project extends Entity {
@@ -12,12 +13,15 @@ export interface Project extends Entity {
   fileIds: Id[],
 }
 
+export const entityName: string = "Project";
+
 const initialState: Projects = {
   ids: [],
   entities: {},
+  openProjectId: null,
 }
 
 export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(
-  "Project",
+  entityName,
   initialState,
 );
