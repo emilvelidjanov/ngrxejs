@@ -38,8 +38,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     });
     openProject$.pipe(take(1)).subscribe(
       (result: OpenProjectResult) => this.createAndDispatchOpenedProject(result), 
-      console.error, 
-      console.log
+      (error: any) => console.error(error),
     );
   }
 

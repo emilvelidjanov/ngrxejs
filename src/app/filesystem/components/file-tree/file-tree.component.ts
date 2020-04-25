@@ -4,7 +4,7 @@ import { FilesystemState } from '../../store';
 import { projectSelectors } from '../../store/project/project.selector';
 import { Observable } from 'rxjs';
 import { Project } from '../../store/project/project.state';
-import { switchMap } from 'rxjs/operators';
+import { File } from '../../store/file/file.state';
 
 
 @Component({
@@ -15,12 +15,14 @@ import { switchMap } from 'rxjs/operators';
 })
 export class FileTreeComponent implements OnInit {
 
-  private openProject$: Observable<Project>;
+  project$: Observable<Project>;
+  files$: Observable<File[]>;
 
   constructor(
     private store: Store<FilesystemState>
   ) {
-    this.openProject$ = this.store.pipe(select(projectSelectors.selectOpenProject));
+    this.project$ = this.store.pipe(select(projectSelectors.selectOpenProject));
+    this.files$ = this.store.pipe(select(projectSelectors.selectOpenProjectFiles));
   }
 
   ngOnInit(): void {
