@@ -11,7 +11,7 @@ export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new
   tokenDescription: 'FilesystemService',
   dependencies: [
     ElectronService,
-    ipcServiceDep.getToken()
+    ipcServiceDep.getToken(),
   ],
   factory: (
     electronService: ElectronService,

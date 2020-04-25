@@ -30,19 +30,20 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions);
     const loadDirectory$ = openDialog$.pipe(
-      switchMap((openDialogResult: OpenDialogResult) => this.loadDirectoryOfOpenedProject(openDialogResult)),
+      switchMap((result: OpenDialogResult) => this.loadFirstDirectory(result)),
     );
-    forkJoin({
-      openedDialog: openDialog$,
+    const openProject$ = forkJoin({
+      openedDialog: openDialog$, 
       loadedDirectory: loadDirectory$
-    }).pipe(take(1)).subscribe((result) => {
-      if (!result.openedDialog.canceled) {
-        this.createAndDispatchOpenProject(result.openedDialog, result.loadedDirectory);
-      }
-    }, (error: any) => console.error(error));
+    });
+    openProject$.pipe(take(1)).subscribe(
+      (result: OpenProjectResult) => this.createAndDispatchOpenedProject(result), 
+      console.error, 
+      console.log
+    );
   }
 
-  private loadDirectoryOfOpenedProject(openDialogResult: OpenDialogResult): Observable<LoadDirectoryResult[]> {
+  private loadFirstDirectory(openDialogResult: OpenDialogResult): Observable<LoadDirectoryResult[]> {
     let result: Observable<LoadDirectoryResult[]> = of([]);
     if (!openDialogResult.canceled) {
       let path: string = openDialogResult.filePaths[0];
@@ -51,11 +52,18 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return result;
   }
 
-  private createAndDispatchOpenProject(openDialogResult: OpenDialogResult, loadDirectoryResult: LoadDirectoryResult[]) {
-    let files: File[] = this.fileService.createFiles(loadDirectoryResult);
-    this.store.dispatch(fileActions.setAll({entities: files}));
-    let project: Project = this.projectService.createProject(openDialogResult, files);
-    this.store.dispatch(projectActions.setAll({entities: [project]}));
-    this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
+  private createAndDispatchOpenedProject(openProjectResult: OpenProjectResult): void {
+    if (!openProjectResult.openedDialog.canceled) {
+      let files: File[] = this.fileService.createFiles(openProjectResult.loadedDirectory);
+      this.store.dispatch(fileActions.setAll({entities: files}));
+      let project: Project = this.projectService.createProject(openProjectResult.openedDialog, files);
+      this.store.dispatch(projectActions.setAll({entities: [project]}));
+      this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
+    }
   }
+}
+
+export interface OpenProjectResult {
+  openedDialog: OpenDialogResult,
+  loadedDirectory: LoadDirectoryResult[],
 }
