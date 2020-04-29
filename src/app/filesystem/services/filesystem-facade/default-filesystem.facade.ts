@@ -42,6 +42,17 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
   }
 
+  loadDirectory(file: File): void {
+    if (!file.isDirectory) {
+      throw new Error(`Cannot load '${file.path}' as it is not a directory`)
+    };
+    const loadDirectory$ = this.filesystemService.loadDirectory(file.path);
+    loadDirectory$.pipe(take(1)).subscribe(
+      (results: LoadDirectoryResult[]) => this.createAndDispatchLoadedDirectory(file, results),
+      (error: any) => console.error(error),
+    );
+  }
+
   private loadFirstDirectory(openDialogResult: OpenDialogResult): Observable<LoadDirectoryResult[]> {
     let result: Observable<LoadDirectoryResult[]> = of([]);
     if (!openDialogResult.canceled) {
@@ -51,14 +62,29 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return result;
   }
 
+  //TODO: make step as observable
   private createAndDispatchOpenedProject(openProjectResult: OpenProjectResult): void {
     if (!openProjectResult.openedDialog.canceled) {
       let files: File[] = this.fileService.createFiles(openProjectResult.loadedDirectory);
-      this.store.dispatch(fileActions.setAll({entities: files}));
       let project: Project = this.projectService.createProject(openProjectResult.openedDialog, files);
+      this.store.dispatch(fileActions.setAll({entities: files}));
       this.store.dispatch(projectActions.setAll({entities: [project]}));
       this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
     }
+  }
+
+  //TODO: make step as observable
+  private createAndDispatchLoadedDirectory(file: File, loadDirectoryResults: LoadDirectoryResult[]): void {
+    let newFiles: File[] = this.fileService.createFiles(loadDirectoryResults);
+    this.store.dispatch(fileActions.addMany({entities: newFiles}));
+    this.store.dispatch(fileActions.updateOne({
+      update: {
+        id: file.id as number,  //TODO: fix?
+        changes: {
+          fileIds: newFiles.map((file: File) => file.id)
+        }
+      }
+    }));
   }
 }
 

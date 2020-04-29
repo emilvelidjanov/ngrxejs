@@ -1,0 +1,9 @@
+<div class="text-light">
+  <ng-container *ngIf="file.isDirectory">
+    <button (click)="loadDirectory()">></button>
+  </ng-container>
+  {{file.name}}{{file.extension}}
+</div>
+<ng-container *ngFor="let nestedFile of nestedFiles$ | async">
+  <app-file-item [file]="nestedFile"></app-file-item>
+</ng-container>

@@ -19,12 +19,11 @@ export class FileTreeComponent implements OnInit {
   files$: Observable<File[]>;
 
   constructor(
-    private store: Store<FilesystemState>
-  ) {
-    this.project$ = this.store.pipe(select(projectSelectors.selectOpenProject));
-    this.files$ = this.store.pipe(select(projectSelectors.selectOpenProjectFiles));
-  }
+    private store: Store<FilesystemState>,
+  ) { }
 
   ngOnInit(): void {
+    this.project$ = this.store.pipe(select(projectSelectors.selectOpenProject));
+    this.files$ = this.store.pipe(select(projectSelectors.selectOpenProjectFiles));
   }
 }

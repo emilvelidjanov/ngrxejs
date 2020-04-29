@@ -3,10 +3,8 @@
     <div class="text-light">
       {{project.name}}
     </div>
-  </ng-container>
-  <ng-container *ngFor="let file of files$ | async">
-    <div class="text-light">
-      {{file.name}}{{file.extension}}
-    </div>
+    <ng-container *ngFor="let file of files$ | async">
+      <app-file-item [file]="file"></app-file-item>
+    </ng-container>
   </ng-container>
 </div>

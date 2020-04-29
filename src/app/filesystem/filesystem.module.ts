@@ -7,10 +7,11 @@ import { filesystemServiceDep } from './services/filesystem-service/filesystem.s
 import { filesystemFacadeDep } from './services/filesystem-facade/filesystem.facade.dependency';
 import { fileServiceDep } from './services/file-service/file.service.dependency';
 import { projectServiceDep } from './services/project-service/project.service.dependency';
+import { FileItemComponent } from './components/file-item/file-item.component';
 
 
 @NgModule({
-  declarations: [FileTreeComponent],
+  declarations: [FileTreeComponent, FileItemComponent],
   imports: [
     CommonModule,
     StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers: metaReducers })
@@ -23,7 +24,7 @@ export class FilesystemModule {
     return {
       ngModule: FilesystemModule,
       providers: [
-        filesystemServiceDep.getProvider(),
+        filesystemServiceDep.getProvider(), //TODO: don't expose services to root?
         filesystemFacadeDep.getProvider(),
         fileServiceDep.getProvider(),
         projectServiceDep.getProvider(),

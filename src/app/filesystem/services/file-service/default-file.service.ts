@@ -11,20 +11,20 @@ import { Id } from 'src/app/core/ngrx/entity';
 
 export class DefaultFileService implements FileService {
 
-  private usedIds: Id[];
+  private fileIds: Id[];  //TODO: make observable?
 
   constructor(
     private store: Store<Files>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
-    this.store.pipe(select(fileSelectors.selectIds)).subscribe((usedIds: Id[]) => {
-      this.usedIds = usedIds;
+    this.store.pipe(select(fileSelectors.selectIds)).subscribe((fileIds: Id[]) => {
+      this.fileIds = fileIds;
     });
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): File[] {
     let size: number = loadDirectoryResults.length;
-    let ids: Id[] = this.idGeneratorService.nextNIds(size, this.usedIds);
+    let ids: Id[] = this.idGeneratorService.nextNIds(size, this.fileIds);
     let files: File[] = ids.map((id: Id, index: number) => {
       return {
         id: id,
@@ -37,7 +37,7 @@ export class DefaultFileService implements FileService {
 
   createFile(loadDirectoryResult: LoadDirectoryResult): File {
     return {
-      id: this.idGeneratorService.nextId(this.usedIds),
+      id: this.idGeneratorService.nextId(this.fileIds),
       fileIds: [],
       ...loadDirectoryResult,
     }
