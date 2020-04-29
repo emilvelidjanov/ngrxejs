@@ -1,6 +1,6 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { EntitySelectors, Predicate, Update, EntityMap } from '@ngrx/entity/src/models';
-import { createAction, props, on, On, ActionCreator } from '@ngrx/store';
+import { EntitySelectors, Predicate, Update, EntityMap, Dictionary } from '@ngrx/entity/src/models';
+import { createAction, props, on, On, ActionCreator, createSelector } from '@ngrx/store';
 import { Id, Entity } from './entity';
 import { TypedAction } from '@ngrx/store/src/models';
 
@@ -24,8 +24,23 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
     this.reducers = this.initReducerFunctions();
   }
 
-  public getSelectors(collectionSelector: (state: object) => CollectionType): EntitySelectors<EntityType, object> {
-    return this.adapter.getSelectors(collectionSelector);
+  //TODO: fix circular dependencies with this
+  public getSelectors(collectionSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
+    const defSelectors = this.adapter.getSelectors( collectionSelector);
+    const selectEntityById = createSelector(
+      defSelectors.selectEntities, 
+      (entities: Dictionary<EntityType>, props: {id: Id}) => entities[props.id],
+    );
+    const selectEntitiesByIds = createSelector(
+      defSelectors.selectEntities, 
+      (entities: Dictionary<EntityType>, props: {ids: Id[]}) => props.ids.map((id: Id) => entities[id]),
+    );
+    const selectors: DefaultSelectors<EntityType> = {
+      ...defSelectors,
+      selectEntityById: selectEntityById,
+      selectEntitiesByIds: selectEntitiesByIds,
+    }
+    return selectors;
   }
 
   public getActions(): DefaultActions<EntityType> {
@@ -119,6 +134,11 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
       }),
     ]
   }
+}
+
+export interface DefaultSelectors<T> extends EntitySelectors<T, object> {
+  selectEntityById: (state: object, props: {id: Id}) => T;
+  selectEntitiesByIds: (state: object, props: {ids: Id[]}) => T[];
 }
 
 export interface DefaultActions<T> {
