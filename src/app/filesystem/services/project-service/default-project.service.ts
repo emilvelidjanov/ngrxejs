@@ -8,19 +8,23 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { projectSelectors } from '../../store/project/project.selector';
 import { Id } from 'src/app/core/ngrx/entity';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 
 export class DefaultProjectService implements ProjectService {
 
-  private usedIds: Id[];
+  private projectIds: Id[];
+  private projectIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Projects>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
     this.store.pipe(select(projectSelectors.selectIds)).subscribe((usedIds: Id[]) => {  //TODO: externalize this logic...
-      this.usedIds = usedIds;
+      this.projectIds = usedIds;
     });
+    this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
   createProject(openDialogResult: OpenDialogResult, files: File[]): Project {
@@ -28,7 +32,28 @@ export class DefaultProjectService implements ProjectService {
       throw new Error(`Cannot create project: OpenDialogResult has ${openDialogResult.filePaths.length} entries.`);
     }
     return {
-      id: this.idGeneratorService.nextId(this.usedIds),
+      id: this.idGeneratorService.nextId(this.projectIds),
+      directory: openDialogResult.filePaths[0],
+      name: openDialogResult.filenames[0],
+      fileIds: files.map((file: File) => file.id),
+    }
+  }
+
+  createProject$(openDialogResult: OpenDialogResult, files: File[]): Observable<Project> {
+    if (openDialogResult.filePaths.length != 1) {
+      throw new Error(`Cannot create project: OpenDialogResult has ${openDialogResult.filePaths.length} entries.`);
+    }
+    const project$ = this.projectIds$.pipe(
+      map((ids: Id[]) => this.idGeneratorService.nextId(ids)),
+      map((nextId: Id) => this.mapToProject(nextId, openDialogResult, files)),
+      take(1)
+    )
+    return project$;
+  }
+
+  private mapToProject(id: Id, openDialogResult: OpenDialogResult, files: File[]): Project {
+    return {
+      id: id,
       directory: openDialogResult.filePaths[0],
       name: openDialogResult.filenames[0],
       fileIds: files.map((file: File) => file.id),

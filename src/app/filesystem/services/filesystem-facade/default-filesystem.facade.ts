@@ -5,8 +5,8 @@ import { filesystemServiceDep } from '../filesystem-service/filesystem.service.d
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
 import { FilesystemState } from 'src/app/filesystem/store';
 import { Store } from '@ngrx/store';
-import { forkJoin, of, Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { switchMap, take, filter } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { File } from '../../store/file/file.state';
@@ -28,18 +28,26 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   ) { }
 
   openProject(): void {
-    const openDialog$ = this.filesystemService.openDialog(openProjectOptions);
-    const loadDirectory$ = openDialog$.pipe(
-      switchMap((result: OpenDialogResult) => this.loadFirstDirectory(result)),
+    const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
+      filter((result: OpenDialogResult) => !result.canceled)
     );
-    const openProject$ = forkJoin({
-      openedDialog: openDialog$, 
-      loadedDirectory: loadDirectory$
-    });
-    openProject$.pipe(take(1)).subscribe(
-      (result: OpenProjectResult) => this.createAndDispatchOpenedProject(result), 
-      (error: any) => console.error(error),
+    const createFiles$ = openDialog$.pipe(
+      switchMap((result: OpenDialogResult) => this.filesystemService.loadDirectory(result.filePaths[0])),
+      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles$(results))
     );
+    const openDirectory$ = forkJoin([openDialog$, createFiles$]);
+    const createProject$ = openDirectory$.pipe(
+      switchMap(([openedDialog, createdFiles]) => this.projectService.createProject$(openedDialog, createdFiles)),
+    )
+    const dispatch$ = forkJoin([createFiles$, createProject$]);
+    dispatch$.pipe(take(1)).subscribe(([createdFiles, createdProject]) => {
+      let files: File[] = createdFiles;
+      let project: Project = createdProject;
+      this.store.dispatch(fileActions.setAll({entities: files}));
+      this.store.dispatch(projectActions.setAll({entities: [project]}));
+      this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
+    }, 
+    console.error);
   }
 
   loadDirectory(file: File): void {
@@ -51,26 +59,6 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       (results: LoadDirectoryResult[]) => this.createAndDispatchLoadedDirectory(file, results),
       (error: any) => console.error(error),
     );
-  }
-
-  private loadFirstDirectory(openDialogResult: OpenDialogResult): Observable<LoadDirectoryResult[]> {
-    let result: Observable<LoadDirectoryResult[]> = of([]);
-    if (!openDialogResult.canceled) {
-      let path: string = openDialogResult.filePaths[0];
-      result = this.filesystemService.loadDirectory(path);
-    }
-    return result;
-  }
-
-  //TODO: make step as observable
-  private createAndDispatchOpenedProject(openProjectResult: OpenProjectResult): void {
-    if (!openProjectResult.openedDialog.canceled) {
-      let files: File[] = this.fileService.createFiles(openProjectResult.loadedDirectory);
-      let project: Project = this.projectService.createProject(openProjectResult.openedDialog, files);
-      this.store.dispatch(fileActions.setAll({entities: files}));
-      this.store.dispatch(projectActions.setAll({entities: [project]}));
-      this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
-    }
   }
 
   //TODO: make step as observable
@@ -86,9 +74,4 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       }
     }));
   }
-}
-
-export interface OpenProjectResult {
-  openedDialog: OpenDialogResult,
-  loadedDirectory: LoadDirectoryResult[],
 }
