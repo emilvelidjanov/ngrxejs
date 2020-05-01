@@ -10,11 +10,8 @@ import { switchMap, take, filter } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { File } from '../../store/file/file.state';
-import { fileActions } from '../../store/file/file.action';
 import { projectServiceDep } from '../project-service/project.service.dependency';
 import { ProjectService } from '../project-service/project.service';
-import { Project } from '../../store/project/project.state';
-import { projectActions } from '../../store/project/project.action';
 
 
 @Injectable()
@@ -33,45 +30,29 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const createFiles$ = openDialog$.pipe(
       switchMap((result: OpenDialogResult) => this.filesystemService.loadDirectory(result.filePaths[0])),
-      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles$(results))
+      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
     );
     const openDirectory$ = forkJoin([openDialog$, createFiles$]);
     const createProject$ = openDirectory$.pipe(
-      switchMap(([openedDialog, createdFiles]) => this.projectService.createProject$(openedDialog, createdFiles)),
-    )
+      switchMap(([openedDialog, createdFiles]) => this.projectService.createProject(openedDialog, createdFiles)),
+    );
     const dispatch$ = forkJoin([createFiles$, createProject$]);
     dispatch$.pipe(take(1)).subscribe(([createdFiles, createdProject]) => {
-      let files: File[] = createdFiles;
-      let project: Project = createdProject;
-      this.store.dispatch(fileActions.setAll({entities: files}));
-      this.store.dispatch(projectActions.setAll({entities: [project]}));
-      this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
+      this.fileService.dispatchSetAll(createdFiles);
+      this.projectService.dispatchOpenedProject(createdProject);
     }, 
     console.error);
   }
 
   loadDirectory(file: File): void {
-    if (!file.isDirectory) {
-      throw new Error(`Cannot load '${file.path}' as it is not a directory`)
+    if (file.isDirectory && !file.isDirectoryLoaded) {
+      const loadDirectory$ = this.filesystemService.loadDirectory(file.path);
+      const createFiles$ = loadDirectory$.pipe(
+        switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
+      );
+      createFiles$.subscribe((files: File[]) => {
+        this.fileService.dispatchLoadedDirectory(file, files);
+      });
     };
-    const loadDirectory$ = this.filesystemService.loadDirectory(file.path);
-    loadDirectory$.pipe(take(1)).subscribe(
-      (results: LoadDirectoryResult[]) => this.createAndDispatchLoadedDirectory(file, results),
-      (error: any) => console.error(error),
-    );
-  }
-
-  //TODO: make step as observable
-  private createAndDispatchLoadedDirectory(file: File, loadDirectoryResults: LoadDirectoryResult[]): void {
-    let newFiles: File[] = this.fileService.createFiles(loadDirectoryResults);
-    this.store.dispatch(fileActions.addMany({entities: newFiles}));
-    this.store.dispatch(fileActions.updateOne({
-      update: {
-        id: file.id as number,  //TODO: fix?
-        changes: {
-          fileIds: newFiles.map((file: File) => file.id)
-        }
-      }
-    }));
   }
 }

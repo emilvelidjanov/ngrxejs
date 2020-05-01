@@ -27,9 +27,7 @@ export class FileItemComponent implements OnInit {
     this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, {ids: this.file.fileIds}));
   }
 
-  loadDirectory(): void {
-    if (this.file.isDirectory) {
-      this.filesystemFacade.loadDirectory(this.file);
-    }
+  openDirectory(): void {
+    this.filesystemFacade.loadDirectory(this.file);
   }
 }

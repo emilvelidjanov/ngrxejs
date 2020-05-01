@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 export interface FileService {
 
-  createFiles(loadDirectoryResult: LoadDirectoryResult[]): File[];  //TODO: make observable?
-  createFile(loadDirectoryResult: LoadDirectoryResult): File;
-  createFiles$(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]>;
+  createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]>;
+  dispatchSetAll(files: File[]): void;
+  dispatchLoadedDirectory(directory: File, files: File[]): void;
 }

@@ -10,36 +10,21 @@ import { projectSelectors } from '../../store/project/project.selector';
 import { Id } from 'src/app/core/ngrx/entity';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { projectActions } from '../../store/project/project.action';
 
 
 export class DefaultProjectService implements ProjectService {
 
-  private projectIds: Id[];
   private projectIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Projects>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
-    this.store.pipe(select(projectSelectors.selectIds)).subscribe((usedIds: Id[]) => {  //TODO: externalize this logic...
-      this.projectIds = usedIds;
-    });
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
-  createProject(openDialogResult: OpenDialogResult, files: File[]): Project {
-    if (openDialogResult.filePaths.length != 1) {
-      throw new Error(`Cannot create project: OpenDialogResult has ${openDialogResult.filePaths.length} entries.`);
-    }
-    return {
-      id: this.idGeneratorService.nextId(this.projectIds),
-      directory: openDialogResult.filePaths[0],
-      name: openDialogResult.filenames[0],
-      fileIds: files.map((file: File) => file.id),
-    }
-  }
-
-  createProject$(openDialogResult: OpenDialogResult, files: File[]): Observable<Project> {
+  createProject(openDialogResult: OpenDialogResult, files: File[]): Observable<Project> {
     if (openDialogResult.filePaths.length != 1) {
       throw new Error(`Cannot create project: OpenDialogResult has ${openDialogResult.filePaths.length} entries.`);
     }
@@ -49,6 +34,11 @@ export class DefaultProjectService implements ProjectService {
       take(1)
     )
     return project$;
+  }
+
+  dispatchOpenedProject(project: Project): void {
+    this.store.dispatch(projectActions.setAll({entities: [project]}));
+    this.store.dispatch(projectActions.setOpenProjectId({id: project.id}));
   }
 
   private mapToProject(id: Id, openDialogResult: OpenDialogResult, files: File[]): Project {
