@@ -29,7 +29,7 @@ export class DefaultFileService implements FileService {
       map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
       map((nextIds: Id[]) => this.mapToFiles(nextIds, loadDirectoryResults)),
       take(1)
-    )
+    );
     return files$;
   }
 
