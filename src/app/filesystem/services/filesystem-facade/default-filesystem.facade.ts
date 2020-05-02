@@ -5,8 +5,8 @@ import { filesystemServiceDep } from '../filesystem-service/filesystem.service.d
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
 import { FilesystemState } from 'src/app/filesystem/store';
 import { Store } from '@ngrx/store';
-import { forkJoin } from 'rxjs';
-import { switchMap, take, filter, share } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { switchMap, filter, share } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { File } from '../../store/file/file.state';
@@ -29,19 +29,16 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       filter((result: OpenDialogResult) => !result.canceled), 
       share()
     );
-    const loadDirectory$ = openDialog$.pipe(
-      switchMap((result: OpenDialogResult) => this.filesystemService.loadDirectory(result.filePaths[0])),
+    const loadAndCreateFiles$ = openDialog$.pipe(
+      switchMap((result: OpenDialogResult) => this.loadDirectoryAndCreateFiles(result.filePaths[0])),
       share()
     )
-    const createFiles$ = loadDirectory$.pipe(
-      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
-    );
-    const openDirectory$ = forkJoin([openDialog$, createFiles$]);
+    const openDirectory$ = forkJoin([openDialog$, loadAndCreateFiles$]);
     const createProject$ = openDirectory$.pipe(
       switchMap(([openedDialog, createdFiles]) => this.projectService.createProject(openedDialog, createdFiles)),
     );
-    const dispatch$ = forkJoin([createFiles$, createProject$]);
-    dispatch$.pipe(take(1)).subscribe(([createdFiles, createdProject]) => {
+    const dispatch$ = forkJoin([loadAndCreateFiles$, createProject$]);
+    dispatch$.subscribe(([createdFiles, createdProject]) => {
       this.fileService.dispatchSetAll(createdFiles);
       this.projectService.dispatchOpenedProject(createdProject);
     }, 
@@ -50,13 +47,17 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   loadDirectory(file: File): void {
     if (file.isDirectory && !file.isDirectoryLoaded) {
-      const loadDirectory$ = this.filesystemService.loadDirectory(file.path).pipe(share());
-      const createFiles$ = loadDirectory$.pipe(
-        switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
-      );
-      createFiles$.pipe(take(1)).subscribe((files: File[]) => {
+      const loadAndCreateFiles$ = this.loadDirectoryAndCreateFiles(file.path);
+      loadAndCreateFiles$.subscribe((files: File[]) => {
         this.fileService.dispatchLoadedDirectory(file, files);
       });
     };
+  }
+
+  private loadDirectoryAndCreateFiles(path: string): Observable<File[]> {
+    const loadAndCreateFiles$ = this.filesystemService.loadDirectory(path).pipe(
+      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
+    );
+    return loadAndCreateFiles$;
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from '../electron-service/electron.service';
-import { IpcRenderer } from 'electron';
+import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { Observable, fromEvent } from 'rxjs';
-import { map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { IpcService } from './ipc-service';
 
 
@@ -19,12 +19,16 @@ export class DefaultIpcService implements IpcService {
       this.initializeIpcRenderer();
     }
     if (!request.responseChannel) {
-      request.responseChannel = `${channel}_response_${new Date().getTime()}`;
+      const random: number = Math.floor(Math.random() * Math.floor(99999));
+      request.responseChannel = `${channel}_response_${new Date().getTime()}_${random}`;
     }
     const ipcRenderer = this.ipcRenderer;
     ipcRenderer.send(channel, request);
-    return fromEvent<any[]>(ipcRenderer, request.responseChannel)
-    .pipe(map((value: any[]) => value[1]));
+    const response$ = fromEvent<[IpcRendererEvent, any]>(ipcRenderer, request.responseChannel).pipe(
+      map(([_event, response]) => response),
+      take(1)
+    );
+    return response$;
   }
 
   private initializeIpcRenderer() {
