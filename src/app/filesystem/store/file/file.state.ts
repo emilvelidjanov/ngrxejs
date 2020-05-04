@@ -12,6 +12,7 @@ export interface File extends Entity {
   extension: string,
   isDirectory: boolean,
   isDirectoryLoaded: boolean,
+  isDirectoryOpened: boolean,
   fileIds: Id[],
 }
 

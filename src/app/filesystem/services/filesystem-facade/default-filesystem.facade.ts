@@ -45,13 +45,16 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     console.error);
   }
 
-  loadDirectory(file: File): void {
-    if (file.isDirectory && !file.isDirectoryLoaded) {
-      const loadAndCreateFiles$ = this.loadDirectoryAndCreateFiles(file.path);
-      loadAndCreateFiles$.subscribe((files: File[]) => {
-        this.fileService.dispatchLoadedDirectory(file, files);
-      });
-    };
+  openDirectory(file: File): void {
+    if (file.isDirectory) {
+      if (!file.isDirectoryLoaded) {
+        const loadAndCreateFiles$ = this.loadDirectoryAndCreateFiles(file.path);
+        loadAndCreateFiles$.subscribe((files: File[]) => {
+          this.fileService.dispatchLoadedDirectory(file, files);
+        });
+      };
+      this.fileService.dispatchOpenedDirectory(file);
+    }
   }
 
   private loadDirectoryAndCreateFiles(path: string): Observable<File[]> {

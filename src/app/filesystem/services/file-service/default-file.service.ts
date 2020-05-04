@@ -48,12 +48,22 @@ export class DefaultFileService implements FileService {
     }}));
   }
 
+  dispatchOpenedDirectory(directory: File): void {
+    this.store.dispatch(fileActions.updateOne({update: {
+      id: directory.id as number,
+      changes: {
+        isDirectoryOpened: !directory.isDirectoryOpened
+      }
+    }}));
+  }
+
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     let files: File[] = ids.map((id: Id, index: number) => {
       return {
         id: id,
         fileIds: [],
         isDirectoryLoaded: false,
+        isDirectoryOpened: false,
         ...loadDirectoryResults[index],
       }
     });

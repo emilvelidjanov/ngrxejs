@@ -5,7 +5,9 @@
     </ng-container>
     {{file.name}}{{file.extension}}
   </div>
-  <ng-container *ngFor="let nestedFile of nestedFiles$ | async">
-    <app-file-item [file]="nestedFile"></app-file-item>
+  <ng-container *ngIf="file.isDirectoryOpened">
+    <ng-container *ngFor="let nestedFile of nestedFiles$ | async">
+      <app-file-item [file]="nestedFile"></app-file-item>
+    </ng-container>
   </ng-container>
 </div>

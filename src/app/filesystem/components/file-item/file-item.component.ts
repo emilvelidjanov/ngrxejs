@@ -28,6 +28,6 @@ export class FileItemComponent implements OnInit {
   }
 
   openDirectory(): void {
-    this.filesystemFacade.loadDirectory(this.file);
+    this.filesystemFacade.openDirectory(this.file);
   }
 }

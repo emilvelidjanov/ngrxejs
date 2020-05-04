@@ -18,7 +18,6 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
     let path: string = request.params;
     FsUtils.readDirectory(path).subscribe((files: Dirent[]) => {
       let response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
-      console.log(response);
       event.reply(request.responseChannel, response);
     }, (error: any) => {
       console.error(error);
