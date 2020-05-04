@@ -3,7 +3,7 @@ import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 import { Project, Projects } from '../../store/project/project.state';
 import { File } from '../../store/file/file.state';
 import { Store, select } from '@ngrx/store';
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { projectSelectors } from '../../store/project/project.selector';
@@ -11,14 +11,18 @@ import { Id } from 'src/app/core/ngrx/entity';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { projectActions } from '../../store/project/project.action';
+import { fileServiceDep } from '../file-service/file.service.dependency';
+import { FileService } from '../file-service/file.service';
 
 
+@Injectable()
 export class DefaultProjectService implements ProjectService {
 
   private projectIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Projects>,
+    @Inject(fileServiceDep.getToken()) private fileService: FileService,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
@@ -46,7 +50,7 @@ export class DefaultProjectService implements ProjectService {
       id: id,
       directory: openDialogResult.filePaths[0],
       name: openDialogResult.filenames[0],
-      fileIds: files.map((file: File) => file.id),
+      fileIds: this.fileService.sortFilesDefault(files).map((file: File) => file.id),
     }
   }
 }
