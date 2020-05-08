@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MenuComponent } from './components/menu/menu.component';
 import { MenuItemComponent } from './components/menu-item/menu-item.component';
 import { StoreModule } from '@ngrx/store';
-import { menuFeatureKey, reducers, metaReducers } from './reducers';
+import { menuFeatureKey, reducers, metaReducers } from './store/reducers';
 
 
 @NgModule({

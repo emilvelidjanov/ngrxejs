@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MenuItemState } from '../../state/menu-item.state';
-
+import { MenuItemState } from '../../store/state/menu-item.state';
 
 
 @Component({

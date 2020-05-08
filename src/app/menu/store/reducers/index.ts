@@ -1,5 +1,5 @@
-import { ActionReducerMap, MetaReducer, createSelector } from '@ngrx/store';
-import { environment } from '../../../environments/environment';
+import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { environment } from '../../../../environments/environment';
 import { MenuState } from '../state/menu.state';
 import { reducer } from './menu.reducer';
 

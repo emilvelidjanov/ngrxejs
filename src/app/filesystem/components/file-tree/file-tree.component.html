@@ -1,0 +1,10 @@
+<div class="bg-dark">
+  <ng-container *ngIf="project$ | async as project">
+    <div class="text-light">
+      {{project.name}}
+    </div>
+    <ng-container *ngFor="let file of files$ | async">
+      <app-file-item [file]="file"></app-file-item>
+    </ng-container>
+  </ng-container>
+</div>
