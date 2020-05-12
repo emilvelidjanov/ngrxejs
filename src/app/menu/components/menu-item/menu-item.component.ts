@@ -1,5 +1,10 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MenuItemState } from '../../store/state/menu-item.state';
+import { Component, OnInit, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { menuItemSelectors } from '../../store/menu-item/menu-item.selector';
+import { menuFacadeDep } from '../../services/menu-facade/menu.facade.dependency';
+import { MenuFacade } from '../../services/menu-facade/menu.facade';
 
 
 @Component({
@@ -10,15 +15,19 @@ import { MenuItemState } from '../../store/state/menu-item.state';
 })
 export class MenuItemComponent implements OnInit {
 
-  @Input() public menuItem: MenuItemState;
+  @Input() public menuItem: MenuItem;
+  public nestedMenuItems$: Observable<MenuItem[]>;
 
-  constructor() { }
+  constructor(
+    private store: Store<MenuItems>,
+    @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
+  ) { }
 
   ngOnInit(): void {
+    this.nestedMenuItems$ = this.store.pipe(select(menuItemSelectors.selectEntitiesByIds, {ids: this.menuItem.menuItemIds}));
   }
 
   public click($event: MouseEvent): void {
-    if (this.menuItem.click) this.menuItem.click($event);
+    this.menuFacade.resolveMenuItemClick(this.menuItem.id);
   }
-
 }

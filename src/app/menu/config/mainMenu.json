@@ -1,0 +1,9 @@
+{
+  "id": "mainMenu",
+  "title": "ngrxejs",
+  "image": "assets/img/ngrx.png",
+  "menuItemIds": [
+    "openProject",
+    "test"
+  ]
+}
