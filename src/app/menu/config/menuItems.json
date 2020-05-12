@@ -1,0 +1,31 @@
+[
+  {
+    "id": "openProject",
+    "label": "Open project...",
+    "menuItemIds": []
+  },
+  {
+    "id": "test",
+    "label": "Test menu item",
+    "menuItemIds": [
+      "nestedTest1",
+      "nestedTest2",
+      "nestedTest3"
+    ]
+  },
+  {
+    "id": "nestedTest1",
+    "label": "Nested test button 1",
+    "menuItemIds": []
+  },
+  {
+    "id": "nestedTest2",
+    "label": "Nested 2",
+    "menuItemIds": []
+  },
+  {
+    "id": "nestedTest3",
+    "label": "Nested 3",
+    "menuItemIds": []
+  }
+]
