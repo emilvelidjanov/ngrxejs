@@ -10,7 +10,7 @@ export class DefaultSortService implements SortService {
       let result: number = sort.primarySort(a, b);
       if (!result && sort.secondarySort) {
         result = sort.secondarySort(a, b);
-      };
+      }
       return result;
     });
   }

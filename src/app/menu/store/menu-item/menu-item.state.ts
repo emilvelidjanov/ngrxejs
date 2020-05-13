@@ -6,16 +6,16 @@ export interface MenuItems extends EntityState<MenuItem> {
 }
 
 export interface MenuItem extends Entity {
-  label: string,
-  menuItemIds: Id[],
+  label: string;
+  menuItemIds: Id[];
 }
 
-export const entityName: string = "MenuItem";
+export const entityName = 'MenuItem';
 
 const initialState: MenuItems = {
   ids: [],
   entities: {},
-}
+};
 
 export const menuItemStoreConfig: StoreConfigurer<MenuItem, MenuItems> = new StoreConfigurer(
   entityName,

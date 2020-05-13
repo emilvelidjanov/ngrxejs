@@ -1,4 +1,4 @@
-import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 
 const buildSpecificModules = [

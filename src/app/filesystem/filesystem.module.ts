@@ -14,21 +14,21 @@ import { FileItemComponent } from './components/file-item/file-item.component';
   declarations: [FileTreeComponent, FileItemComponent],
   imports: [
     CommonModule,
-    StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers: metaReducers })
+    StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers })
   ],
   exports: [FileTreeComponent]
 })
-export class FilesystemModule { 
-  
+export class FilesystemModule {
+
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FilesystemModule,
       providers: [
-        filesystemServiceDep.getProvider(), //TODO: don't expose services to root?
+        filesystemServiceDep.getProvider(), // TODO: don't expose services to root?
         filesystemFacadeDep.getProvider(),
         fileServiceDep.getProvider(),
         projectServiceDep.getProvider(),
       ]
-    }
+    };
   }
 }

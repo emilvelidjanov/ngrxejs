@@ -2,7 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 
 
 export class DependencyConfigurer<DependencyType> {
-  
+
   private token: InjectionToken<DependencyType>;
   private provider: Provider;
 
@@ -12,7 +12,7 @@ export class DependencyConfigurer<DependencyType> {
       provide: this.token,
       useFactory: configuration.factory,
       deps: configuration.dependencies
-    }
+    };
   }
 
   public getToken(): InjectionToken<DependencyType> {
@@ -25,7 +25,7 @@ export class DependencyConfigurer<DependencyType> {
 }
 
 export interface DependencyConfiguration {
-  tokenDescription: string,
-  dependencies: any[],
-  factory: Function
+  tokenDescription: string;
+  dependencies: any[];
+  factory: Function;
 }

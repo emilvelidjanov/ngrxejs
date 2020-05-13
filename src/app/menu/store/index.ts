@@ -9,8 +9,8 @@ import { Menus } from './menu/menu.state';
 export const menuFeatureKey = 'menu';
 
 export interface MenuState {
-  menuItems: MenuItems,
-  menus: Menus,
+  menuItems: MenuItems;
+  menus: Menus;
 }
 
 export const reducers: ActionReducerMap<MenuState> = {

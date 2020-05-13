@@ -9,21 +9,21 @@ export interface Files extends EntityState<File> {
 }
 
 export interface File extends Entity {
-  path: string,
-  name: string,
-  extension: string,
-  isDirectory: boolean,
-  fileIds: Id[],
+  path: string;
+  name: string;
+  extension: string;
+  isDirectory: boolean;
+  fileIds: Id[];
 }
 
-export const entityName: string = "File";
+export const entityName = 'File';
 
 const initialState: Files = {
   ids: [],
   entities: {},
   loadedDirectoryIds: [],
   openedDirectoryIds: [],
-}
+};
 
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
   entityName,

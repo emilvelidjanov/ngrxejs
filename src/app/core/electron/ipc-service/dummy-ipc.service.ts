@@ -10,6 +10,6 @@ export class DummyIpcService implements IpcService {
   constructor() { }
 
   public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
-    throw new Error("DummyIpcService#send is dummy method. Do not call.");
+    throw new Error('DummyIpcService#send is dummy method. Do not call.');
   }
 }

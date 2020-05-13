@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
     @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
   ) {
-    this.mainMenuId = "mainMenu";
+    this.mainMenuId = 'mainMenu';
   }
 
   ngOnInit(): void { }

@@ -6,6 +6,6 @@ export interface SortService {
 export type SortFunction<Type> = (a: Type, b: Type) => number;
 export interface Sort<Type> {
 
-  primarySort: SortFunction<Type>,
-  secondarySort?: SortFunction<Type>
+  primarySort: SortFunction<Type>;
+  secondarySort?: SortFunction<Type>;
 }

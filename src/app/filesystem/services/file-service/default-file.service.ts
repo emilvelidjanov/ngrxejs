@@ -44,9 +44,9 @@ export class DefaultFileService implements FileService {
   sortFilesDefault(file: File[]): File[] {
     return this.sortService.sort(file, {
       primarySort: (a, b) => {
-        if (a.isDirectory === b.isDirectory) return 0;
-        if (a.isDirectory) return -1;
-        if (b.isDirectory) return 1;
+        if (a.isDirectory === b.isDirectory) { return 0; }
+        if (a.isDirectory) { return -1; }
+        if (b.isDirectory) { return 1; }
       },
       secondarySort: (a, b) => a.name.localeCompare(b.name)
     });
@@ -60,7 +60,7 @@ export class DefaultFileService implements FileService {
     this.store.dispatch(fileActions.addMany({ entities: files }));
     this.store.dispatch(fileActions.updateOne({
       update: {
-        id: directory.id as number, //TODO: fix...
+        id: directory.id as number, // TODO: fix...
         changes: {
           fileIds: this.sortFilesDefault(files).map((file: File) => file.id),
         }
@@ -88,12 +88,12 @@ export class DefaultFileService implements FileService {
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
-    let files: File[] = ids.map((id: Id, index: number) => {
-      let file: File = {
-        id: id,
+    const files: File[] = ids.map((id: Id, index: number) => {
+      const file: File = {
+        id,
         fileIds: [],
         ...loadDirectoryResults[index],
-      }
+      };
       return file;
     });
     return files;

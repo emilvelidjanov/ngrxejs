@@ -12,14 +12,14 @@ import { menuServiceDep } from './services/menu-service/menu.service.dependency'
 @NgModule({
   declarations: [MenuComponent, MenuItemComponent],
   imports: [
-    CommonModule, 
-    StoreModule.forFeature(menuFeatureKey, reducers, { metaReducers: metaReducers })
+    CommonModule,
+    StoreModule.forFeature(menuFeatureKey, reducers, { metaReducers })
   ],
   providers: [],
   exports: [MenuComponent]
 })
 export class MenuModule {
-  
+
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MenuModule,
@@ -28,6 +28,6 @@ export class MenuModule {
         menuItemServiceDep.getProvider(),
         menuServiceDep.getProvider(),
       ]
-    }
+    };
   }
 }

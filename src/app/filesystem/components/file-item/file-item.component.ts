@@ -15,7 +15,7 @@ import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem
 })
 export class FileItemComponent implements OnInit {
 
-  @Input("file") file: File;
+  @Input() file: File;
   nestedFiles$: Observable<File[]>;
   isOpenedDirectory$: Observable<boolean>;
 

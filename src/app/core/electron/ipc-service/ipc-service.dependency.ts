@@ -9,8 +9,8 @@ export const ipcServiceDep: DependencyConfigurer<IpcService> = new DependencyCon
   tokenDescription: 'IpcService',
   dependencies: [ElectronService],
   factory: (electronService: ElectronService) => {
-    let isElectron: boolean = electronService.isElectron();
-    let ipcService: IpcService = isElectron ?
+    const isElectron: boolean = electronService.isElectron();
+    const ipcService: IpcService = isElectron ?
       new DefaultIpcService(electronService) :
       new DummyIpcService();
     return ipcService;

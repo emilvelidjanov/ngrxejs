@@ -17,9 +17,9 @@ export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new
     electronService: ElectronService,
     ipcService: IpcService,
   ) => {
-    let isElectron: boolean = electronService.isElectron();
-    let filesystemService: FilesystemService = isElectron ? 
-      new LocalFilesystemService(ipcService) : 
+    const isElectron: boolean = electronService.isElectron();
+    const filesystemService: FilesystemService = isElectron ?
+      new LocalFilesystemService(ipcService) :
       new RemoteFilesystemService();
     return filesystemService;
   }

@@ -13,6 +13,6 @@ const selectOpenedDirectoryIds = createSelector(selectFiles,
 
 export const fileSelectors = {
   ...defSelectors,
-  selectLoadedDirectoryIds: selectLoadedDirectoryIds,
-  selectOpenedDirectoryIds: selectOpenedDirectoryIds,
+  selectLoadedDirectoryIds,
+  selectOpenedDirectoryIds,
 };

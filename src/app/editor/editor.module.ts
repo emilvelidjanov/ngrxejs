@@ -11,12 +11,12 @@ import { EditorComponent } from './editor/editor.component';
   providers: [],
   exports: [EditorComponent]
 })
-export class EditorModule { 
-  
+export class EditorModule {
+
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: EditorModule,
       providers: []
-    }
+    };
   }
 }

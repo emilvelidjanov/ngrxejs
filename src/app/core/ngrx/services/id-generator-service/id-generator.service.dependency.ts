@@ -8,7 +8,7 @@ export const numberIdGeneratorServiceDep: DependencyConfigurer<IdGeneratorServic
   tokenDescription: 'NumberIdGeneratorService',
   dependencies: [],
   factory: () => {
-    return new NumberIdGeneratorService()
+    return new NumberIdGeneratorService();
   },
 });
 
@@ -16,6 +16,6 @@ export const uuidGeneratorServiceDep: DependencyConfigurer<IdGeneratorService> =
   tokenDescription: 'UuidGeneratorService',
   dependencies: [],
   factory: () => {
-    return new UuidGeneratorService()
+    return new UuidGeneratorService();
   },
 });

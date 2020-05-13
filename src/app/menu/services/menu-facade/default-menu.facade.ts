@@ -23,8 +23,8 @@ export class DefaultMenuFacade implements MenuFacade {
 
   resolveMenuItemClick(menuItemId: Id): void {
     switch (menuItemId) {
-      case "openProject":
-        this.filesystemFacade.openProject(); 
+      case 'openProject':
+        this.filesystemFacade.openProject();
         break;
     }
   }

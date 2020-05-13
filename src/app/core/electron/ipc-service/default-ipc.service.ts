@@ -3,7 +3,7 @@ import { ElectronService } from '../electron-service/electron.service';
 import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { Observable, fromEvent } from 'rxjs';
-import { map, take } from "rxjs/operators";
+import { map, take } from 'rxjs/operators';
 import { IpcService } from './ipc-service';
 
 
@@ -25,7 +25,7 @@ export class DefaultIpcService implements IpcService {
     const ipcRenderer = this.ipcRenderer;
     ipcRenderer.send(channel, request);
     const response$ = fromEvent<[IpcRendererEvent, any]>(ipcRenderer, request.responseChannel).pipe(
-      map(([_event, response]) => response),
+      map(([event, response]) => response),
       take(1)
     );
     return response$;
@@ -33,7 +33,7 @@ export class DefaultIpcService implements IpcService {
 
   private initializeIpcRenderer() {
     if (!this.electronService.isElectron()) {
-      throw new Error("Unable to initialize IpcRenderer.");
+      throw new Error('Unable to initialize IpcRenderer.');
     }
     this.ipcRenderer = window.require('electron').ipcRenderer;
   }

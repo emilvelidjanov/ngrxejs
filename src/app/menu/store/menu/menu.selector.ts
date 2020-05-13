@@ -18,6 +18,6 @@ const selectMenuItems = createSelector(selectMenuItemIds,
 
 export const menuSelectors = {
   ...defSelectors,
-  selectMenuItemIds: selectMenuItemIds,
-  selectMenuItems: selectMenuItems,
+  selectMenuItemIds,
+  selectMenuItems,
 };

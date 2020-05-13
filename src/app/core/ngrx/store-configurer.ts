@@ -24,22 +24,22 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
     this.reducers = this.initReducerFunctions();
   }
 
-  //TODO: fix circular dependencies with this
+  // TODO: fix circular dependencies with this
   public getSelectors(collectionSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
     const defSelectors = this.adapter.getSelectors( collectionSelector);
     const selectEntityById = createSelector(
-      defSelectors.selectEntities, 
-      (entities: Dictionary<EntityType>, props: {id: Id}) => entities[props.id],
+      defSelectors.selectEntities,
+      (entities: Dictionary<EntityType>, props: PropId) => entities[props.id],
     );
     const selectEntitiesByIds = createSelector(
-      defSelectors.selectEntities, 
-      (entities: Dictionary<EntityType>, props: {ids: Id[]}) => props.ids.map((id: Id) => entities[id]),
+      defSelectors.selectEntities,
+      (entities: Dictionary<EntityType>, props: PropIds) => props.ids.map((id: Id) => entities[id]),
     );
     const selectors: DefaultSelectors<EntityType> = {
       ...defSelectors,
-      selectEntityById: selectEntityById,
-      selectEntitiesByIds: selectEntitiesByIds,
-    }
+      selectEntityById,
+      selectEntitiesByIds,
+    };
     return selectors;
   }
 
@@ -70,20 +70,20 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
 
   private initActions(): DefaultActions<EntityType> {
     return {
-      addOne: createAction(this.getActionType("Add One"), props<PropEntity<EntityType>>()),
-      addMany: createAction(this.getActionType("Add Many"), props<PropEntities<EntityType>>()),
-      setOne: createAction(this.getActionType("Set One"), props<PropEntity<EntityType>>()),
-      setAll: createAction(this.getActionType("Set All"), props<PropEntities<EntityType>>()),
-      removeOne: createAction(this.getActionType("Remove One"), props<PropId>()),
-      removeMany: createAction(this.getActionType("Remove Many"), props<PropIds>()),
-      removeByPredicate: createAction(this.getActionType("Remove By Predicate"), props<PropPredicate<EntityType>>()),
-      removeAll: createAction(this.getActionType("Remove All")),
-      updateOne: createAction(this.getActionType("Update One"), props<PropUpdate<EntityType>>()),
-      updateMany: createAction(this.getActionType("Update Many"), props<PropUpdates<EntityType>>()),
-      upsertOne: createAction(this.getActionType("Upsert One"), props<PropEntity<EntityType>>()),
-      upsertMany: createAction(this.getActionType("Upsert Many"), props<PropEntities<EntityType>>()),
-      map: createAction(this.getActionType("Map"), props<{entityMap: EntityMap<EntityType>}>()),
-    }
+      addOne: createAction(this.getActionType('Add One'), props<PropEntity<EntityType>>()),
+      addMany: createAction(this.getActionType('Add Many'), props<PropEntities<EntityType>>()),
+      setOne: createAction(this.getActionType('Set One'), props<PropEntity<EntityType>>()),
+      setAll: createAction(this.getActionType('Set All'), props<PropEntities<EntityType>>()),
+      removeOne: createAction(this.getActionType('Remove One'), props<PropId>()),
+      removeMany: createAction(this.getActionType('Remove Many'), props<PropIds>()),
+      removeByPredicate: createAction(this.getActionType('Remove By Predicate'), props<PropPredicate<EntityType>>()),
+      removeAll: createAction(this.getActionType('Remove All')),
+      updateOne: createAction(this.getActionType('Update One'), props<PropUpdate<EntityType>>()),
+      updateMany: createAction(this.getActionType('Update Many'), props<PropUpdates<EntityType>>()),
+      upsertOne: createAction(this.getActionType('Upsert One'), props<PropEntity<EntityType>>()),
+      upsertMany: createAction(this.getActionType('Upsert Many'), props<PropEntities<EntityType>>()),
+      map: createAction(this.getActionType('Map'), props<{entityMap: EntityMap<EntityType>}>()),
+    };
   }
 
   private initReducerFunctions(): On<CollectionType>[] {
@@ -102,13 +102,16 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
       }),
       on(this.actions.removeOne, (state: CollectionType, {id}) => {
         let typedId: any;
-        if (typeof id === "number") typedId = id as number;
-        else typedId = id as string;
+        if (typeof id === 'number') {
+          typedId = id as number;
+        } else {
+          typedId = id as string;
+        }
         return this.adapter.removeOne(typedId, state);
       }),
       on(this.actions.removeMany, (state: CollectionType, {ids}) => {
-        let numberIds: number[] = ids.filter((id: Id) => typeof id === "number") as number[];
-        let stringIds: string[] = ids.filter((id: Id) => typeof id === "string") as string[];
+        const numberIds: number[] = ids.filter((id: Id) => typeof id === 'number') as number[];
+        const stringIds: string[] = ids.filter((id: Id) => typeof id === 'string') as string[];
         return this.adapter.removeMany(stringIds, this.adapter.removeMany(numberIds, state));
       }),
       on(this.actions.removeByPredicate, (state: CollectionType, {predicate}) => {
@@ -132,7 +135,7 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
       on(this.actions.map, (state: CollectionType, {entityMap}) => {
         return this.adapter.map(entityMap, state);
       }),
-    ]
+    ];
   }
 }
 
@@ -142,49 +145,49 @@ export interface DefaultSelectors<T> extends EntitySelectors<T, object> {
 }
 
 export interface DefaultActions<T> {
-  addOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>,
-  addMany: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>,
-  setOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>,
-  setAll: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>,
-  removeOne: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>,
-  removeMany: ActionCreator<string, (props: PropIds) => PropIds & TypedAction<string>>,
-  removeByPredicate: ActionCreator<string, (props: PropPredicate<T>) => PropPredicate<T> & TypedAction<string>>,
-  removeAll: ActionCreator<string, () => TypedAction<string>>,
-  updateOne: ActionCreator<string, (props: PropUpdate<T>) => PropUpdate<T> & TypedAction<string>>,
-  updateMany: ActionCreator<string, (props: PropUpdates<T>) => PropUpdates<T> & TypedAction<string>>,
-  upsertOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>,
-  upsertMany: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>,
-  map: ActionCreator<string, (props: PropEntityMap<T>) => PropEntityMap<T> & TypedAction<string>>,
+  addOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>;
+  addMany: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>;
+  setOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>;
+  setAll: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>;
+  removeOne: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
+  removeMany: ActionCreator<string, (props: PropIds) => PropIds & TypedAction<string>>;
+  removeByPredicate: ActionCreator<string, (props: PropPredicate<T>) => PropPredicate<T> & TypedAction<string>>;
+  removeAll: ActionCreator<string, () => TypedAction<string>>;
+  updateOne: ActionCreator<string, (props: PropUpdate<T>) => PropUpdate<T> & TypedAction<string>>;
+  updateMany: ActionCreator<string, (props: PropUpdates<T>) => PropUpdates<T> & TypedAction<string>>;
+  upsertOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>;
+  upsertMany: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>;
+  map: ActionCreator<string, (props: PropEntityMap<T>) => PropEntityMap<T> & TypedAction<string>>;
 }
 
 export interface PropEntity<T> {
-  entity: T,
+  entity: T;
 }
 
 export interface PropEntities<T> {
-  entities: T[],
+  entities: T[];
 }
 
 export interface PropId {
-  id: Id,
+  id: Id;
 }
 
 export interface PropIds {
-  ids: Id[],
+  ids: Id[];
 }
 
 export interface PropPredicate<T> {
-  predicate: Predicate<T>,
+  predicate: Predicate<T>;
 }
 
 export interface PropUpdate<T> {
-  update: Update<T>,
+  update: Update<T>;
 }
 
 export interface PropUpdates<T> {
-  updates: Update<T>[],
+  updates: Update<T>[];
 }
 
 export interface PropEntityMap<T> {
-  entityMap: EntityMap<T>,
+  entityMap: EntityMap<T>;
 }

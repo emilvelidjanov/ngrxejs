@@ -29,14 +29,14 @@ export class DefaultProjectService implements ProjectService {
   }
 
   createProject(openDialogResult: OpenDialogResult, files: File[]): Observable<Project> {
-    if (openDialogResult.filePaths.length != 1) {
+    if (openDialogResult.filePaths.length !== 1) {
       throw new Error(`Cannot create project: OpenDialogResult has ${openDialogResult.filePaths.length} entries.`);
     }
     const project$ = this.projectIds$.pipe(
       map((ids: Id[]) => this.idGeneratorService.nextId(ids)),
       map((nextId: Id) => this.mapToProject(nextId, openDialogResult, files)),
       take(1)
-    )
+    );
     return project$;
   }
 
@@ -47,10 +47,10 @@ export class DefaultProjectService implements ProjectService {
 
   private mapToProject(id: Id, openDialogResult: OpenDialogResult, files: File[]): Project {
     return {
-      id: id,
+      id,
       directory: openDialogResult.filePaths[0],
       name: openDialogResult.filenames[0],
       fileIds: this.fileService.sortFilesDefault(files).map((file: File) => file.id),
-    }
+    };
   }
 }

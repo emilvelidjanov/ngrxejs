@@ -24,6 +24,6 @@ export class CoreModule {
         uuidGeneratorServiceDep.getProvider(),
         sortServiceDep.getProvider(),
       ]
-    }
+    };
   }
 }

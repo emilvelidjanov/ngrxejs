@@ -83,7 +83,33 @@
     "template-banana-in-box": true,
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
-    "use-pipe-transform-interface": true
+    "use-pipe-transform-interface": true,
+    "ban-types": {
+      "options": [
+        [
+          "Object",
+          "Avoid using the `Object` type. Did you mean `object`?"
+        ],
+        [
+          "Boolean",
+          "Avoid using the `Boolean` type. Did you mean `boolean`?"
+        ],
+        [
+          "Number",
+          "Avoid using the `Number` type. Did you mean `number`?"
+        ],
+        [
+          "String",
+          "Avoid using the `String` type. Did you mean `string`?"
+        ],
+        [
+          "Symbol",
+          "Avoid using the `Symbol` type. Did you mean `symbol`?"
+        ]
+      ]
+    },
+    "no-shadowed-variable": false,
+    "no-empty-interface": false
   },
   "rulesDirectory": [
     "codelyzer"

@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { FilesystemFacade } from './filesystem.facade';
 import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
-import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
+import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 import { forkJoin, Observable } from 'rxjs';
 import { switchMap, filter, share } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
@@ -29,7 +29,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const loadAndCreateFiles$ = openDialog$.pipe(
       switchMap((result: OpenDialogResult) => this.loadDirectoryAndCreateFiles(result.filePaths[0])),
       share()
-    )
+    );
     const openDirectory$ = forkJoin([openDialog$, loadAndCreateFiles$]);
     const createProject$ = openDirectory$.pipe(
       switchMap(([openedDialog, createdFiles]) => this.projectService.createProject(openedDialog, createdFiles)),

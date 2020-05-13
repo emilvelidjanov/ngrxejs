@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from "@angular/router";
-import { StoreModule } from "@ngrx/store";
-import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
-import { buildSpecificModules } from "src/build-specifics/index";
+import { RouterModule } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
+import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
+import { buildSpecificModules } from 'src/build-specifics/index';
 import { AppComponent } from './app.component';
 import { MenuModule } from './menu/menu.module';
 import { FilesystemModule } from './filesystem/filesystem.module';
@@ -18,9 +18,9 @@ import { CoreModule } from './core/core.module';
     BrowserModule,
     RouterModule.forRoot([], {}),
     StoreModule.forRoot(reducers, {
-      metaReducers, 
+      metaReducers,
       runtimeChecks: {
-        strictStateImmutability: true,  //TODO: turn off for prod?
+        strictStateImmutability: true,  // TODO: turn off for prod?
         strictActionImmutability: true,
         strictStateSerializability: true,
         strictActionSerializability: true

@@ -8,7 +8,7 @@ export interface IpcChannel<ParamType> {
 }
 
 export interface IpcRequest<ParamType> {
-  
+
   responseChannel?: string;
   params?: ParamType;
 }

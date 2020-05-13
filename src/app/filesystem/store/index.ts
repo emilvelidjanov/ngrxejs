@@ -9,8 +9,8 @@ import { filesReducer } from './file/file.reducer';
 export const filesystemFeatureKey = 'filesystem';
 
 export interface FilesystemState {
-  projects: Projects,
-  files: Files,
+  projects: Projects;
+  files: Files;
 }
 
 export const reducers: ActionReducerMap<FilesystemState> = {

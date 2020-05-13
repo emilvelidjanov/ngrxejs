@@ -8,14 +8,14 @@ export interface FilesystemService {
 }
 
 export interface OpenDialogResult {
-  canceled: boolean,
-  filePaths: string[],
-  filenames: string[],
+  canceled: boolean;
+  filePaths: string[];
+  filenames: string[];
 }
 
 export interface LoadDirectoryResult {
-  name: string,
-  path: string,
-  extension: string,
-  isDirectory: boolean
+  name: string;
+  path: string;
+  extension: string;
+  isDirectory: boolean;
 }

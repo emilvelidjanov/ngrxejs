@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 
 export interface ProjectService {
-  
+
   createProject(openDialogResult: OpenDialogResult, files: File[]): Observable<Project>;
   dispatchOpenedProject(project: Project): void;
 }

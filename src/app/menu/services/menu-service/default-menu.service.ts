@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { MenuService } from './menu.service';
 import { Menus } from '../../store/menu/menu.state';
 import { Store } from '@ngrx/store';

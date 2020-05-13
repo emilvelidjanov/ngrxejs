@@ -9,6 +9,7 @@
     "electron-prod": "electron . --prod",
     "start": "ng serve",
     "lint": "ng lint",
+    "lint-fix": "ng lint --fix",
     "test": "ng test",
     "e2e": "ng e2e",
     "build": "ng build",

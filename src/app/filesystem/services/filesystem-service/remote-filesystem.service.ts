@@ -7,12 +7,12 @@ import { Observable } from 'rxjs';
 export class RemoteFilesystemService implements FilesystemService {
 
   constructor() { }
-  
+
   openDialog(options?: any): Observable<OpenDialogResult> {
-    throw new Error("RemoteFilesystemService#openDialog not implemented.");
+    throw new Error('RemoteFilesystemService#openDialog not implemented.');
   }
-  
+
   loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
-    throw new Error("RemoteFilesystemService#loadDirectory not implemented.");
+    throw new Error('RemoteFilesystemService#loadDirectory not implemented.');
   }
 }
