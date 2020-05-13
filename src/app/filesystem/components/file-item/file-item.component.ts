@@ -17,6 +17,7 @@ export class FileItemComponent implements OnInit {
 
   @Input("file") file: File;
   nestedFiles$: Observable<File[]>;
+  isOpenedDirectory$: Observable<boolean>;
 
   constructor(
     private store: Store<Files>,
@@ -24,7 +25,8 @@ export class FileItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, {ids: this.file.fileIds}));
+    this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, { ids: this.file.fileIds }));
+    this.isOpenedDirectory$ = this.filesystemFacade.isOpenedDirectory(this.file);
   }
 
   openDirectory(): void {

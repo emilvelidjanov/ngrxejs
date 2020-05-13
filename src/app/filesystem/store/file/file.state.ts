@@ -4,6 +4,8 @@ import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 
 export interface Files extends EntityState<File> {
+  loadedDirectoryIds: Id[];
+  openedDirectoryIds: Id[];
 }
 
 export interface File extends Entity {
@@ -11,8 +13,6 @@ export interface File extends Entity {
   name: string,
   extension: string,
   isDirectory: boolean,
-  isDirectoryLoaded: boolean,
-  isDirectoryOpened: boolean,
   fileIds: Id[],
 }
 
@@ -21,6 +21,8 @@ export const entityName: string = "File";
 const initialState: Files = {
   ids: [],
   entities: {},
+  loadedDirectoryIds: [],
+  openedDirectoryIds: [],
 }
 
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
