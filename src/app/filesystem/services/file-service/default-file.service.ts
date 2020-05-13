@@ -19,6 +19,7 @@ export class DefaultFileService implements FileService {
 
   private fileIds$: Observable<Id[]>;
   private loadedDirectoryIds$: Observable<Id[]>;
+  private openedDirectoryIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Files>,
@@ -27,6 +28,7 @@ export class DefaultFileService implements FileService {
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
     this.loadedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectLoadedDirectoryIds));
+    this.openedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectOpenedDirectoryIds));
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
@@ -68,31 +70,31 @@ export class DefaultFileService implements FileService {
   }
 
   dispatchOpenedDirectory(directory: File): void {
-    this.store.dispatch(fileActions.updateOne({
-      update: {
-        id: directory.id as number,
-        changes: {
-          isDirectoryOpened: !directory.isDirectoryOpened
-        }
-      }
-    }));
+    this.store.dispatch(fileActions.toggleOpenedDirectoryId({ id: directory.id }));
   }
 
-  isLoadedDirectory(directory: File): Observable<boolean> {
+  selectIsLoadedDirectory(directory: File): Observable<boolean> {
     const isLoadedDirectory$ = this.loadedDirectoryIds$.pipe(
       map((ids: Id[]) => ids.includes(directory.id)),
     );
     return isLoadedDirectory$;
   }
 
+  selectIsOpenedDirectory(directory: File): Observable<boolean> {
+    const isOpenedDirectory$ = this.openedDirectoryIds$.pipe(
+      map((ids: Id[]) => ids.includes(directory.id)),
+    );
+    return isOpenedDirectory$;
+  }
+
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     let files: File[] = ids.map((id: Id, index: number) => {
-      return {
+      let file: File = {
         id: id,
         fileIds: [],
-        isDirectoryOpened: false,
         ...loadDirectoryResults[index],
       }
+      return file;
     });
     return files;
   }

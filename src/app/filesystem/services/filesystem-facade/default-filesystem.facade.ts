@@ -44,7 +44,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   openDirectory(file: File): void {
     if (file.isDirectory) {
-      const isLoadedDirectory$ = this.fileService.isLoadedDirectory(file);
+      const isLoadedDirectory$ = this.fileService.selectIsLoadedDirectory(file);
       const loadAndCreateFiles$ = isLoadedDirectory$.pipe(
         filter((isLoaded: boolean) => !isLoaded),
         switchMap(() => this.loadDirectoryAndCreateFiles(file.path)),
@@ -54,6 +54,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       });
       this.fileService.dispatchOpenedDirectory(file);
     }
+  }
+
+  isOpenedDirectory(file: File): Observable<boolean> {
+    const isOpenedDirectory$ = this.fileService.selectIsOpenedDirectory(file);
+    return isOpenedDirectory$;
   }
 
   private loadDirectoryAndCreateFiles(path: string): Observable<File[]> {
