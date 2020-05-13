@@ -18,6 +18,7 @@ import { SortService } from 'src/app/core/services/sort-service/sort.service';
 export class DefaultFileService implements FileService {
 
   private fileIds$: Observable<Id[]>;
+  private loadedDirectoryIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Files>,
@@ -25,6 +26,7 @@ export class DefaultFileService implements FileService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
+    this.loadedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectLoadedDirectoryIds));
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
@@ -49,27 +51,38 @@ export class DefaultFileService implements FileService {
   }
 
   dispatchSetAll(files: File[]): void {
-    this.store.dispatch(fileActions.setAll({entities: files}));
+    this.store.dispatch(fileActions.setAll({ entities: files }));
   }
 
   dispatchLoadedDirectory(directory: File, files: File[]): void {
-    this.store.dispatch(fileActions.addMany({entities: files}));
-    this.store.dispatch(fileActions.updateOne({update: {
-      id: directory.id as number, //TODO: fix...
-      changes: {
-        isDirectoryLoaded: true,
-        fileIds: this.sortFilesDefault(files).map((file: File) => file.id),
+    this.store.dispatch(fileActions.addMany({ entities: files }));
+    this.store.dispatch(fileActions.updateOne({
+      update: {
+        id: directory.id as number, //TODO: fix...
+        changes: {
+          fileIds: this.sortFilesDefault(files).map((file: File) => file.id),
+        }
       }
-    }}));
+    }));
+    this.store.dispatch(fileActions.addLoadedDirectoryId({ id: directory.id }));
   }
 
   dispatchOpenedDirectory(directory: File): void {
-    this.store.dispatch(fileActions.updateOne({update: {
-      id: directory.id as number,
-      changes: {
-        isDirectoryOpened: !directory.isDirectoryOpened
+    this.store.dispatch(fileActions.updateOne({
+      update: {
+        id: directory.id as number,
+        changes: {
+          isDirectoryOpened: !directory.isDirectoryOpened
+        }
       }
-    }}));
+    }));
+  }
+
+  isLoadedDirectory(directory: File): Observable<boolean> {
+    const isLoadedDirectory$ = this.loadedDirectoryIds$.pipe(
+      map((ids: Id[]) => ids.includes(directory.id)),
+    );
+    return isLoadedDirectory$;
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
@@ -77,7 +90,6 @@ export class DefaultFileService implements FileService {
       return {
         id: id,
         fileIds: [],
-        isDirectoryLoaded: false,
         isDirectoryOpened: false,
         ...loadDirectoryResults[index],
       }

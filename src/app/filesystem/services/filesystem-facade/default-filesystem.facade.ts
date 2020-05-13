@@ -3,8 +3,6 @@ import { FilesystemFacade } from './filesystem.facade';
 import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import openProjectOptions from "src/config/filesystem/openProjectOptions.json";
-import { FilesystemState } from 'src/app/filesystem/store';
-import { Store } from '@ngrx/store';
 import { forkJoin, Observable } from 'rxjs';
 import { switchMap, filter, share } from 'rxjs/operators';
 import { fileServiceDep } from '../file-service/file.service.dependency';
@@ -18,7 +16,6 @@ import { ProjectService } from '../project-service/project.service';
 export class DefaultFilesystemFacade implements FilesystemFacade {
 
   constructor(
-    private store: Store<FilesystemState>,
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
     @Inject(fileServiceDep.getToken()) private fileService: FileService,
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
@@ -26,7 +23,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
-      filter((result: OpenDialogResult) => !result.canceled), 
+      filter((result: OpenDialogResult) => !result.canceled),
       share()
     );
     const loadAndCreateFiles$ = openDialog$.pipe(
@@ -41,18 +38,20 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     dispatch$.subscribe(([createdFiles, createdProject]) => {
       this.fileService.dispatchSetAll(createdFiles);
       this.projectService.dispatchOpenedProject(createdProject);
-    }, 
-    console.error);
+    },
+      console.error);
   }
 
   openDirectory(file: File): void {
     if (file.isDirectory) {
-      if (!file.isDirectoryLoaded) {
-        const loadAndCreateFiles$ = this.loadDirectoryAndCreateFiles(file.path);
-        loadAndCreateFiles$.subscribe((files: File[]) => {
-          this.fileService.dispatchLoadedDirectory(file, files);
-        });
-      };
+      const isLoadedDirectory$ = this.fileService.isLoadedDirectory(file);
+      const loadAndCreateFiles$ = isLoadedDirectory$.pipe(
+        filter((isLoaded: boolean) => !isLoaded),
+        switchMap(() => this.loadDirectoryAndCreateFiles(file.path)),
+      );
+      loadAndCreateFiles$.subscribe((files: File[]) => {
+        this.fileService.dispatchLoadedDirectory(file, files);
+      });
       this.fileService.dispatchOpenedDirectory(file);
     }
   }

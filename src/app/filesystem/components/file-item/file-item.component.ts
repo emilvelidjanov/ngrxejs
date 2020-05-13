@@ -24,7 +24,7 @@ export class FileItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, {ids: this.file.fileIds}));
+    this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, { ids: this.file.fileIds }));
   }
 
   openDirectory(): void {
