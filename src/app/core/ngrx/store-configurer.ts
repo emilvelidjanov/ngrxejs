@@ -24,7 +24,6 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
     this.reducers = this.initReducerFunctions();
   }
 
-  // TODO: fix circular dependencies with this
   public getSelectors(collectionSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
     const defSelectors = this.adapter.getSelectors( collectionSelector);
     const selectEntityById = createSelector(

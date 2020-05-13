@@ -24,7 +24,7 @@ export class FilesystemModule {
     return {
       ngModule: FilesystemModule,
       providers: [
-        filesystemServiceDep.getProvider(), // TODO: don't expose services to root?
+        filesystemServiceDep.getProvider(),
         filesystemFacadeDep.getProvider(),
         fileServiceDep.getProvider(),
         projectServiceDep.getProvider(),

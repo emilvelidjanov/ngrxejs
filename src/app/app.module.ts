@@ -20,7 +20,7 @@ import { CoreModule } from './core/core.module';
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
-        strictStateImmutability: true,  // TODO: turn off for prod?
+        strictStateImmutability: true,
         strictActionImmutability: true,
         strictStateSerializability: true,
         strictActionSerializability: true

@@ -60,7 +60,7 @@ export class DefaultFileService implements FileService {
     this.store.dispatch(fileActions.addMany({ entities: files }));
     this.store.dispatch(fileActions.updateOne({
       update: {
-        id: directory.id as number, // TODO: fix...
+        id: directory.id as number,
         changes: {
           fileIds: this.sortFilesDefault(files).map((file: File) => file.id),
         }
