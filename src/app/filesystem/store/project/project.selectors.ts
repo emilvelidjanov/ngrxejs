@@ -4,7 +4,7 @@ import { createSelector } from '@ngrx/store';
 import { Dictionary } from '@ngrx/entity';
 import { Id } from 'src/app/core/ngrx/entity';
 import { File } from '../file/file.state';
-import { fileSelectors } from '../file/file.selector';
+import { fileSelectors } from '../file/file.selectors';
 
 
 const initialState = projectStoreConfig.getInitialState();

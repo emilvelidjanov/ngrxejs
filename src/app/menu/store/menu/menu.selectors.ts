@@ -2,7 +2,7 @@ import { menuStoreConfig, Menu } from './menu.state';
 import { selectMenus } from '..';
 import { createSelector } from '@ngrx/store';
 import { Id } from 'src/app/core/ngrx/entity';
-import { menuItemSelectors } from '../menu-item/menu-item.selector';
+import { menuItemSelectors } from '../menu-item/menu-item.selectors';
 import { Dictionary } from '@ngrx/entity';
 import { MenuItem } from '../menu-item/menu-item.state';
 

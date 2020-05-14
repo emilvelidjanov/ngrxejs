@@ -3,7 +3,7 @@ import { Menu } from '../../store/menu/menu.state';
 import { Observable } from 'rxjs';
 import { MenuState } from '../../store';
 import { Store, select } from '@ngrx/store';
-import { menuSelectors } from '../../store/menu/menu.selector';
+import { menuSelectors } from '../../store/menu/menu.selectors';
 import { MenuItem } from '../../store/menu-item/menu-item.state';
 
 

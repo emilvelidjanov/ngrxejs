@@ -3,7 +3,7 @@ import { File, Files } from '../../store/file/file.state';
 import { Observable } from 'rxjs';
 import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 import { Store, select } from '@ngrx/store';
-import { fileSelectors } from '../../store/file/file.selector';
+import { fileSelectors } from '../../store/file/file.selectors';
 import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
 
 

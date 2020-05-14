@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy, Inject } from '@angu
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { menuItemSelectors } from '../../store/menu-item/menu-item.selector';
+import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { menuFacadeDep } from '../../services/menu-facade/menu.facade.dependency';
 import { MenuFacade } from '../../services/menu-facade/menu.facade';
 

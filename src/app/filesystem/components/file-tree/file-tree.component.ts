@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { FilesystemState } from '../../store';
-import { projectSelectors } from '../../store/project/project.selector';
+import { projectSelectors } from '../../store/project/project.selectors';
 import { Observable } from 'rxjs';
 import { Project } from '../../store/project/project.state';
 import { File } from '../../store/file/file.state';

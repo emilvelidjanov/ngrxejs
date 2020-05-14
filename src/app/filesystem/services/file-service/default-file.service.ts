@@ -5,11 +5,11 @@ import { Store, select } from '@ngrx/store';
 import { Inject, Injectable } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
-import { fileSelectors } from '../../store/file/file.selector';
+import { fileSelectors } from '../../store/file/file.selectors';
 import { Id } from 'src/app/core/ngrx/entity';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { fileActions } from '../../store/file/file.action';
+import { fileActions } from '../../store/file/file.actions';
 import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
 
