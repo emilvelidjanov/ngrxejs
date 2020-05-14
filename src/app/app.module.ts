@@ -10,6 +10,7 @@ import { FilesystemModule } from './filesystem/filesystem.module';
 import { EditorModule } from './editor/editor.module';
 import { reducers, metaReducers } from './store';
 import { CoreModule } from './core/core.module';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { CoreModule } from './core/core.module';
     StoreRouterConnectingModule.forRoot({
       routerState: RouterState.Minimal
     }),
+    EffectsModule.forRoot(),
     buildSpecificModules,
     CoreModule.forRoot(),
     MenuModule.forRoot(),

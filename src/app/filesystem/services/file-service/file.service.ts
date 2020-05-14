@@ -11,5 +11,4 @@ export interface FileService {
   dispatchLoadedDirectory(directory: File, files: File[]): void;
   dispatchOpenedDirectory(directory: File): void;
   selectIsLoadedDirectory(directory: File): Observable<boolean>;
-  selectIsOpenedDirectory(directory: File): Observable<boolean>;
 }

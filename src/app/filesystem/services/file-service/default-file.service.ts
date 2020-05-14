@@ -18,8 +18,6 @@ import { SortService } from 'src/app/core/services/sort-service/sort.service';
 export class DefaultFileService implements FileService {
 
   private fileIds$: Observable<Id[]>;
-  private loadedDirectoryIds$: Observable<Id[]>;
-  private openedDirectoryIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Files>,
@@ -27,8 +25,6 @@ export class DefaultFileService implements FileService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
-    this.loadedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectLoadedDirectoryIds));
-    this.openedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectOpenedDirectoryIds));
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
@@ -74,17 +70,7 @@ export class DefaultFileService implements FileService {
   }
 
   selectIsLoadedDirectory(directory: File): Observable<boolean> {
-    const isLoadedDirectory$ = this.loadedDirectoryIds$.pipe(
-      map((ids: Id[]) => ids.includes(directory.id)),
-    );
-    return isLoadedDirectory$;
-  }
-
-  selectIsOpenedDirectory(directory: File): Observable<boolean> {
-    const isOpenedDirectory$ = this.openedDirectoryIds$.pipe(
-      map((ids: Id[]) => ids.includes(directory.id)),
-    );
-    return isOpenedDirectory$;
+    return this.store.pipe(select(fileSelectors.selectIsLoadedDirectoryId, {id: directory.id}));
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {

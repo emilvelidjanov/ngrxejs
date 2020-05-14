@@ -7,6 +7,7 @@ export interface MenuItems extends EntityState<MenuItem> {
 
 export interface MenuItem extends Entity {
   label: string;
+  clickAction?: string;
   menuItemIds: Id[];
 }
 

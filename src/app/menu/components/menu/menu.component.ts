@@ -27,5 +27,4 @@ export class MenuComponent implements OnInit {
     this.menu$ = this.store.pipe(select(menuSelectors.selectEntityById, {id: this.menuId}));
     this.menuItems$ = this.store.pipe(select(menuSelectors.selectMenuItems, {id: this.menuId}));
   }
-
 }

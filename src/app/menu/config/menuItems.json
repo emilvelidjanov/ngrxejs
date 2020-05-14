@@ -2,6 +2,7 @@
   {
     "id": "openProject",
     "label": "Open project...",
+    "clickAction": "[Project] Open Project",
     "menuItemIds": []
   },
   {

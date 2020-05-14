@@ -5,6 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { menuFacadeDep } from '../../services/menu-facade/menu.facade.dependency';
 import { MenuFacade } from '../../services/menu-facade/menu.facade';
+import { projectActions } from 'src/app/filesystem/store/project/project.actions';
 
 
 @Component({
@@ -20,14 +21,15 @@ export class MenuItemComponent implements OnInit {
 
   constructor(
     private store: Store<MenuItems>,
-    @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
   ) { }
 
   ngOnInit(): void {
-    this.nestedMenuItems$ = this.store.pipe(select(menuItemSelectors.selectEntitiesByIds, {ids: this.menuItem.menuItemIds}));
+    this.nestedMenuItems$ = this.store.pipe(select(menuItemSelectors.selectEntitiesByIds, { ids: this.menuItem.menuItemIds }));
   }
 
-  public click($event: MouseEvent): void {
-    this.menuFacade.resolveMenuItemClick(this.menuItem.id);
+  public click(): void {
+    if (this.menuItem.clickAction) {
+      this.store.dispatch({ type: this.menuItem.clickAction });
+    }
   }
 }

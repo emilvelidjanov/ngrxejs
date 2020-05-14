@@ -1,10 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { File, Files } from '../../store/file/file.state';
 import { Observable } from 'rxjs';
-import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 import { Store, select } from '@ngrx/store';
 import { fileSelectors } from '../../store/file/file.selectors';
-import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
+import { fileActions } from '../../store/file/file.actions';
 
 
 @Component({
@@ -21,15 +20,16 @@ export class FileItemComponent implements OnInit {
 
   constructor(
     private store: Store<Files>,
-    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
   ) { }
 
   ngOnInit(): void {
     this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, { ids: this.file.fileIds }));
-    this.isOpenedDirectory$ = this.filesystemFacade.isOpenedDirectory(this.file);
+    this.isOpenedDirectory$ = this.store.pipe(select(fileSelectors.selectIsOpenedDirectoryId, { id: this.file.id }));
   }
 
   openDirectory(): void {
-    this.filesystemFacade.openDirectory(this.file);
+    if (this.file.isDirectory) {
+      this.store.dispatch(fileActions.openDirectory({ entity: this.file }));
+    }
   }
 }
