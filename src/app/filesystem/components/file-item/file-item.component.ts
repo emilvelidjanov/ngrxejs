@@ -4,18 +4,20 @@ import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { fileActions } from '../../store/file/file.actions';
+import { Id } from 'src/app/core/ngrx/entity';
+import { filter, tap, take } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'app-file-item[file]',
+  selector: 'app-file-item[fileId]',
   templateUrl: './file-item.component.html',
   styleUrls: ['./file-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileItemComponent implements OnInit {
 
-  @Input() file: File;
-  nestedFiles$: Observable<File[]>;
+  @Input() fileId: Id;
+  file$: Observable<File>;
   isOpenedDirectory$: Observable<boolean>;
 
   constructor(
@@ -23,13 +25,15 @@ export class FileItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.nestedFiles$ = this.store.pipe(select(fileSelectors.selectEntitiesByIds, { ids: this.file.fileIds }));
-    this.isOpenedDirectory$ = this.store.pipe(select(fileSelectors.selectIsOpenedDirectoryId, { id: this.file.id }));
+    this.file$ = this.store.pipe(select(fileSelectors.selectEntityById, { id: this.fileId }))
+    this.isOpenedDirectory$ = this.store.pipe(select(fileSelectors.selectIsOpenedDirectoryId, { id: this.fileId }));
   }
 
   openDirectory(): void {
-    if (this.file.isDirectory) {
-      this.store.dispatch(fileActions.openDirectory({ entity: this.file }));
-    }
+    this.file$.pipe(
+      take(1),
+      filter((file: File) => file.isDirectory),
+      tap((file: File) => this.store.dispatch(fileActions.openDirectory({ entity: file }))),
+    ).subscribe();
   }
 }

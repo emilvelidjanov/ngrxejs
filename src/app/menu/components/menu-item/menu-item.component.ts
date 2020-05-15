@@ -1,35 +1,36 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
-import { menuFacadeDep } from '../../services/menu-facade/menu.facade.dependency';
-import { MenuFacade } from '../../services/menu-facade/menu.facade';
-import { projectActions } from 'src/app/filesystem/store/project/project.actions';
+import { filter, tap, take } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity';
 
 
 @Component({
-  selector: 'app-menu-item[menuItem]',
+  selector: 'app-menu-item[menuItemId]',
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuItemComponent implements OnInit {
 
-  @Input() public menuItem: MenuItem;
-  public nestedMenuItems$: Observable<MenuItem[]>;
+  @Input() public menuItemId: Id;
+  public menuItem$: Observable<MenuItem>;
 
   constructor(
     private store: Store<MenuItems>,
   ) { }
 
   ngOnInit(): void {
-    this.nestedMenuItems$ = this.store.pipe(select(menuItemSelectors.selectEntitiesByIds, { ids: this.menuItem.menuItemIds }));
+    this.menuItem$ = this.store.pipe(select(menuItemSelectors.selectEntityById, { id: this.menuItemId }));
   }
 
-  public click(): void {
-    if (this.menuItem.clickAction) {
-      this.store.dispatch({ type: this.menuItem.clickAction });
-    }
+  click(): void {
+    this.menuItem$.pipe(
+      take(1),
+      filter((menuItem: MenuItem) => menuItem.clickAction !== undefined),
+      tap((menuItem: MenuItem) => this.store.dispatch({ type: menuItem.clickAction })),
+    ).subscribe();
   }
 }

@@ -6,10 +6,10 @@
         {{menu.title}}
       </button>
     </div>
-  </ng-container>
-  <ng-container *ngFor="let menuItem of menuItems$ | async">
-    <div class="d-inline-block">
-      <app-menu-item [menuItem]="menuItem" class="d-inline-block"></app-menu-item>
-    </div>
+    <ng-container *ngFor="let menuItemId of menu.menuItemIds">
+      <div class="d-inline-block">
+        <app-menu-item [menuItemId]="menuItemId" class="d-inline-block"></app-menu-item>
+      </div>
+    </ng-container>
   </ng-container>
 </nav>
