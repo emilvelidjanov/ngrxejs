@@ -1,9 +1,9 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity';
+import { Entity, Id, EntityAppState } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 
-export interface Files extends EntityState<File> {
+export interface Files extends EntityState<File>, EntityAppState {
   loadedDirectoryIds: Id[];
   openedDirectoryIds: Id[];
 }

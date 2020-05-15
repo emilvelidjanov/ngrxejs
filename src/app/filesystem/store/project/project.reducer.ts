@@ -1,6 +1,6 @@
 import { Projects, projectStoreConfig } from './project.state';
 import { Action, createReducer, on } from '@ngrx/store';
-import { projectActions } from './project.action';
+import { projectActions } from './project.actions';
 import { PropId } from 'src/app/core/ngrx/store-configurer';
 
 

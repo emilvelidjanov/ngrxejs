@@ -8,13 +8,17 @@ import { filesystemFacadeDep } from './services/filesystem-facade/filesystem.fac
 import { fileServiceDep } from './services/file-service/file.service.dependency';
 import { projectServiceDep } from './services/project-service/project.service.dependency';
 import { FileItemComponent } from './components/file-item/file-item.component';
+import { EffectsModule } from '@ngrx/effects';
+import { ProjectEffects } from './store/project/project.effects';
+import { FileEffects } from './store/file/file.effects';
 
 
 @NgModule({
   declarations: [FileTreeComponent, FileItemComponent],
   imports: [
     CommonModule,
-    StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers })
+    StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers }),
+    EffectsModule.forFeature([ProjectEffects, FileEffects]),
   ],
   exports: [FileTreeComponent]
 })

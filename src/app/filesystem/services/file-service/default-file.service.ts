@@ -5,11 +5,11 @@ import { Store, select } from '@ngrx/store';
 import { Inject, Injectable } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
-import { fileSelectors } from '../../store/file/file.selector';
+import { fileSelectors } from '../../store/file/file.selectors';
 import { Id } from 'src/app/core/ngrx/entity';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { fileActions } from '../../store/file/file.action';
+import { fileActions } from '../../store/file/file.actions';
 import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
 
@@ -18,8 +18,6 @@ import { SortService } from 'src/app/core/services/sort-service/sort.service';
 export class DefaultFileService implements FileService {
 
   private fileIds$: Observable<Id[]>;
-  private loadedDirectoryIds$: Observable<Id[]>;
-  private openedDirectoryIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<Files>,
@@ -27,8 +25,6 @@ export class DefaultFileService implements FileService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
-    this.loadedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectLoadedDirectoryIds));
-    this.openedDirectoryIds$ = this.store.pipe(select(fileSelectors.selectOpenedDirectoryIds));
   }
 
   createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
@@ -74,17 +70,7 @@ export class DefaultFileService implements FileService {
   }
 
   selectIsLoadedDirectory(directory: File): Observable<boolean> {
-    const isLoadedDirectory$ = this.loadedDirectoryIds$.pipe(
-      map((ids: Id[]) => ids.includes(directory.id)),
-    );
-    return isLoadedDirectory$;
-  }
-
-  selectIsOpenedDirectory(directory: File): Observable<boolean> {
-    const isOpenedDirectory$ = this.openedDirectoryIds$.pipe(
-      map((ids: Id[]) => ids.includes(directory.id)),
-    );
-    return isOpenedDirectory$;
+    return this.store.pipe(select(fileSelectors.selectIsLoadedDirectoryId, {id: directory.id}));
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {

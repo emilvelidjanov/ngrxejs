@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Menu } from '../../store/menu/menu.state';
+import { Menu, Menus } from '../../store/menu/menu.state';
 import { Observable } from 'rxjs';
-import { MenuState } from '../../store';
 import { Store, select } from '@ngrx/store';
-import { menuSelectors } from '../../store/menu/menu.selector';
-import { MenuItem } from '../../store/menu-item/menu-item.state';
+import { menuSelectors } from '../../store/menu/menu.selectors';
+import { Id } from 'src/app/core/ngrx/entity';
 
 
 @Component({
@@ -15,17 +14,14 @@ import { MenuItem } from '../../store/menu-item/menu-item.state';
 })
 export class MenuComponent implements OnInit {
 
-  @Input() private menuId: string;
+  @Input() private menuId: Id;
   public menu$: Observable<Menu>;
-  public menuItems$: Observable<MenuItem[]>;
 
   constructor(
-    private store: Store<MenuState>,
+    private store: Store<Menus>,
   ) { }
 
   ngOnInit(): void {
     this.menu$ = this.store.pipe(select(menuSelectors.selectEntityById, {id: this.menuId}));
-    this.menuItems$ = this.store.pipe(select(menuSelectors.selectMenuItems, {id: this.menuId}));
   }
-
 }

@@ -6,11 +6,11 @@ import { Store, select } from '@ngrx/store';
 import { Inject, Injectable } from '@angular/core';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
-import { projectSelectors } from '../../store/project/project.selector';
+import { projectSelectors } from '../../store/project/project.selectors';
 import { Id } from 'src/app/core/ngrx/entity';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { projectActions } from '../../store/project/project.action';
+import { projectActions } from '../../store/project/project.actions';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FileService } from '../file-service/file.service';
 

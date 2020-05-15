@@ -56,11 +56,6 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     }
   }
 
-  isOpenedDirectory(file: File): Observable<boolean> {
-    const isOpenedDirectory$ = this.fileService.selectIsOpenedDirectory(file);
-    return isOpenedDirectory$;
-  }
-
   private loadDirectoryAndCreateFiles(path: string): Observable<File[]> {
     const loadAndCreateFiles$ = this.filesystemService.loadDirectory(path).pipe(
       switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))

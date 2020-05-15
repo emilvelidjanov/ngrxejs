@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItemService } from './menu-item.service';
 import { MenuItems } from '../../store/menu-item/menu-item.state';
 import { Store } from '@ngrx/store';
-import { menuItemActions } from '../../store/menu-item/menu-item.action';
+import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import defaultMenuItems from '../../config/menuItems.json';
 
 

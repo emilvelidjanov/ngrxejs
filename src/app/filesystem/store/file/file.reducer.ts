@@ -1,6 +1,6 @@
 import { Files, fileStoreConfig } from './file.state';
 import { createReducer, Action, on } from '@ngrx/store';
-import { fileActions } from './file.action';
+import { fileActions } from './file.actions';
 import { Id } from 'src/app/core/ngrx/entity';
 import { PropId } from 'src/app/core/ngrx/store-configurer';
 
