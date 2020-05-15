@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { FilesystemState } from '../../store';
 import { projectSelectors } from '../../store/project/project.selectors';
 import { Observable } from 'rxjs';
-import { Project } from '../../store/project/project.state';
+import { Project, Projects } from '../../store/project/project.state';
 
 
 @Component({
@@ -17,7 +16,7 @@ export class FileTreeComponent implements OnInit {
   project$: Observable<Project>;
 
   constructor(
-    private store: Store<FilesystemState>,
+    private store: Store<Projects>,
   ) { }
 
   ngOnInit(): void {

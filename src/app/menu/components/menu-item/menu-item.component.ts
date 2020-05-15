@@ -28,9 +28,9 @@ export class MenuItemComponent implements OnInit {
 
   click(): void {
     this.menuItem$.pipe(
-      take(1),
       filter((menuItem: MenuItem) => menuItem.clickAction !== undefined),
       tap((menuItem: MenuItem) => this.store.dispatch({ type: menuItem.clickAction })),
+      take(1),
     ).subscribe();
   }
 }

@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { fileActions } from '../../store/file/file.actions';
 import { Id } from 'src/app/core/ngrx/entity';
-import { filter, tap, take } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 
 
 @Component({
@@ -31,9 +31,8 @@ export class FileItemComponent implements OnInit {
 
   openDirectory(): void {
     this.file$.pipe(
-      take(1),
-      filter((file: File) => file.isDirectory),
       tap((file: File) => this.store.dispatch(fileActions.openDirectory({ entity: file }))),
+      take(1),
     ).subscribe();
   }
 }

@@ -1,3 +1,8 @@
+export interface EntityAppState {
+  // loadingIds: Id[],
+  // errorIds: Id[],
+}
+
 export interface Entity {
   id: Id;
 }

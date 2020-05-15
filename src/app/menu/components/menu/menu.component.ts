@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Menu } from '../../store/menu/menu.state';
+import { Menu, Menus } from '../../store/menu/menu.state';
 import { Observable } from 'rxjs';
-import { MenuState } from '../../store';
 import { Store, select } from '@ngrx/store';
 import { menuSelectors } from '../../store/menu/menu.selectors';
 import { Id } from 'src/app/core/ngrx/entity';
@@ -19,7 +18,7 @@ export class MenuComponent implements OnInit {
   public menu$: Observable<Menu>;
 
   constructor(
-    private store: Store<MenuState>,
+    private store: Store<Menus>,
   ) { }
 
   ngOnInit(): void {
