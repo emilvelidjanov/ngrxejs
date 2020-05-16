@@ -1,7 +1,5 @@
 {
   "title": "Choose a project directory",
   "buttonLabel": "Open as project...",
-  "properties": [
-    "openDirectory"
-  ]
+  "properties": ["openDirectory"]
 }

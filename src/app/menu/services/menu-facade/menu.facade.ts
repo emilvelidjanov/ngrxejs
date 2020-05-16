@@ -1,1 +1,1 @@
-export interface MenuFacade { }
+export interface MenuFacade {}

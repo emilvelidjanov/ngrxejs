@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from '../electron-service/electron.service';
 import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
-import { Observable, fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { IpcService } from './ipc-service';
 
+import { ElectronService } from '../electron-service/electron.service';
+
+import { IpcService } from './ipc-service';
 
 @Injectable()
 export class DefaultIpcService implements IpcService {
-
   private ipcRenderer: IpcRenderer;
 
-  constructor(private electronService: ElectronService) { }
+  constructor(private electronService: ElectronService) {}
 
   public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
     if (!this.ipcRenderer) {
@@ -26,7 +26,7 @@ export class DefaultIpcService implements IpcService {
     ipcRenderer.send(channel, request);
     const response$ = fromEvent<[IpcRendererEvent, any]>(ipcRenderer, request.responseChannel).pipe(
       map(([event, response]) => response),
-      take(1)
+      take(1),
     );
     return response$;
   }

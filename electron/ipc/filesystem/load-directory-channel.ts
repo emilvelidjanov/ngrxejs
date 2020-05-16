@@ -5,10 +5,8 @@ import { Dirent } from 'fs';
 import { PathUtils } from '../../utils/path.utils';
 import { LoadDirectoryResult } from './../../../src/app/filesystem/services/filesystem-service/filesystem.service';
 
-
 export class LoadDirectoryChannel implements IpcChannel<string> {
-
-  constructor() { }
+  constructor() {}
 
   getName(): string {
     return IpcChannelName.LOAD_DIRECTORY;
@@ -16,12 +14,15 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
 
   handle(event: IpcMainEvent, request: IpcRequest<string>): void {
     let path: string = request.params;
-    FsUtils.readDirectory(path).subscribe((files: Dirent[]) => {
-      let response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
-      event.reply(request.responseChannel, response);
-    }, (error: any) => {
-      console.error(error);
-    });
+    FsUtils.readDirectory(path).subscribe(
+      (files: Dirent[]) => {
+        let response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
+        event.reply(request.responseChannel, response);
+      },
+      (error: any) => {
+        console.error(error);
+      },
+    );
   }
 
   private toResponse(file: Dirent, path: string): LoadDirectoryResult {
@@ -33,6 +34,6 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
       path: fullPath,
       extension: extension,
       isDirectory: file.isDirectory(),
-    }
+    };
   }
 }

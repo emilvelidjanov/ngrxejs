@@ -15,7 +15,9 @@
     "build": "ng build",
     "build-prod": "ng build --prod=true",
     "tsc-main": "tsc main.ts --outDir ./tsc-build",
-    "ng": "ng"
+    "ng": "ng",
+    "prettier": "prettier --write .",
+    "pretty-quick": "pretty-quick --staged"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +52,7 @@
     "codelyzer": "^5.2.2",
     "electron": "^8.2.0",
     "electron-devtools-installer": "^2.2.4",
+    "husky": "^4.2.5",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.3.0",
@@ -57,9 +60,18 @@
     "karma-coverage-istanbul-reporter": "~2.1.0",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.5.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "~3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s pretty-quick lint-fix"
+    }
   }
 }

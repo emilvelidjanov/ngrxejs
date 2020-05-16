@@ -1,11 +1,11 @@
 @mixin hide {
-    display: none;
-    opacity: 0;
-    visibility: hidden;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
 @mixin show($display) {
-    display: $display;
-    opacity: 1;
-    visibility: visible;
+  display: $display;
+  opacity: 1;
+  visibility: visible;
 }

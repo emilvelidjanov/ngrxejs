@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
-import { IpcService } from './ipc-service';
 
+import { IpcService } from './ipc-service';
 
 @Injectable()
 export class DummyIpcService implements IpcService {
-
-  constructor() { }
+  constructor() {}
 
   public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
     throw new Error('DummyIpcService#send is dummy method. Do not call.');

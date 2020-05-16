@@ -1,21 +1,20 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from './store/app/app.state';
-import { filesystemFacadeDep } from './filesystem/services/filesystem-facade/filesystem.facade.dependency';
-import { FilesystemFacade } from './filesystem/services/filesystem-facade/filesystem.facade';
-import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependency';
-import { MenuFacade } from './menu/services/menu-facade/menu.facade';
 
+import { FilesystemFacade } from './filesystem/services/filesystem-facade/filesystem.facade';
+import { filesystemFacadeDep } from './filesystem/services/filesystem-facade/filesystem.facade.dependency';
+import { MenuFacade } from './menu/services/menu-facade/menu.facade';
+import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependency';
+import { AppState } from './store/app/app.state';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-
-  mainMenuId: string;
+  public mainMenuId: string;
 
   constructor(
     private store: Store<AppState>,
@@ -25,5 +24,5 @@ export class AppComponent implements OnInit {
     this.mainMenuId = 'mainMenu';
   }
 
-  ngOnInit(): void { }
+  public ngOnInit(): void {}
 }

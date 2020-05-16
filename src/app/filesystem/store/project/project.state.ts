@@ -1,7 +1,6 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id, EntityAppState } from 'src/app/core/ngrx/entity';
+import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
-
 
 export interface Projects extends EntityState<Project>, EntityAppState {
   openProjectId: Id;
@@ -21,7 +20,4 @@ const initialState: Projects = {
   openProjectId: null,
 };
 
-export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(
-  entityName,
-  initialState,
-);
+export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(entityName, initialState);

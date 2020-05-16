@@ -1,17 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
-import { buildSpecificModules } from 'src/build-specifics/index';
-import { AppComponent } from './app.component';
-import { MenuModule } from './menu/menu.module';
-import { FilesystemModule } from './filesystem/filesystem.module';
-import { EditorModule } from './editor/editor.module';
-import { reducers, metaReducers } from './store';
-import { CoreModule } from './core/core.module';
 import { EffectsModule } from '@ngrx/effects';
+import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreModule } from '@ngrx/store';
+import { buildSpecificModules } from 'src/build-specifics/index';
 
+import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
+import { EditorModule } from './editor/editor.module';
+import { FilesystemModule } from './filesystem/filesystem.module';
+import { MenuModule } from './menu/menu.module';
+import { metaReducers, reducers } from './store';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,11 +24,11 @@ import { EffectsModule } from '@ngrx/effects';
         strictStateImmutability: true,
         strictActionImmutability: true,
         strictStateSerializability: true,
-        strictActionSerializability: true
-      }
+        strictActionSerializability: true,
+      },
     }),
     StoreRouterConnectingModule.forRoot({
-      routerState: RouterState.Minimal
+      routerState: RouterState.Minimal,
     }),
     EffectsModule.forRoot(),
     buildSpecificModules,
@@ -39,6 +39,6 @@ import { EffectsModule } from '@ngrx/effects';
   ],
   providers: [],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

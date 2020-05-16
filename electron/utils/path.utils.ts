@@ -1,8 +1,6 @@
-import * as nodePath from "path";
-
+import * as nodePath from 'path';
 
 export class PathUtils {
-
   static joinPath(...args: string[]): string {
     return nodePath.join(...args);
   }

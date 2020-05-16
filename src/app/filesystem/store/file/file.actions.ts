@@ -1,7 +1,7 @@
-import { fileStoreConfig, File } from './file.state';
 import { createAction, props } from '@ngrx/store';
-import { PropId, PropEntity } from 'src/app/core/ngrx/store-configurer';
+import { PropEntity, PropId } from 'src/app/core/ngrx/store-configurer';
 
+import { File, fileStoreConfig } from './file.state';
 
 export const fileActions = {
   ...fileStoreConfig.getActions(),

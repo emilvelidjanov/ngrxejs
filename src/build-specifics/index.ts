@@ -4,8 +4,8 @@ import { environment } from 'src/environments/environment';
 const buildSpecificModules = [
   StoreDevtoolsModule.instrument({
     maxAge: 25,
-    logOnly: environment.production
-  })
+    logOnly: environment.production,
+  }),
 ];
 
 export { buildSpecificModules };

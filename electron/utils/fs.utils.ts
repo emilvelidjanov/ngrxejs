@@ -2,12 +2,10 @@ import * as fs from 'fs';
 import { bindNodeCallback, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-
 export class FsUtils {
-
   static readDirectory(directory: string): Observable<fs.Dirent[]> {
     let options: ReaddirOptions = {
-      encoding: "utf-8",
+      encoding: 'utf-8',
       withFileTypes: true,
     };
     const readDirectoryObservable = bindNodeCallback<fs.PathLike, any, fs.Dirent[]>(fs.readdir);
@@ -16,6 +14,6 @@ export class FsUtils {
 }
 
 export interface ReaddirOptions {
-  encoding: BufferEncoding,
-  withFileTypes?: boolean
+  encoding: BufferEncoding;
+  withFileTypes?: boolean;
 }

@@ -1,20 +1,17 @@
-import { Injectable, Inject } from '@angular/core';
-import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from './filesystem.service';
+import { Inject, Injectable } from '@angular/core';
 import { OpenDialogOptions } from 'electron';
-import { IpcRequest, IpcChannelName } from 'electron/ipc/ipc';
+import { IpcChannelName, IpcRequest } from 'electron/ipc/ipc';
 import { Observable } from 'rxjs';
-import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
 import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
+import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
 
+import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from './filesystem.service';
 
 @Injectable()
 export class LocalFilesystemService implements FilesystemService {
+  constructor(@Inject(ipcServiceDep.getToken()) private ipcService: IpcService) {}
 
-  constructor(
-    @Inject(ipcServiceDep.getToken()) private ipcService: IpcService,
-  ) { }
-
-  openDialog(options?: OpenDialogOptions): Observable<OpenDialogResult> {
+  public openDialog(options?: OpenDialogOptions): Observable<OpenDialogResult> {
     const request: IpcRequest<OpenDialogOptions> = {
       params: options,
     };
@@ -22,12 +19,11 @@ export class LocalFilesystemService implements FilesystemService {
     return response$;
   }
 
-  loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
+  public loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
     const request: IpcRequest<string> = {
-      params: path
+      params: path,
     };
     const response$ = this.ipcService.send<string, LoadDirectoryResult[]>(IpcChannelName.LOAD_DIRECTORY, request);
     return response$;
   }
 }
-

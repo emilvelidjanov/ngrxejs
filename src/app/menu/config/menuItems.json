@@ -8,11 +8,7 @@
   {
     "id": "test",
     "label": "Test menu item",
-    "menuItemIds": [
-      "nestedTest1",
-      "nestedTest2",
-      "nestedTest3"
-    ]
+    "menuItemIds": ["nestedTest1", "nestedTest2", "nestedTest3"]
   },
   {
     "id": "nestedTest1",

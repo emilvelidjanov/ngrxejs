@@ -3,9 +3,7 @@ import { IpcMainEvent, OpenDialogOptions, dialog, BrowserWindow, OpenDialogRetur
 import { OpenDialogResult } from '../../../src/app/filesystem/services/filesystem-service/filesystem.service';
 import { PathUtils } from '../../utils/path.utils';
 
-
 export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
-
   private window: BrowserWindow;
 
   constructor(window: BrowserWindow) {
@@ -17,7 +15,8 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
   }
 
   handle(event: IpcMainEvent, request: IpcRequest<OpenDialogOptions>): void {
-    dialog.showOpenDialog(this.window, request.params)
+    dialog
+      .showOpenDialog(this.window, request.params)
       .then((value: OpenDialogReturnValue) => {
         let names: string[] = value.filePaths.map((filePath: string) => PathUtils.getFilename(filePath));
         let response: OpenDialogResult = {
@@ -25,7 +24,8 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
           filenames: names,
         };
         event.reply(request.responseChannel, response);
-      }).catch((error: any) => {
+      })
+      .catch((error: any) => {
         console.error(error);
       });
   }

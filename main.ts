@@ -1,12 +1,10 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent } from 'electron';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
-import { IpcChannel, IpcRequest } from "./electron/ipc/ipc";
+import { IpcChannel, IpcRequest } from './electron/ipc/ipc';
 import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel';
 import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
 
-
 class Main {
-
   static PROD_SWITCH: string = 'prod';
 
   private mainWindow: BrowserWindow;
@@ -19,9 +17,9 @@ class Main {
     this.isProd = app.commandLine.hasSwitch(Main.PROD_SWITCH);
     this.mainWindowOptions = {
       webPreferences: {
-        nodeIntegration: true
-      }
-    }
+        nodeIntegration: true,
+      },
+    };
   }
 
   public init(): void {
@@ -53,10 +51,7 @@ class Main {
   private createIpcChannels(): IpcChannel<any>[] {
     let openDialogChannel: OpenDialogChannel = new OpenDialogChannel(this.mainWindow);
     let loadDirectoryChannel: LoadDirectoryChannel = new LoadDirectoryChannel();
-    let channels: IpcChannel<any>[] = [
-      openDialogChannel,
-      loadDirectoryChannel
-    ]
+    let channels: IpcChannel<any>[] = [openDialogChannel, loadDirectoryChannel];
     return channels;
   }
 

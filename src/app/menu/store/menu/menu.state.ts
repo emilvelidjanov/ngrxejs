@@ -1,10 +1,8 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id, EntityAppState } from 'src/app/core/ngrx/entity';
+import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
-
-export interface Menus extends EntityState<Menu>, EntityAppState {
-}
+export interface Menus extends EntityState<Menu>, EntityAppState {}
 
 export interface Menu extends Entity {
   title: string;
@@ -19,7 +17,4 @@ const initialState: Menus = {
   entities: {},
 };
 
-export const menuStoreConfig: StoreConfigurer<Menu, Menus> = new StoreConfigurer(
-  entityName,
-  initialState,
-);
+export const menuStoreConfig: StoreConfigurer<Menu, Menus> = new StoreConfigurer(entityName, initialState);

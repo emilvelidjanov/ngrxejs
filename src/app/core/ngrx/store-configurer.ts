@@ -1,12 +1,11 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { EntitySelectors, Predicate, Update, EntityMap, Dictionary } from '@ngrx/entity/src/models';
-import { createAction, props, on, On, ActionCreator, createSelector } from '@ngrx/store';
-import { Id, Entity } from './entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Dictionary, EntityMap, EntitySelectors, Predicate, Update } from '@ngrx/entity/src/models';
+import { ActionCreator, createAction, createSelector, on, On, props } from '@ngrx/store';
 import { TypedAction } from '@ngrx/store/src/models';
 
+import { Entity, Id } from './entity';
 
 export class StoreConfigurer<EntityType extends Entity, CollectionType extends EntityState<EntityType>> {
-
   private adapter: EntityAdapter<EntityType>;
   private initialState: CollectionType;
   private entityName: string;
@@ -37,7 +36,7 @@ export class StoreConfigurer<EntityType extends Entity, CollectionType extends E
     const selectIsInStore = createSelector(
       defSelectors.selectEntities,
       (entities: Dictionary<EntityType>, props: PropId) => entities[props.id] !== undefined,
-    )
+    );
     const selectors: DefaultSelectors<EntityType> = {
       ...defSelectors,
       selectEntityById,

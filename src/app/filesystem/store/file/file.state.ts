@@ -1,7 +1,6 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id, EntityAppState } from 'src/app/core/ngrx/entity';
+import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
-
 
 export interface Files extends EntityState<File>, EntityAppState {
   loadedDirectoryIds: Id[];
@@ -25,7 +24,4 @@ const initialState: Files = {
   openedDirectoryIds: [],
 };
 
-export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(
-  entityName,
-  initialState,
-);
+export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(entityName, initialState);

@@ -1,34 +1,34 @@
-import { Injectable, Inject } from '@angular/core';
-import { FilesystemFacade } from './filesystem.facade';
-import { FilesystemService, OpenDialogResult, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
-import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
-import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
+import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { switchMap, filter, share } from 'rxjs/operators';
-import { fileServiceDep } from '../file-service/file.service.dependency';
-import { FileService } from '../file-service/file.service';
-import { File } from '../../store/file/file.state';
-import { projectServiceDep } from '../project-service/project.service.dependency';
-import { ProjectService } from '../project-service/project.service';
+import { filter, share, switchMap } from 'rxjs/operators';
+import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
+import { File } from '../../store/file/file.state';
+import { FileService } from '../file-service/file.service';
+import { fileServiceDep } from '../file-service/file.service.dependency';
+import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from '../filesystem-service/filesystem.service';
+import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
+import { ProjectService } from '../project-service/project.service';
+import { projectServiceDep } from '../project-service/project.service.dependency';
+
+import { FilesystemFacade } from './filesystem.facade';
 
 @Injectable()
 export class DefaultFilesystemFacade implements FilesystemFacade {
-
   constructor(
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
     @Inject(fileServiceDep.getToken()) private fileService: FileService,
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
-  ) { }
+  ) {}
 
-  openProject(): void {
+  public openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
       filter((result: OpenDialogResult) => !result.canceled),
-      share()
+      share(),
     );
     const loadAndCreateFiles$ = openDialog$.pipe(
       switchMap((result: OpenDialogResult) => this.loadDirectoryAndCreateFiles(result.filePaths[0])),
-      share()
+      share(),
     );
     const openDirectory$ = forkJoin([openDialog$, loadAndCreateFiles$]);
     const createProject$ = openDirectory$.pipe(
@@ -38,11 +38,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     dispatch$.subscribe(([createdFiles, createdProject]) => {
       this.fileService.dispatchSetAll(createdFiles);
       this.projectService.dispatchOpenedProject(createdProject);
-    },
-      console.error);
+    }, console.error);
   }
 
-  openDirectory(file: File): void {
+  public openDirectory(file: File): void {
     if (file.isDirectory) {
       const isLoadedDirectory$ = this.fileService.selectIsLoadedDirectory(file);
       const loadAndCreateFiles$ = isLoadedDirectory$.pipe(
@@ -57,9 +56,9 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   private loadDirectoryAndCreateFiles(path: string): Observable<File[]> {
-    const loadAndCreateFiles$ = this.filesystemService.loadDirectory(path).pipe(
-      switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results))
-    );
+    const loadAndCreateFiles$ = this.filesystemService
+      .loadDirectory(path)
+      .pipe(switchMap((results: LoadDirectoryResult[]) => this.fileService.createFiles(results)));
     return loadAndCreateFiles$;
   }
 }

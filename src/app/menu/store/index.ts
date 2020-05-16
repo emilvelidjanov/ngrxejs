@@ -1,10 +1,10 @@
-import { MenuItems } from './menu-item/menu-item.state';
-import { ActionReducerMap, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
-import { menuItemsReducer } from './menu-item/menu-item.reducer';
-import { menusReducer } from './menu/menu.reducer';
+import { ActionReducerMap, createFeatureSelector, createSelector, MetaReducer } from '@ngrx/store';
 import { environment } from 'src/environments/environment';
-import { Menus } from './menu/menu.state';
 
+import { menuItemsReducer } from './menu-item/menu-item.reducer';
+import { MenuItems } from './menu-item/menu-item.state';
+import { menusReducer } from './menu/menu.reducer';
+import { Menus } from './menu/menu.state';
 
 export const menuFeatureKey = 'menu';
 

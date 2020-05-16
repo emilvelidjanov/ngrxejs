@@ -1,17 +1,17 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import { filesystemFeatureKey, reducers, metaReducers } from './store';
-import { FileTreeComponent } from './components/file-tree/file-tree.component';
-import { filesystemServiceDep } from './services/filesystem-service/filesystem.service.dependency';
-import { filesystemFacadeDep } from './services/filesystem-facade/filesystem.facade.dependency';
-import { fileServiceDep } from './services/file-service/file.service.dependency';
-import { projectServiceDep } from './services/project-service/project.service.dependency';
-import { FileItemComponent } from './components/file-item/file-item.component';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { ProjectEffects } from './store/project/project.effects';
-import { FileEffects } from './store/file/file.effects';
+import { StoreModule } from '@ngrx/store';
 
+import { FileItemComponent } from './components/file-item/file-item.component';
+import { FileTreeComponent } from './components/file-tree/file-tree.component';
+import { fileServiceDep } from './services/file-service/file.service.dependency';
+import { filesystemFacadeDep } from './services/filesystem-facade/filesystem.facade.dependency';
+import { filesystemServiceDep } from './services/filesystem-service/filesystem.service.dependency';
+import { projectServiceDep } from './services/project-service/project.service.dependency';
+import { filesystemFeatureKey, metaReducers, reducers } from './store';
+import { FileEffects } from './store/file/file.effects';
+import { ProjectEffects } from './store/project/project.effects';
 
 @NgModule({
   declarations: [FileTreeComponent, FileItemComponent],
@@ -20,11 +20,10 @@ import { FileEffects } from './store/file/file.effects';
     StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers }),
     EffectsModule.forFeature([ProjectEffects, FileEffects]),
   ],
-  exports: [FileTreeComponent]
+  exports: [FileTreeComponent],
 })
 export class FilesystemModule {
-
-  static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders {
     return {
       ngModule: FilesystemModule,
       providers: [
@@ -32,7 +31,7 @@ export class FilesystemModule {
         filesystemFacadeDep.getProvider(),
         fileServiceDep.getProvider(),
         projectServiceDep.getProvider(),
-      ]
+      ],
     };
   }
 }

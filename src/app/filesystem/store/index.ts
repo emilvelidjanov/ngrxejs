@@ -1,10 +1,10 @@
-import { ActionReducerMap, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
+import { ActionReducerMap, createFeatureSelector, createSelector, MetaReducer } from '@ngrx/store';
 import { environment } from 'src/environments/environment';
-import { Projects } from './project/project.state';
-import { projectsReducer } from './project/project.reducer';
-import { Files } from './file/file.state';
-import { filesReducer } from './file/file.reducer';
 
+import { filesReducer } from './file/file.reducer';
+import { Files } from './file/file.state';
+import { projectsReducer } from './project/project.reducer';
+import { Projects } from './project/project.state';
 
 export const filesystemFeatureKey = 'filesystem';
 
