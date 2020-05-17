@@ -3,6 +3,7 @@ import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { IpcChannel, IpcRequest } from './electron/ipc/ipc';
 import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel';
 import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
+import { PathUtils } from './electron/utils/path.utils';
 
 class Main {
   static PROD_SWITCH: string = 'prod';
@@ -86,5 +87,17 @@ class Main {
   }
 }
 
-let main: Main = new Main();
+if (!app.commandLine.hasSwitch(Main.PROD_SWITCH)) {
+  const rootPath = PathUtils.getDirname(__dirname);
+  const distPath = PathUtils.joinPath(rootPath, 'dist');
+  const electronPath = PathUtils.joinPath(rootPath, 'node_modules', 'electron');
+  require('electron-reload')(distPath, {
+    electron: require(electronPath),
+    chokidar: {
+      awaitWriteFinish: true,
+    },
+  });
+}
+
+const main: Main = new Main();
 main.init();

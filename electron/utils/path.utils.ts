@@ -12,4 +12,8 @@ export class PathUtils {
   static getFilename(path: string): string {
     return nodePath.basename(path, nodePath.extname(path));
   }
+
+  static getDirname(path: string): string {
+    return nodePath.dirname(path);
+  }
 }
