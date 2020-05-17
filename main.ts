@@ -30,22 +30,24 @@ class Main {
   }
 
   private onReady(): void {
-    this.createMainWindow(this.indexFile);
+    this.createMainWindow();
     let channels: IpcChannel<any>[] = this.createIpcChannels();
     this.registerIpcChannels(channels);
     if (!this.isProd) {
-      installExtension(REDUX_DEVTOOLS)
+      installExtension(REDUX_DEVTOOLS, false)
         .then((name: string) => console.info(`Added Extension: ${name}`))
         .catch((error: any) => console.error('An error occurred: ', error));
     }
   }
 
-  private createMainWindow(indexFile: string): void {
+  private createMainWindow(): void {
     this.mainWindow = new BrowserWindow(this.mainWindowOptions);
-    this.mainWindow.loadFile(indexFile);
+    this.loadIndexFile();
     this.mainWindow.removeMenu();
     this.mainWindow.webContents.openDevTools();
-    this.mainWindow.on('closed', this.windowOnClosed);
+    const _this = this;
+    this.mainWindow.on('closed', () => _this.windowOnClosed());
+    this.mainWindow.webContents.on('did-fail-load', () => _this.loadIndexFile());
   }
 
   private createIpcChannels(): IpcChannel<any>[] {
@@ -67,8 +69,12 @@ class Main {
 
   private onActivate(): void {
     if (this.mainWindow === null) {
-      this.createMainWindow(this.indexFile);
+      this.createMainWindow();
     }
+  }
+
+  private loadIndexFile(): void {
+    this.mainWindow.loadFile(this.indexFile);
   }
 
   public registerIpcChannels(ipcChannels: IpcChannel<any>[]): void {
