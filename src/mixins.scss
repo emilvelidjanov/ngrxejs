@@ -1,4 +1,4 @@
-@mixin hide {
+@mixin hide() {
   display: none;
   opacity: 0;
   visibility: hidden;
@@ -8,4 +8,9 @@
   display: $display;
   opacity: 1;
   visibility: visible;
+}
+
+@mixin padx($value) {
+  padding-left: $value;
+  padding-right: $value;
 }

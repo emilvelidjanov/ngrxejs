@@ -1,0 +1,30 @@
+@import 'src/mixins.scss';
+
+.inline-block {
+  display: inline-block;
+}
+
+.fill-width {
+  width: 100%;
+}
+
+.padx-025 {
+  @include padx(0.25em);
+}
+
+.padx-05 {
+  @include padx(0.5em);
+}
+
+.padx-075 {
+  @include padx(0.75em);
+}
+
+.padx-1 {
+  @include padx(1em);
+}
+
+.label {
+  white-space: nowrap;
+  text-align: left;
+}
