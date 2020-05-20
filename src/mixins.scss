@@ -9,8 +9,3 @@
   opacity: 1;
   visibility: visible;
 }
-
-@mixin padx($value) {
-  padding-left: $value;
-  padding-right: $value;
-}

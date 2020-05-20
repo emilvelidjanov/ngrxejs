@@ -1,10 +1,10 @@
 <div>
   <ng-container *ngIf="file$ | async as file">
-    <div class="text-light">
+    <div>
       <ng-container *ngIf="file.isDirectory">
-        <button (click)="openDirectory()">></button>
+        <button class="btn btn-dark btn-sm" (click)="openDirectory()">></button>
       </ng-container>
-      {{ file.name }}{{ file.extension }}
+      <span class="text-light align-middle"> {{ file.name }}{{ file.extension }} </span>
     </div>
     <ng-container *ngIf="isOpenedDirectory$ | async as isOpenedDirectory">
       <ng-container *ngFor="let nestedFileId of file.fileIds">

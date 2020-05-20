@@ -1,11 +1,11 @@
-<div>
+<div class="bg-dark">
   <ng-container *ngIf="menu$ | async as menu">
-    <span class="label padx-05">
-      <img [src]="menu.image" height="26" />
+    <span class="text-light text-nowrap align-middle px-2 no-select">
+      <img [src]="menu.image" height="24" />
       {{ menu.title }}
     </span>
     <ng-container *ngFor="let menuItemId of menu.menuItemIds">
-      <app-menu-item [menuItemId]="menuItemId" class="inline-block"></app-menu-item>
+      <app-menu-item [menuItemId]="menuItemId" class="d-inline-block"></app-menu-item>
     </ng-container>
   </ng-container>
 </div>
