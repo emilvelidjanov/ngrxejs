@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "app",
+			"path": "src\\app"
+		},
+		{
+			"name": "electron",
+			"path": "electron"
+		},
+		{
+			"name": "ngrxejs",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

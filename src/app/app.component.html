@@ -1,11 +1,15 @@
-<div>
-  <div>
-    <app-menu [menuId]="mainMenuId"></app-menu>
+<div class="d-flex flex-column h100">
+  <div class="row no-gutters">
+    <div class="col">
+      <app-menu [menuId]="mainMenuId"></app-menu>
+    </div>
   </div>
-  <div>
-    <app-file-tree></app-file-tree>
-  </div>
-  <div>
-    <app-editor></app-editor>
+  <div class="row no-gutters flex-grow-1">
+    <div class="col">
+      <app-file-tree></app-file-tree>
+    </div>
+    <div class="col">
+      <app-editor></app-editor>
+    </div>
   </div>
 </div>
