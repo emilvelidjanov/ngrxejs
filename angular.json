@@ -26,7 +26,11 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {

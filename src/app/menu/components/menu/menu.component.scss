@@ -1,0 +1,13 @@
+@import 'src/mixins.scss';
+
+:host {
+  display: block;
+}
+
+div {
+  display: inline-block;
+}
+
+.menuTitle {
+  @include label();
+}

@@ -1,17 +1,33 @@
 @import 'src/mixins.scss';
 
+:host {
+  display: inline-block;
+
+  app-menu-item {
+    width: 100%;
+  }
+}
+
 .menuItem {
   position: relative;
-}
 
-.nestedMenuItems {
-  @include hide;
-  position: absolute;
-  left: 0px;
-  width: fit-content;
-}
+  button {
+    @include label();
+    width: 100%;
+  }
 
-.menuItem:hover > .nestedMenuItems,
-.nestedMenuItems:hover {
-  @include show(block);
+  .nestedMenuItems {
+    @include hide();
+    position: absolute;
+    left: 0px;
+    z-index: 100;
+
+    &:hover {
+      @include show(block);
+    }
+  }
+
+  &:hover > .nestedMenuItems {
+    @include show(block);
+  }
 }

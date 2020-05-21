@@ -9,3 +9,9 @@
   opacity: 1;
   visibility: visible;
 }
+
+@mixin label() {
+  text-align: left;
+  white-space: nowrap;
+  user-select: none;
+}

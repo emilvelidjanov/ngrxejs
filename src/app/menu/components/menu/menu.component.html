@@ -1,11 +1,9 @@
-<div class="bg-dark">
-  <ng-container *ngIf="menu$ | async as menu">
-    <span class="text-light text-nowrap align-middle px-2 no-select">
-      <img [src]="menu.image" height="24" />
-      {{ menu.title }}
-    </span>
-    <ng-container *ngFor="let menuItemId of menu.menuItemIds">
-      <app-menu-item [menuItemId]="menuItemId" class="d-inline-block"></app-menu-item>
-    </ng-container>
+<ng-container *ngIf="menu$ | async as menu">
+  <div class="menuTitle px-2">
+    <img [src]="menu.image" height="16" />
+    {{ menu.title }}
+  </div>
+  <ng-container *ngFor="let menuItemId of menu.menuItemIds">
+    <app-menu-item [menuItemId]="menuItemId"></app-menu-item>
   </ng-container>
-</div>
+</ng-container>
