@@ -13,7 +13,7 @@
     "test": "ng test",
     "e2e": "ng e2e",
     "build": "ng build",
-    "build-watch": "ng build --watch --poll 1000",
+    "build-watch": "ng build --watch --poll 2000",
     "build-prod": "ng build --prod=true",
     "tsc-main": "tsc main.ts --outDir ./tsc-build",
     "ng": "ng",

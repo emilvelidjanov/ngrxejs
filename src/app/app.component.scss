@@ -1,4 +1,24 @@
 :host {
   display: block;
   height: 100%;
+  overflow: hidden;
+}
+
+app-file-tree {
+  width: 300px;
+}
+
+.full-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  flex-grow: 1;
+  display: flex;
+}
+
+app-editor {
+  flex-grow: 1;
 }

@@ -1,12 +1,10 @@
-<div class="menuItem">
-  <ng-container *ngIf="menuItem$ | async as menuItem">
-    <button class="px-2" (click)="click()">
-      {{ menuItem.label }}
-    </button>
-    <div class="nestedMenuItems">
-      <ng-container *ngFor="let nestedMenuItemId of menuItem.menuItemIds">
-        <app-menu-item [menuItemId]="nestedMenuItemId"></app-menu-item>
-      </ng-container>
-    </div>
-  </ng-container>
-</div>
+<ng-container *ngIf="menuItem$ | async as menuItem">
+  <button (click)="click()">
+    {{ menuItem.label }}
+  </button>
+  <div class="nested-menu-items">
+    <ng-container *ngFor="let nestedMenuItemId of menuItem.menuItemIds">
+      <app-menu-item [menuItemId]="nestedMenuItemId"></app-menu-item>
+    </ng-container>
+  </div>
+</ng-container>

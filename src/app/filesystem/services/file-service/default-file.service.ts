@@ -37,8 +37,8 @@ export class DefaultFileService implements FileService {
     return files$;
   }
 
-  public sortFilesDefault(file: File[]): File[] {
-    return this.sortService.sort(file, {
+  public sortFilesDefault(files: File[]): File[] {
+    return this.sortService.sort(files, {
       primarySort: (a, b) => {
         if (a.isDirectory === b.isDirectory) {
           return 0;

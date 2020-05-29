@@ -1,5 +1,5 @@
 <ng-container *ngIf="project$ | async as project">
-  <div>
+  <div class="project-name">
     {{ project.name }}
   </div>
   <ng-container *ngFor="let fileId of project.fileIds">

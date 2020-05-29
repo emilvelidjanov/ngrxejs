@@ -2,34 +2,15 @@ import { IdGeneratorService } from './id-generator.service';
 
 export class NumberIdGeneratorService implements IdGeneratorService {
   public nextId(usedIds: number[]): number {
-    const sortedUsedIds = usedIds.slice().sort((a: number, b: number) => a - b);
-    let lowest: number;
-    for (let i = 0; i < sortedUsedIds.length; i++) {
-      if (sortedUsedIds[i] !== i) {
-        lowest = i;
-        break;
-      }
-    }
-    if (!sortedUsedIds.length) {
-      lowest = 0;
-    }
-    if (lowest === undefined) {
-      lowest = sortedUsedIds[sortedUsedIds.length - 1] + 1;
-    }
-    return lowest;
+    return this.nextNIds(1, usedIds)[0];
   }
 
   public nextNIds(n: number, usedIds: number[]): number[] {
-    const sortedUsedIds = usedIds.slice().sort((a: number, b: number) => a - b);
     const nLowest: number[] = [];
-    for (let i = 0; i < sortedUsedIds.length; i++) {
-      if (sortedUsedIds[i] !== i) {
+    for (let i = 0; nLowest.length < n; i++) {
+      if (usedIds.indexOf(i) === -1) {
         nLowest.push(i);
       }
-    }
-    const max: number = n + sortedUsedIds.length;
-    for (let j = sortedUsedIds.length; j < max; j++) {
-      nLowest.push(j);
     }
     return nLowest;
   }

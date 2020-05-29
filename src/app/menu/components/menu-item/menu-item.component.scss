@@ -2,32 +2,29 @@
 
 :host {
   display: inline-block;
+  position: relative;
 
   app-menu-item {
     width: 100%;
   }
+
+  &:hover > .nested-menu-items {
+    @include show(block);
+  }
 }
 
-.menuItem {
-  position: relative;
+button {
+  @include label();
+  width: 100%;
+}
 
-  button {
-    @include label();
-    width: 100%;
-  }
+.nested-menu-items {
+  @include hide();
+  position: absolute;
+  left: 0px;
+  z-index: 100;
 
-  .nestedMenuItems {
-    @include hide();
-    position: absolute;
-    left: 0px;
-    z-index: 100;
-
-    &:hover {
-      @include show(block);
-    }
-  }
-
-  &:hover > .nestedMenuItems {
+  &:hover {
     @include show(block);
   }
 }

@@ -1,8 +1,8 @@
 <ng-container *ngIf="menu$ | async as menu">
-  <div class="menuTitle px-2">
+  <span class="menu-title">
     <img [src]="menu.image" height="16" />
     {{ menu.title }}
-  </div>
+  </span>
   <ng-container *ngFor="let menuItemId of menu.menuItemIds">
     <app-menu-item [menuItemId]="menuItemId"></app-menu-item>
   </ng-container>
