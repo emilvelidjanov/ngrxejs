@@ -21,6 +21,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
   ) {}
 
+  // TODO: dont setAll but add project? Check if project already loaded? Rename to "loadProject"
   public openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
       filter((result: OpenDialogResult) => !result.canceled),

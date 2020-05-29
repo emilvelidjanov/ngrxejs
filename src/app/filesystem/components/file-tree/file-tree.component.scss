@@ -1,4 +1,12 @@
+@import 'src/mixins.scss';
+
 :host {
   display: block;
-  height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.project-name {
+  @include label();
+  @include padx(0.5);
 }

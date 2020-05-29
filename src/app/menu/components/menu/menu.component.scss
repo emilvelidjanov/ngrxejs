@@ -4,10 +4,7 @@
   display: block;
 }
 
-div {
-  display: inline-block;
-}
-
-.menuTitle {
+.menu-title {
   @include label();
+  @include padx(0.5);
 }
