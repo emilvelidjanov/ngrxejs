@@ -1,0 +1,11 @@
+:host {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.textarea {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  word-wrap: normal;
+}
