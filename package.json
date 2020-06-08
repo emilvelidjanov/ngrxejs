@@ -74,7 +74,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s pretty-quick lint-fix"
+      "pre-commit": "run-s pretty-quick lint"
     }
   }
 }
