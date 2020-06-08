@@ -13,4 +13,5 @@ export interface IpcRequest<ParamType> {
 export enum IpcChannelName {
   OPEN_DIALOG = 'open-dialog',
   LOAD_DIRECTORY = 'load-directory',
+  LOAD_FILE = 'load-file',
 }

@@ -23,4 +23,13 @@ export class FileItemComponent implements OnInit {
   public ngOnInit(): void {
     this.file$ = this.store.pipe(select(fileSelectors.selectEntityById, { id: this.fileId }));
   }
+
+  public openFile(): void {
+    this.file$
+      .pipe(
+        tap((file: File) => this.store.dispatch(fileActions.openFile({ entity: file }))),
+        take(1),
+      )
+      .subscribe();
+  }
 }

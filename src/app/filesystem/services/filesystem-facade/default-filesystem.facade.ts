@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { filter, share, switchMap } from 'rxjs/operators';
+import { filter, share, switchMap, tap } from 'rxjs/operators';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
 import { Directory } from '../../store/directory/directory.state';
+import { File } from '../../store/file/file.state';
 import { DirectoryContent, DirectoryService } from '../directory-service/directory.service';
 import { directoryServiceDep } from '../directory-service/directory.service.dependency';
+import { FileService } from '../file-service/file.service';
+import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
@@ -19,6 +22,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
     @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
+    @Inject(fileServiceDep.getToken()) private fileService: FileService,
   ) {}
 
   public openProject(): void {
@@ -48,10 +52,19 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       filter((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.loadAndCreateDirectoryContent(directory.path)),
     );
-    loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) => {
-      this.directoryService.dispatchLoadedDirectory(directory, directoryContent);
-    });
+    loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) =>
+      this.directoryService.dispatchLoadedDirectory(directory, directoryContent),
+    );
     this.directoryService.dispatchOpenedDirectory(directory);
+  }
+
+  public openFile(file: File): void {
+    const isLoadedFile$ = this.fileService.selectIsLoadedFile(file);
+    const loadFileContent$ = isLoadedFile$.pipe(
+      filter((isLoaded: boolean) => !isLoaded),
+      switchMap(() => this.filesystemService.loadFile(file.path)),
+    );
+    loadFileContent$.subscribe((content: string) => console.log(content));
   }
 
   private loadAndCreateDirectoryContent(path: string): Observable<DirectoryContent> {

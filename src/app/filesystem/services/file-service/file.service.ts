@@ -8,4 +8,5 @@ export interface FileService {
   sortFilesDefault(file: File[]): File[];
   dispatchSetAll(files: File[]): void;
   dispatchAddMany(file: File[]): void;
+  selectIsLoadedFile(file: File): Observable<boolean>;
 }

@@ -13,6 +13,7 @@ import { filesystemServiceDep } from './services/filesystem-service/filesystem.s
 import { projectServiceDep } from './services/project-service/project.service.dependency';
 import { filesystemFeatureKey, metaReducers, reducers } from './store';
 import { DirectoryEffects } from './store/directory/directory.effects';
+import { FileEffects } from './store/file/file.effects';
 import { ProjectEffects } from './store/project/project.effects';
 
 @NgModule({
@@ -20,7 +21,7 @@ import { ProjectEffects } from './store/project/project.effects';
   imports: [
     CommonModule,
     StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers }),
-    EffectsModule.forFeature([ProjectEffects, DirectoryEffects]),
+    EffectsModule.forFeature([ProjectEffects, DirectoryEffects, FileEffects]),
   ],
   exports: [FileTreeComponent],
 })

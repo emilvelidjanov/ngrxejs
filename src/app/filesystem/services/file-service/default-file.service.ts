@@ -54,12 +54,16 @@ export class DefaultFileService implements FileService {
     this.store.dispatch(fileActions.addMany({ entities: files }));
   }
 
+  public selectIsLoadedFile(file: File): Observable<boolean> {
+    return this.store.pipe(select(fileSelectors.selectIsLoadedFileId, { id: file.id }));
+  }
+
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     const files: File[] = ids.map((id: Id, index: number) => {
       const { isDirectory, ...toFile } = loadDirectoryResults[index];
       const file: File = {
         id,
-        content: '<div>This is a test text</div><div>I hope <strong>this</strong> is working</div>',
+        content: null,
         ...toFile,
       };
       return file;

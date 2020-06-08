@@ -14,4 +14,8 @@ export class RemoteFilesystemService implements FilesystemService {
   public loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
     throw new Error('RemoteFilesystemService#loadDirectory not implemented.');
   }
+
+  public loadFile(path: string): Observable<string> {
+    throw new Error('RemoteFilesystemService#loadFile not implemented.');
+  }
 }
