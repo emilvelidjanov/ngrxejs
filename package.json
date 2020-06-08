@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "main": "./tsc-build/main.js",
   "scripts": {
+    "build-watch": "ng build --watch --poll 2000",
+    "electron-build-run": "npm-run-all -s tsc-main electron",
     "desktop": "npm-run-all -s tsc-main -p build-watch electron",
     "desktop-prod": "npm-run-all tsc-main build-prod electron-prod",
     "start": "ng serve",
@@ -13,7 +15,6 @@
     "test": "ng test",
     "e2e": "ng e2e",
     "build": "ng build",
-    "build-watch": "ng build --watch --poll 2000",
     "build-prod": "ng build --prod=true",
     "tsc-main": "tsc main.ts --outDir ./tsc-build",
     "ng": "ng",

@@ -10,6 +10,7 @@ export interface Project extends Entity {
   name: string;
   directory: string;
   fileIds: Id[];
+  directoryIds: Id[];
 }
 
 export const entityName = 'Project';

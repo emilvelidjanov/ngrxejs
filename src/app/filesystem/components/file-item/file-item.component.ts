@@ -17,21 +17,10 @@ import { File, Files } from '../../store/file/file.state';
 export class FileItemComponent implements OnInit {
   @Input() public fileId: Id;
   public file$: Observable<File>;
-  public isOpenedDirectory$: Observable<boolean>;
 
   constructor(private store: Store<Files>) {}
 
   public ngOnInit(): void {
     this.file$ = this.store.pipe(select(fileSelectors.selectEntityById, { id: this.fileId }));
-    this.isOpenedDirectory$ = this.store.pipe(select(fileSelectors.selectIsOpenedDirectoryId, { id: this.fileId }));
-  }
-
-  public openDirectory(): void {
-    this.file$
-      .pipe(
-        tap((file: File) => this.store.dispatch(fileActions.openDirectory({ entity: file }))),
-        take(1),
-      )
-      .subscribe();
   }
 }

@@ -1,6 +1,6 @@
-import { File } from '../../store/file/file.state';
+import { Directory } from '../../store/directory/directory.state';
 
 export interface FilesystemFacade {
   openProject(): void;
-  openDirectory(file: File): void;
+  openDirectory(directory: Directory): void;
 }

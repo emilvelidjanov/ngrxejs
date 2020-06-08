@@ -2,6 +2,9 @@
   <div class="project-name">
     {{ project.name }}
   </div>
+  <ng-container *ngFor="let directoryId of project.directoryIds">
+    <app-directory-item [directoryId]="directoryId"></app-directory-item>
+  </ng-container>
   <ng-container *ngFor="let fileId of project.fileIds">
     <app-file-item [fileId]="fileId"></app-file-item>
   </ng-container>

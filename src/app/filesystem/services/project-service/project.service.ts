@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
 
-import { File } from '../../store/file/file.state';
 import { Project } from '../../store/project/project.state';
+import { DirectoryContent } from '../directory-service/directory.service';
 import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 
 export interface ProjectService {
-  createProject(openDialogResult: OpenDialogResult, files: File[]): Observable<Project>;
-  dispatchOpenedProject(project: Project): void;
+  createProject(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project>;
+  dispatchOpenedProject(project: Project, content: DirectoryContent): void;
 }
