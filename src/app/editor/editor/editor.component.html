@@ -1,1 +1,5 @@
-<div class="textarea" contenteditable="true"></div>
+<ng-container *ngIf="files$ | async as files">
+  <ng-container *ngIf="files.length">
+    <div class="textarea" contenteditable="true" [innerHTML]="files[0].content"></div>
+  </ng-container>
+</ng-container>

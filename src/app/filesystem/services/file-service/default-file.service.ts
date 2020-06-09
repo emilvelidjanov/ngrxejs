@@ -58,6 +58,24 @@ export class DefaultFileService implements FileService {
     return this.store.pipe(select(fileSelectors.selectIsLoadedFileId, { id: file.id }));
   }
 
+  public dispatchLoadedFile(file: File, content: string): void {
+    this.store.dispatch(
+      fileActions.updateOne({
+        update: {
+          id: file.id as number,
+          changes: {
+            content,
+          },
+        },
+      }),
+    );
+    this.store.dispatch(fileActions.addLoadedFileId({ id: file.id }));
+  }
+
+  public dispatchOpenedFile(file: File): void {
+    this.store.dispatch(fileActions.setOpenedFileId({ id: file.id }));
+  }
+
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     const files: File[] = ids.map((id: Id, index: number) => {
       const { isDirectory, ...toFile } = loadDirectoryResults[index];

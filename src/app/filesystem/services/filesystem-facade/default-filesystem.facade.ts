@@ -64,7 +64,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       filter((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.filesystemService.loadFile(file.path)),
     );
-    loadFileContent$.subscribe((content: string) => console.log(content));
+    loadFileContent$.subscribe((content: string) => this.fileService.dispatchLoadedFile(file, content));
+    this.fileService.dispatchOpenedFile(file);
   }
 
   private loadAndCreateDirectoryContent(path: string): Observable<DirectoryContent> {

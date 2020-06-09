@@ -6,15 +6,12 @@ import { selectProjects } from '..';
 
 import { Project, Projects, projectStoreConfig } from './project.state';
 
-const initialState = projectStoreConfig.getInitialState();
-
 const defSelectors = { ...projectStoreConfig.getSelectors(selectProjects) };
 const selectOpenProjectId = createSelector(selectProjects, (projects: Projects) => projects.openProjectId);
 const selectOpenProject = createSelector(
   selectOpenProjectId,
   defSelectors.selectEntities,
-  (projectId: Id, projects: Dictionary<Project>) =>
-    projectId !== initialState.openProjectId ? projects[projectId] : null,
+  (id: Id, projects: Dictionary<Project>) => (id !== null ? projects[id] : null),
 );
 
 export const projectSelectors = {
