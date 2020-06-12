@@ -7,12 +7,12 @@ import { menuSelectors } from '../../store/menu/menu.selectors';
 import { Menu, Menus } from '../../store/menu/menu.state';
 
 @Component({
-  selector: 'app-menu[menuId]',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss'],
+  selector: 'app-menu-bar[menuId]',
+  templateUrl: './menu-bar.component.html',
+  styleUrls: ['./menu-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuComponent implements OnInit {
+export class MenuBarComponent implements OnInit {
   @Input() private menuId: Id;
   public menu$: Observable<Menu>;
 

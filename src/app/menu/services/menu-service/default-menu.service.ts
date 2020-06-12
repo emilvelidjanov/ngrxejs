@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import mainMenu from '../../config/mainMenu.json';
+import mainMenuBar from '../../config/mainMenuBar.json';
 import { menuActions } from '../../store/menu/menu.actions';
 import { Menus } from '../../store/menu/menu.state';
 
@@ -12,6 +12,6 @@ export class DefaultMenuService implements MenuService {
   constructor(private store: Store<Menus>) {}
 
   public initMenus(): void {
-    this.store.dispatch(menuActions.addMany({ entities: [mainMenu] }));
+    this.store.dispatch(menuActions.addMany({ entities: [mainMenuBar] }));
   }
 }
