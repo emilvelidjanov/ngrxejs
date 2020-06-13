@@ -1,5 +1,6 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
+import { Entity, Id } from 'src/app/core/ngrx/entity';
+import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-app-state';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
 export interface Directories extends EntityState<Directory>, EntityAppState {
@@ -17,6 +18,7 @@ export interface Directory extends Entity {
 export const entityName = 'Directory';
 
 const initialState: Directories = {
+  ...defaultInitialEntityAppState,
   ids: [],
   entities: {},
   loadedDirectoryIds: [],

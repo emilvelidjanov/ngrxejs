@@ -1,8 +1,8 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
+import { Entity, Id } from 'src/app/core/ngrx/entity';
 import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 
-export interface Menus extends EntityState<Menu>, EntityAppState {}
+export interface Menus extends EntityState<Menu> {}
 
 export interface Menu extends Entity {
   title: string;
