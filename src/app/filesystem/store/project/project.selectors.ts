@@ -1,12 +1,12 @@
 import { Dictionary } from '@ngrx/entity';
 import { createSelector } from '@ngrx/store';
-import { Id } from 'src/app/core/ngrx/entity';
+import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
 
 import { selectProjects } from '..';
 
-import { Project, Projects, projectStoreConfig } from './project.state';
+import { Project, projectEntityStateConfig, Projects } from './project.state';
 
-const defSelectors = { ...projectStoreConfig.getSelectors(selectProjects) };
+const defSelectors = { ...projectEntityStateConfig.getSelectors(selectProjects) };
 const selectOpenProjectId = createSelector(selectProjects, (projects: Projects) => projects.openProjectId);
 const selectOpenProject = createSelector(
   selectOpenProjectId,

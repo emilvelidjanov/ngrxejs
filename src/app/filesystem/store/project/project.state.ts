@@ -1,7 +1,7 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity';
-import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-app-state';
-import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
+import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
+import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 export interface Projects extends EntityState<Project>, EntityAppState {
   openProjectId: Id;
@@ -21,6 +21,10 @@ const initialState: Projects = {
   ids: [],
   entities: {},
   openProjectId: null,
+  openedIds: [],
 };
 
-export const projectStoreConfig: StoreConfigurer<Project, Projects> = new StoreConfigurer(entityName, initialState);
+export const projectEntityStateConfig: EntityStateConfigurer<Project, Projects> = new EntityStateConfigurer(
+  entityName,
+  initialState,
+);

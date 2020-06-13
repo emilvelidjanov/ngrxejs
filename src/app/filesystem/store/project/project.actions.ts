@@ -1,10 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { PropId } from 'src/app/core/ngrx/store-configurer';
+import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
-import { projectStoreConfig } from './project.state';
+import { projectEntityStateConfig } from './project.state';
 
 export const projectActions = {
-  ...projectStoreConfig.getActions(),
-  setOpenProjectId: createAction(projectStoreConfig.getActionType('Set Open Project Id'), props<PropId>()),
-  openProject: createAction(projectStoreConfig.getActionType('Open Project')),
+  ...projectEntityStateConfig.getActions(),
+  setOpenProjectId: createAction(projectEntityStateConfig.getActionType('Set Open Project Id'), props<PropId>()),
+  openProject: createAction(projectEntityStateConfig.getActionType('Open Project')),
 };

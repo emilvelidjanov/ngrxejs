@@ -5,7 +5,7 @@ import { TypedAction } from '@ngrx/store/src/models';
 
 import { Entity, Id } from './entity';
 
-export class StoreConfigurer<EntityType extends Entity, CollectionType extends EntityState<EntityType>> {
+export class EntityStateConfigurer<EntityType extends Entity, CollectionType extends EntityState<EntityType>> {
   private adapter: EntityAdapter<EntityType>;
   private initialState: CollectionType;
   private entityName: string;

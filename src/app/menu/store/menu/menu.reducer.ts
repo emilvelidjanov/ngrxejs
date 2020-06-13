@@ -1,8 +1,8 @@
 import { Action, createReducer } from '@ngrx/store';
 
-import { Menus, menuStoreConfig } from './menu.state';
+import { menuEntityStateConfig, Menus } from './menu.state';
 
-const reducer = createReducer(menuStoreConfig.getInitialState(), ...menuStoreConfig.getReducerFunctions());
+const reducer = createReducer(menuEntityStateConfig.getInitialState(), ...menuEntityStateConfig.getReducerFunctions());
 
 export function menusReducer(state: Menus | undefined, action: Action) {
   return reducer(state, action);

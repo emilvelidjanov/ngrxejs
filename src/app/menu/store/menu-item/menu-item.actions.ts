@@ -1,5 +1,5 @@
-import { menuItemStoreConfig } from './menu-item.state';
+import { menuItemEntityStateConfig } from './menu-item.state';
 
 export const menuItemActions = {
-  ...menuItemStoreConfig.getActions(),
+  ...menuItemEntityStateConfig.getActions(),
 };

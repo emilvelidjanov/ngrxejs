@@ -1,8 +1,8 @@
 import { selectMenus } from '..';
 
-import { menuStoreConfig } from './menu.state';
+import { menuEntityStateConfig } from './menu.state';
 
-const defSelectors = { ...menuStoreConfig.getSelectors(selectMenus) };
+const defSelectors = { ...menuEntityStateConfig.getSelectors(selectMenus) };
 
 export const menuSelectors = {
   ...defSelectors,

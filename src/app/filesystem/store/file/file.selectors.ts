@@ -1,13 +1,13 @@
 import { Dictionary } from '@ngrx/entity';
 import { createSelector } from '@ngrx/store';
-import { Id } from 'src/app/core/ngrx/entity';
-import { PropId } from 'src/app/core/ngrx/store-configurer';
+import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
+import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 import { selectFiles } from '..';
 
-import { File, Files, fileStoreConfig } from './file.state';
+import { File, fileEntityStateConfig, Files } from './file.state';
 
-const defSelectors = { ...fileStoreConfig.getSelectors(selectFiles) };
+const defSelectors = { ...fileEntityStateConfig.getSelectors(selectFiles) };
 const selectLoadedFileIds = createSelector(selectFiles, (files: Files) => files.loadedFileIds);
 const selectIsLoadedFileId = createSelector(selectLoadedFileIds, (ids: Id[], props: PropId) => ids.includes(props.id));
 const selectOpenedFileIds = createSelector(selectFiles, (files: Files) => files.openedFileIds);

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, take, takeWhile, tap } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity';
+import { take, takeWhile, tap } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
 
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';

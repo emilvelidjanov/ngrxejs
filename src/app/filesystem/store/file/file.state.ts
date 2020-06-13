@@ -1,7 +1,7 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity';
-import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-app-state';
-import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
+import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
+import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 export interface Files extends EntityState<File>, EntityAppState {
   loadedFileIds: Id[];
@@ -27,4 +27,7 @@ const initialState: Files = {
   focusedFileId: null,
 };
 
-export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(entityName, initialState);
+export const fileEntityStateConfig: EntityStateConfigurer<File, Files> = new EntityStateConfigurer(
+  entityName,
+  initialState,
+);

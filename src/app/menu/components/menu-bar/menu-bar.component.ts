@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/core/ngrx/entity';
+import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
 
 import { menuSelectors } from '../../store/menu/menu.selectors';
 import { Menu, Menus } from '../../store/menu/menu.state';

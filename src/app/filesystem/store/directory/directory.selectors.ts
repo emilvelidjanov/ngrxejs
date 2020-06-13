@@ -1,12 +1,12 @@
 import { createSelector } from '@ngrx/store';
-import { Id } from 'src/app/core/ngrx/entity';
-import { PropId } from 'src/app/core/ngrx/store-configurer';
+import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
+import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 import { selectDirectories } from '..';
 
-import { Directories, directoryStoreConfig } from './directory.state';
+import { Directories, directoryEntityStateConfig } from './directory.state';
 
-const defSelectors = { ...directoryStoreConfig.getSelectors(selectDirectories) };
+const defSelectors = { ...directoryEntityStateConfig.getSelectors(selectDirectories) };
 const selectLoadedDirectoryIds = createSelector(
   selectDirectories,
   (directories: Directories) => directories.loadedDirectoryIds,
