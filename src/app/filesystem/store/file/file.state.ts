@@ -1,6 +1,6 @@
 import { EntityState } from '@ngrx/entity';
 import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
-import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
+import { EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
 import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-app-state-configurer';
 import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
@@ -20,7 +20,6 @@ export interface File extends Entity {
 export const entityName = 'File';
 
 const initialState: Files = {
-  ...defaultInitialEntityAppState,
   ids: [],
   entities: {},
   loadedFileIds: [],
@@ -38,5 +37,6 @@ export const fileEntityStateConfig: EntityStateConfigurer<File, Files> = new Ent
   initialState,
 );
 export const fileEntityAppStateConfig: EntityAppStateConfigurer<File, Files> = new EntityAppStateConfigurer(
+  entityName,
   initialState,
 );

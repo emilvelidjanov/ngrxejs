@@ -1,6 +1,6 @@
 import { EntityState } from '@ngrx/entity';
 import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
-import { defaultInitialEntityAppState, EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
+import { EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
 import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-app-state-configurer';
 import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
@@ -18,7 +18,6 @@ export interface Project extends Entity {
 export const entityName = 'Project';
 
 const initialState: Projects = {
-  ...defaultInitialEntityAppState,
   ids: [],
   entities: {},
   openProjectId: null,
@@ -32,5 +31,6 @@ export const projectEntityStateConfig: EntityStateConfigurer<Project, Projects> 
   initialState,
 );
 export const projectEntityAppStateConfig: EntityAppStateConfigurer<Project, Projects> = new EntityAppStateConfigurer(
+  entityName,
   initialState,
 );

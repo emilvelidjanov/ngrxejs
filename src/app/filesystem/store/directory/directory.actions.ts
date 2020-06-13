@@ -1,10 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { PropEntity, PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
-import { Directory, directoryEntityStateConfig } from './directory.state';
+import { Directory, directoryEntityAppStateConfig, directoryEntityStateConfig } from './directory.state';
 
 export const directoryActions = {
   ...directoryEntityStateConfig.getActions(),
+  ...directoryEntityAppStateConfig.getActions(),
   addLoadedDirectoryId: createAction(
     directoryEntityStateConfig.getActionType('Add Loaded Directory Id'),
     props<PropId>(),
