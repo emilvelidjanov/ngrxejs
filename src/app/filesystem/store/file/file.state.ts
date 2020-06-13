@@ -5,6 +5,7 @@ import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
 export interface Files extends EntityState<File>, EntityAppState {
   loadedFileIds: Id[];
   openedFileIds: Id[];
+  focusedFileId: Id;
 }
 
 export interface File extends Entity {
@@ -21,6 +22,7 @@ const initialState: Files = {
   entities: {},
   loadedFileIds: [],
   openedFileIds: [],
+  focusedFileId: null,
 };
 
 export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(entityName, initialState);

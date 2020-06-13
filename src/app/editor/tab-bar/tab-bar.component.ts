@@ -1,4 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Id } from 'src/app/core/ngrx/entity';
+import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
+import { Files } from 'src/app/filesystem/store/file/file.state';
 
 @Component({
   selector: 'app-tab-bar',
@@ -7,7 +12,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabBarComponent implements OnInit {
-  constructor() {}
+  public fileIds$: Observable<Id[]>;
 
-  public ngOnInit(): void {}
+  constructor(private store: Store<Files>) {}
+
+  public ngOnInit(): void {
+    this.fileIds$ = this.store.pipe(select(fileSelectors.selectOpenedFileIds));
+  }
 }

@@ -11,8 +11,11 @@ export interface DirectoryService {
   dispatchSetAll(directories: Directory[]): void;
   dispatchAddMany(directories: Directory[]): void;
   dispatchLoadedDirectory(loadedDirectory: Directory, content: DirectoryContent): void;
+  dispatchToggleOpenedDirectory(directory: Directory): void;
   dispatchOpenedDirectory(directory: Directory): void;
+  dispatchClosedDirectory(directory: Directory): void;
   selectIsLoadedDirectory(directory: Directory): Observable<boolean>;
+  selectIsOpenedDirectory(directory: Directory): Observable<boolean>;
 }
 
 export interface DirectoryContent {

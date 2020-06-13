@@ -17,6 +17,12 @@ const selectOpenedFiles = createSelector(
   defSelectors.selectEntities,
   (ids: Id[], files: Dictionary<File>) => ids.map((id: Id) => files[id]),
 );
+const selectFocusedFileId = createSelector(selectFiles, (files: Files) => files.focusedFileId);
+const selectFocusedFile = createSelector(
+  selectFocusedFileId,
+  defSelectors.selectEntities,
+  (id: Id, files: Dictionary<File>) => files[id],
+);
 
 export const fileSelectors = {
   ...defSelectors,
@@ -25,4 +31,6 @@ export const fileSelectors = {
   selectOpenedFileIds,
   selectIsOpenedFileId,
   selectOpenedFiles,
+  selectFocusedFileId,
+  selectFocusedFile,
 };

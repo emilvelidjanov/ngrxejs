@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { filter, share, switchMap, tap } from 'rxjs/operators';
+import { share, switchMap, takeWhile } from 'rxjs/operators';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
 import { Directory } from '../../store/directory/directory.state';
@@ -27,7 +27,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public openProject(): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
-      filter((result: OpenDialogResult) => !result.canceled),
+      takeWhile((result: OpenDialogResult) => !result.canceled),
       share(),
     );
     const loadAndCreateDirectoryContent$ = openDialog$.pipe(
@@ -49,23 +49,24 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   public openDirectory(directory: Directory): void {
     const isLoadedDirectory$ = this.directoryService.selectIsLoadedDirectory(directory);
     const loadAndCreateDirectoryContent$ = isLoadedDirectory$.pipe(
-      filter((isLoaded: boolean) => !isLoaded),
+      takeWhile((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.loadAndCreateDirectoryContent(directory.path)),
     );
-    loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) =>
-      this.directoryService.dispatchLoadedDirectory(directory, directoryContent),
-    );
-    this.directoryService.dispatchOpenedDirectory(directory);
+    loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) => {
+      this.directoryService.dispatchLoadedDirectory(directory, directoryContent);
+    });
+    this.directoryService.dispatchToggleOpenedDirectory(directory);
   }
 
   public openFile(file: File): void {
     const isLoadedFile$ = this.fileService.selectIsLoadedFile(file);
-    const loadFileContent$ = isLoadedFile$.pipe(
-      filter((isLoaded: boolean) => !isLoaded),
+    const loadFile$ = isLoadedFile$.pipe(
+      takeWhile((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.filesystemService.loadFile(file.path)),
     );
-    loadFileContent$.subscribe((content: string) => this.fileService.dispatchLoadedFile(file, content));
-    this.fileService.dispatchOpenedFile(file);
+    loadFile$.subscribe((content: string) => this.fileService.dispatchLoadedFile(file, content));
+    this.fileService.dispatchToggleOpenedFile(file);
+    this.fileService.dispatchFocusedFile(file);
   }
 
   private loadAndCreateDirectoryContent(path: string): Observable<DirectoryContent> {

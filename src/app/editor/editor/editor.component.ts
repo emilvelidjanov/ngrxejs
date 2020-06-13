@@ -11,10 +11,10 @@ import { File, Files } from 'src/app/filesystem/store/file/file.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent implements OnInit {
-  public files$: Observable<File[]>;
+  public file$: Observable<File>;
 
   constructor(private store: Store<Files>) {
-    this.files$ = this.store.pipe(select(fileSelectors.selectOpenedFiles));
+    this.file$ = this.store.pipe(select(fileSelectors.selectFocusedFile));
   }
 
   public ngOnInit(): void {}

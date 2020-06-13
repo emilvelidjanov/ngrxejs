@@ -79,12 +79,27 @@ export class DefaultDirectoryService implements DirectoryService {
     this.store.dispatch(directoryActions.addLoadedDirectoryId({ id: loadedDirectory.id }));
   }
 
+  public dispatchToggleOpenedDirectory(directory: Directory): void {
+    const isOpened$ = this.selectIsOpenedDirectory(directory);
+    isOpened$.subscribe((isOpened: boolean) => {
+      isOpened ? this.dispatchClosedDirectory(directory) : this.dispatchOpenedDirectory(directory);
+    });
+  }
+
   public dispatchOpenedDirectory(directory: Directory): void {
-    this.store.dispatch(directoryActions.toggleOpenedDirectoryId({ id: directory.id }));
+    this.store.dispatch(directoryActions.addOpenedDirectoryId({ id: directory.id }));
+  }
+
+  public dispatchClosedDirectory(directory: Directory): void {
+    this.store.dispatch(directoryActions.removeOpenedDirectoryId({ id: directory.id }));
   }
 
   public selectIsLoadedDirectory(directory: Directory): Observable<boolean> {
-    return this.store.pipe(select(directorySelectors.selectIsLoadedDirectoryId, { id: directory.id }));
+    return this.store.pipe(select(directorySelectors.selectIsLoadedDirectoryId, { id: directory.id }), take(1));
+  }
+
+  public selectIsOpenedDirectory(directory: Directory): Observable<boolean> {
+    return this.store.pipe(select(directorySelectors.selectIsOpenedDirectoryId, { id: directory.id }), take(1));
   }
 
   private mapToDirectories(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): Directory[] {

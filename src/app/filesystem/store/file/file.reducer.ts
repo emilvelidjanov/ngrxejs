@@ -10,8 +10,11 @@ const reducer = createReducer(
   on(fileActions.addLoadedFileId, (state: Files, props: PropId) => {
     return { ...state, loadedFileIds: [...state.loadedFileIds, props.id] };
   }),
-  on(fileActions.setOpenedFileId, (state: Files, props: PropId) => {
-    return { ...state, openedFileIds: [props.id] };
+  on(fileActions.addOpenedFileId, (state: Files, props: PropId) => {
+    return { ...state, openedFileIds: [...state.openedFileIds, props.id] };
+  }),
+  on(fileActions.setFocusedFileId, (state: Files, props: PropId) => {
+    return { ...state, focusedFileId: props.id };
   }),
 );
 

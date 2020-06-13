@@ -1,0 +1,3 @@
+<ng-container *ngIf="file$ | async as file">
+  <button (click)="focusTab()">{{ file.name }}{{ file.extension }}</button>
+</ng-container>

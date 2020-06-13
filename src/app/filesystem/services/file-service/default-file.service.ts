@@ -55,7 +55,20 @@ export class DefaultFileService implements FileService {
   }
 
   public selectIsLoadedFile(file: File): Observable<boolean> {
-    return this.store.pipe(select(fileSelectors.selectIsLoadedFileId, { id: file.id }));
+    return this.store.pipe(select(fileSelectors.selectIsLoadedFileId, { id: file.id }), take(1));
+  }
+
+  public selectIsOpenedFile(file: File): Observable<boolean> {
+    return this.store.pipe(select(fileSelectors.selectIsOpenedFileId, { id: file.id }), take(1));
+  }
+
+  public dispatchToggleOpenedFile(file: File): void {
+    const isOpened$ = this.selectIsOpenedFile(file);
+    isOpened$.subscribe((isOpened: boolean) => {
+      if (!isOpened) {
+        this.dispatchOpenedFile(file);
+      }
+    });
   }
 
   public dispatchLoadedFile(file: File, content: string): void {
@@ -73,7 +86,11 @@ export class DefaultFileService implements FileService {
   }
 
   public dispatchOpenedFile(file: File): void {
-    this.store.dispatch(fileActions.setOpenedFileId({ id: file.id }));
+    this.store.dispatch(fileActions.addOpenedFileId({ id: file.id }));
+  }
+
+  public dispatchFocusedFile(file: File): void {
+    this.store.dispatch(fileActions.setFocusedFileId({ id: file.id }));
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {

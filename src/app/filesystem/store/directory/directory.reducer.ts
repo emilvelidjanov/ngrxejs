@@ -11,13 +11,11 @@ const reducer = createReducer(
   on(directoryActions.addLoadedDirectoryId, (state: Directories, props: PropId) => {
     return { ...state, loadedDirectoryIds: [...state.loadedDirectoryIds, props.id] };
   }),
-  on(directoryActions.toggleOpenedDirectoryId, (state: Directories, props: PropId) => {
-    return {
-      ...state,
-      openedDirectoryIds: state.openedDirectoryIds.includes(props.id)
-        ? state.openedDirectoryIds.filter((id: Id) => id !== props.id)
-        : [...state.openedDirectoryIds, props.id],
-    };
+  on(directoryActions.addOpenedDirectoryId, (state: Directories, props: PropId) => {
+    return { ...state, openedDirectoryIds: [...state.openedDirectoryIds, props.id] };
+  }),
+  on(directoryActions.removeOpenedDirectoryId, (state: Directories, props: PropId) => {
+    return { ...state, openedDirectoryIds: state.openedDirectoryIds.filter((id: Id) => id !== props.id) };
   }),
 );
 
