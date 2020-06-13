@@ -3,11 +3,12 @@ import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
 import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 import { directoryActions } from './directory.actions';
-import { Directories, directoryEntityStateConfig } from './directory.state';
+import { Directories, directoryEntityAppStateConfig, directoryEntityStateConfig } from './directory.state';
 
 const reducer = createReducer(
   directoryEntityStateConfig.getInitialState(),
   ...directoryEntityStateConfig.getReducerFunctions(),
+  ...directoryEntityAppStateConfig.getReducerFunctions(),
   on(directoryActions.addLoadedDirectoryId, (state: Directories, props: PropId) => {
     return { ...state, loadedDirectoryIds: [...state.loadedDirectoryIds, props.id] };
   }),

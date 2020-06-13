@@ -2,11 +2,12 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 import { fileActions } from './file.actions';
-import { fileEntityStateConfig, Files } from './file.state';
+import { fileEntityAppStateConfig, fileEntityStateConfig, Files } from './file.state';
 
 const reducer = createReducer(
   fileEntityStateConfig.getInitialState(),
   ...fileEntityStateConfig.getReducerFunctions(),
+  ...fileEntityAppStateConfig.getReducerFunctions(),
   on(fileActions.addLoadedFileId, (state: Files, props: PropId) => {
     return { ...state, loadedFileIds: [...state.loadedFileIds, props.id] };
   }),

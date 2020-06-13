@@ -1,5 +1,5 @@
 import { Dictionary } from '@ngrx/entity';
-import { ActionCreator, createAction, createSelector, props } from '@ngrx/store';
+import { ActionCreator, createAction, createSelector, On, on, props } from '@ngrx/store';
 import { TypedAction } from '@ngrx/store/src/models';
 
 import { Entity, Id } from './entity';
@@ -10,11 +10,13 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
   private entityName: string;
   private initialState: AppStateType;
   private actions: DefaultAppActions;
+  private reducers: On<AppStateType>[];
 
   constructor(entityName: string, initialState: AppStateType) {
     this.entityName = entityName;
     this.initialState = initialState;
     this.actions = this.initActions();
+    this.reducers = this.initReducerFunctions();
   }
 
   public getSelectors(
@@ -85,6 +87,10 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
     return actionType;
   }
 
+  public getReducerFunctions(): On<AppStateType>[] {
+    return this.reducers;
+  }
+
   private initActions(): DefaultAppActions {
     const defaultAppActions: DefaultAppActions = {};
     if (this.initialState.loadedIds !== undefined) {
@@ -98,6 +104,35 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
       defaultAppActions.setFocusedId = createAction(this.getActionType('Set Focused Id'), props<PropId>());
     }
     return defaultAppActions;
+  }
+
+  private initReducerFunctions(): On<AppStateType>[] {
+    const reducerFunctions: On<AppStateType>[] = [];
+    if (this.initialState.loadedIds !== undefined) {
+      reducerFunctions.push(
+        on(this.actions.addLoadedId, (state: AppStateType, props: PropId) => {
+          return { ...state, loadedIds: [...state.loadedIds, props.id] };
+        }),
+      );
+    }
+    if (this.initialState.openedIds !== undefined) {
+      reducerFunctions.push(
+        on(this.actions.addOpenedId, (state: AppStateType, props: PropId) => {
+          return { ...state, openedIds: [...state.openedIds, props.id] };
+        }),
+        on(this.actions.removeOpenedId, (state: AppStateType, props: PropId) => {
+          return { ...state, openedIds: state.openedIds.filter((id: Id) => id !== props.id) };
+        }),
+      );
+    }
+    if (this.initialState.focusedId !== undefined) {
+      reducerFunctions.push(
+        on(this.actions.setFocusedId, (state: AppStateType, props: PropId) => {
+          return { ...state, focusedId: props.id };
+        }),
+      );
+    }
+    return reducerFunctions;
   }
 }
 

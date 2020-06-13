@@ -5,14 +5,14 @@ import { TypedAction } from '@ngrx/store/src/models';
 
 import { Entity, Id } from './entity';
 
-export class EntityStateConfigurer<EntityType extends Entity, CollectionType extends EntityState<EntityType>> {
+export class EntityStateConfigurer<EntityType extends Entity, EntityStateType extends EntityState<EntityType>> {
   private adapter: EntityAdapter<EntityType>;
-  private initialState: CollectionType;
+  private initialState: EntityStateType;
   private entityName: string;
   private actions: DefaultActions<EntityType>;
-  private reducers: On<CollectionType>[];
+  private reducers: On<EntityStateType>[];
 
-  constructor(entityName: string, initialState: CollectionType) {
+  constructor(entityName: string, initialState: EntityStateType) {
     this.adapter = createEntityAdapter<EntityType>();
     this.initialState = this.adapter.getInitialState(initialState);
     if (entityName) {
@@ -23,7 +23,7 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
     this.reducers = this.initReducerFunctions();
   }
 
-  public getSelectors(entityStateSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
+  public getSelectors(entityStateSelector: (state: object) => EntityStateType): DefaultSelectors<EntityType> {
     const defSelectors = this.adapter.getSelectors(entityStateSelector);
     const selectEntityById = createSelector(
       defSelectors.selectEntities,
@@ -50,7 +50,7 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
     return this.actions;
   }
 
-  public getReducerFunctions(): On<CollectionType>[] {
+  public getReducerFunctions(): On<EntityStateType>[] {
     return this.reducers;
   }
 
@@ -58,7 +58,7 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
     return this.adapter;
   }
 
-  public getInitialState(): CollectionType {
+  public getInitialState(): EntityStateType {
     return this.initialState;
   }
 
@@ -89,21 +89,21 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
     };
   }
 
-  private initReducerFunctions(): On<CollectionType>[] {
+  private initReducerFunctions(): On<EntityStateType>[] {
     return [
-      on(this.actions.addOne, (state: CollectionType, props: PropEntity<EntityType>) => {
+      on(this.actions.addOne, (state: EntityStateType, props: PropEntity<EntityType>) => {
         return this.adapter.addOne(props.entity, state);
       }),
-      on(this.actions.addMany, (state: CollectionType, props: PropEntities<EntityType>) => {
+      on(this.actions.addMany, (state: EntityStateType, props: PropEntities<EntityType>) => {
         return this.adapter.addMany(props.entities, state);
       }),
-      on(this.actions.setAll, (state: CollectionType, props: PropEntities<EntityType>) => {
+      on(this.actions.setAll, (state: EntityStateType, props: PropEntities<EntityType>) => {
         return this.adapter.setAll(props.entities, state);
       }),
-      on(this.actions.setOne, (state: CollectionType, props: PropEntity<EntityType>) => {
+      on(this.actions.setOne, (state: EntityStateType, props: PropEntity<EntityType>) => {
         return this.adapter.setOne(props.entity, state);
       }),
-      on(this.actions.removeOne, (state: CollectionType, props: PropId) => {
+      on(this.actions.removeOne, (state: EntityStateType, props: PropId) => {
         let typedId: any;
         if (typeof props.id === 'number') {
           typedId = props.id as number;
@@ -112,30 +112,30 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
         }
         return this.adapter.removeOne(typedId, state);
       }),
-      on(this.actions.removeMany, (state: CollectionType, props: PropIds) => {
+      on(this.actions.removeMany, (state: EntityStateType, props: PropIds) => {
         const numberIds: number[] = props.ids.filter((id: Id) => typeof id === 'number') as number[];
         const stringIds: string[] = props.ids.filter((id: Id) => typeof id === 'string') as string[];
         return this.adapter.removeMany(stringIds, this.adapter.removeMany(numberIds, state));
       }),
-      on(this.actions.removeByPredicate, (state: CollectionType, props: PropPredicate<EntityType>) => {
+      on(this.actions.removeByPredicate, (state: EntityStateType, props: PropPredicate<EntityType>) => {
         return this.adapter.removeMany(props.predicate, state);
       }),
-      on(this.actions.removeAll, (state: CollectionType) => {
+      on(this.actions.removeAll, (state: EntityStateType) => {
         return this.adapter.removeAll(state);
       }),
-      on(this.actions.updateOne, (state: CollectionType, props: PropUpdate<EntityType>) => {
+      on(this.actions.updateOne, (state: EntityStateType, props: PropUpdate<EntityType>) => {
         return this.adapter.updateOne(props.update, state);
       }),
-      on(this.actions.updateMany, (state: CollectionType, props: PropUpdates<EntityType>) => {
+      on(this.actions.updateMany, (state: EntityStateType, props: PropUpdates<EntityType>) => {
         return this.adapter.updateMany(props.updates, state);
       }),
-      on(this.actions.upsertOne, (state: CollectionType, props: PropEntity<EntityType>) => {
+      on(this.actions.upsertOne, (state: EntityStateType, props: PropEntity<EntityType>) => {
         return this.adapter.upsertOne(props.entity, state);
       }),
-      on(this.actions.upsertMany, (state: CollectionType, props: PropEntities<EntityType>) => {
+      on(this.actions.upsertMany, (state: EntityStateType, props: PropEntities<EntityType>) => {
         return this.adapter.upsertMany(props.entities, state);
       }),
-      on(this.actions.map, (state: CollectionType, props: PropEntityMap<EntityType>) => {
+      on(this.actions.map, (state: EntityStateType, props: PropEntityMap<EntityType>) => {
         return this.adapter.map(props.entityMap, state);
       }),
     ];

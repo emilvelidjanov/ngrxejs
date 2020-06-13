@@ -2,11 +2,12 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
 
 import { projectActions } from './project.actions';
-import { projectEntityStateConfig, Projects } from './project.state';
+import { projectEntityAppStateConfig, projectEntityStateConfig, Projects } from './project.state';
 
 const reducer = createReducer(
   projectEntityStateConfig.getInitialState(),
   ...projectEntityStateConfig.getReducerFunctions(),
+  ...projectEntityAppStateConfig.getReducerFunctions(),
   on(projectActions.setOpenProjectId, (state: Projects, props: PropId) => {
     return { ...state, openProjectId: props.id };
   }),
