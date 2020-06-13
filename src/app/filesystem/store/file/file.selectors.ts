@@ -5,9 +5,10 @@ import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configu
 
 import { selectFiles } from '..';
 
-import { File, fileEntityStateConfig, Files } from './file.state';
+import { File, fileEntityAppStateConfig, fileEntityStateConfig, Files } from './file.state';
 
 const defSelectors = { ...fileEntityStateConfig.getSelectors(selectFiles) };
+const defAppSelectors = { ...fileEntityAppStateConfig.getSelectors(selectFiles, defSelectors) };
 const selectLoadedFileIds = createSelector(selectFiles, (files: Files) => files.loadedFileIds);
 const selectIsLoadedFileId = createSelector(selectLoadedFileIds, (ids: Id[], props: PropId) => ids.includes(props.id));
 const selectOpenedFileIds = createSelector(selectFiles, (files: Files) => files.openedFileIds);
@@ -26,6 +27,7 @@ const selectFocusedFile = createSelector(
 
 export const fileSelectors = {
   ...defSelectors,
+  ...defAppSelectors,
   selectLoadedFileIds,
   selectIsLoadedFileId,
   selectOpenedFileIds,

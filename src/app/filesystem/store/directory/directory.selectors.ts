@@ -4,9 +4,10 @@ import { PropId } from 'src/app/core/ngrx/entity-configurer/entity-state-configu
 
 import { selectDirectories } from '..';
 
-import { Directories, directoryEntityStateConfig } from './directory.state';
+import { Directories, directoryEntityAppStateConfig, directoryEntityStateConfig } from './directory.state';
 
 const defSelectors = { ...directoryEntityStateConfig.getSelectors(selectDirectories) };
+const defAppSelectors = { ...directoryEntityAppStateConfig.getSelectors(selectDirectories, defSelectors) };
 const selectLoadedDirectoryIds = createSelector(
   selectDirectories,
   (directories: Directories) => directories.loadedDirectoryIds,
@@ -24,6 +25,7 @@ const selectIsOpenedDirectoryId = createSelector(selectOpenedDirectoryIds, (ids:
 
 export const directorySelectors = {
   ...defSelectors,
+  ...defAppSelectors,
   selectLoadedDirectoryIds,
   selectIsLoadedDirectoryId,
   selectOpenedDirectoryIds,

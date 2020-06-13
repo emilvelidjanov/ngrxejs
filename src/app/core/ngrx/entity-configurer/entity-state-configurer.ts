@@ -23,8 +23,8 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
     this.reducers = this.initReducerFunctions();
   }
 
-  public getSelectors(collectionSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
-    const defSelectors = this.adapter.getSelectors(collectionSelector);
+  public getSelectors(entityStateSelector: (state: object) => CollectionType): DefaultSelectors<EntityType> {
+    const defSelectors = this.adapter.getSelectors(entityStateSelector);
     const selectEntityById = createSelector(
       defSelectors.selectEntities,
       (entities: Dictionary<EntityType>, props: PropId) => entities[props.id],
@@ -142,13 +142,13 @@ export class EntityStateConfigurer<EntityType extends Entity, CollectionType ext
   }
 }
 
-export interface DefaultSelectors<T> extends EntitySelectors<T, object> {
+export interface DefaultSelectors<T extends Entity> extends EntitySelectors<T, object> {
   selectEntityById: (state: object, props: PropId) => T;
   selectEntitiesByIds: (state: object, props: PropIds) => T[];
   selectIsInStore: (state: object, props: PropId) => boolean;
 }
 
-export interface DefaultActions<T> {
+export interface DefaultActions<T extends Entity> {
   addOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>;
   addMany: ActionCreator<string, (props: PropEntities<T>) => PropEntities<T> & TypedAction<string>>;
   setOne: ActionCreator<string, (props: PropEntity<T>) => PropEntity<T> & TypedAction<string>>;
@@ -164,11 +164,11 @@ export interface DefaultActions<T> {
   map: ActionCreator<string, (props: PropEntityMap<T>) => PropEntityMap<T> & TypedAction<string>>;
 }
 
-export interface PropEntity<T> {
+export interface PropEntity<T extends Entity> {
   entity: T;
 }
 
-export interface PropEntities<T> {
+export interface PropEntities<T extends Entity> {
   entities: T[];
 }
 
@@ -180,18 +180,18 @@ export interface PropIds {
   ids: Id[];
 }
 
-export interface PropPredicate<T> {
+export interface PropPredicate<T extends Entity> {
   predicate: Predicate<T>;
 }
 
-export interface PropUpdate<T> {
+export interface PropUpdate<T extends Entity> {
   update: Update<T>;
 }
 
-export interface PropUpdates<T> {
+export interface PropUpdates<T extends Entity> {
   updates: Update<T>[];
 }
 
-export interface PropEntityMap<T> {
+export interface PropEntityMap<T extends Entity> {
   entityMap: EntityMap<T>;
 }

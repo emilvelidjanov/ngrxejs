@@ -4,9 +4,10 @@ import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
 
 import { selectProjects } from '..';
 
-import { Project, projectEntityStateConfig, Projects } from './project.state';
+import { Project, projectEntityAppStateConfig, projectEntityStateConfig, Projects } from './project.state';
 
 const defSelectors = { ...projectEntityStateConfig.getSelectors(selectProjects) };
+const defAppSelectors = { ...projectEntityAppStateConfig.getSelectors(selectProjects, defSelectors) };
 const selectOpenProjectId = createSelector(selectProjects, (projects: Projects) => projects.openProjectId);
 const selectOpenProject = createSelector(
   selectOpenProjectId,
@@ -16,6 +17,7 @@ const selectOpenProject = createSelector(
 
 export const projectSelectors = {
   ...defSelectors,
+  ...defAppSelectors,
   selectOpenProjectId,
   selectOpenProject,
 };
