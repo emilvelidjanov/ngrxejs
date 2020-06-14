@@ -1,4 +1,4 @@
-import { Id } from '../../entity-configurer/entity';
+import { Id } from '../../entity/entity';
 
 export interface IdGeneratorService {
   nextId(...args: any[]): Id;

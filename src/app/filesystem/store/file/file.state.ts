@@ -1,14 +1,10 @@
-import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
-import { EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
-import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-app-state-configurer';
-import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
+import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface Files extends EntityState<File>, EntityAppState {
-  loadedFileIds: Id[];
-  openedFileIds: Id[];
-  focusedFileId: Id;
-}
+export interface Files extends EntityDomainState<File>, EntityAppState {}
 
 export interface File extends Entity {
   path: string;
@@ -22,21 +18,16 @@ export const entityName = 'File';
 const initialState: Files = {
   ids: [],
   entities: {},
-  loadedFileIds: [],
-  openedFileIds: [],
-  focusedFileId: null,
-
-  // app state
   loadedIds: [],
   openedIds: [],
   focusedId: null,
 };
 
-export const fileEntityStateConfig: EntityStateConfigurer<File, Files> = new EntityStateConfigurer(
+export const fileDomainStateConfig: EntityDomainStateConfigurer<File, Files> = new EntityDomainStateConfigurer(
   entityName,
   initialState,
 );
-export const fileEntityAppStateConfig: EntityAppStateConfigurer<File, Files> = new EntityAppStateConfigurer(
+export const fileAppStateConfig: EntityAppStateConfigurer<File, Files> = new EntityAppStateConfigurer(
   entityName,
   initialState,
 );

@@ -1,9 +1,9 @@
 import { selectFiles } from '..';
 
-import { fileEntityAppStateConfig, fileEntityStateConfig } from './file.state';
+import { fileAppStateConfig, fileDomainStateConfig } from './file.state';
 
-const defSelectors = { ...fileEntityStateConfig.getSelectors(selectFiles) };
-const defAppSelectors = { ...fileEntityAppStateConfig.getSelectors(selectFiles, defSelectors) };
+const defSelectors = { ...fileDomainStateConfig.getSelectors(selectFiles) };
+const defAppSelectors = { ...fileAppStateConfig.getSelectors(selectFiles, defSelectors) };
 
 export const fileSelectors = {
   ...defSelectors,

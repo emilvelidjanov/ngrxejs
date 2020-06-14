@@ -1,6 +1,4 @@
-import { Id } from './entity';
-
-export const entityAppStateKey: string = 'EntityAppState';
+import { Id } from '../entity';
 
 export interface EntityAppState {
   loadedIds?: Id[];

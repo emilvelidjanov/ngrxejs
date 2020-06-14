@@ -1,12 +1,11 @@
 import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
-import { EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
-import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-app-state-configurer';
-import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
+import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface Projects extends EntityState<Project>, EntityAppState {
-  openProjectId: Id;
-}
+export interface Projects extends EntityDomainState<Project>, EntityAppState {}
 
 export interface Project extends Entity {
   name: string;
@@ -20,17 +19,14 @@ export const entityName = 'Project';
 const initialState: Projects = {
   ids: [],
   entities: {},
-  openProjectId: null,
-
-  // app state
   openedIds: [],
 };
 
-export const projectEntityStateConfig: EntityStateConfigurer<Project, Projects> = new EntityStateConfigurer(
+export const projectDomainStateConfig: EntityDomainStateConfigurer<Project, Projects> = new EntityDomainStateConfigurer(
   entityName,
   initialState,
 );
-export const projectEntityAppStateConfig: EntityAppStateConfigurer<Project, Projects> = new EntityAppStateConfigurer(
+export const projectAppStateConfig: EntityAppStateConfigurer<Project, Projects> = new EntityAppStateConfigurer(
   entityName,
   initialState,
 );

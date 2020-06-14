@@ -1,9 +1,9 @@
 import { createAction } from '@ngrx/store';
 
-import { projectEntityAppStateConfig, projectEntityStateConfig } from './project.state';
+import { projectAppStateConfig, projectDomainStateConfig } from './project.state';
 
 export const projectActions = {
-  ...projectEntityStateConfig.getActions(),
-  ...projectEntityAppStateConfig.getActions(),
-  openProject: createAction(projectEntityStateConfig.getActionType('Open Project')),
+  ...projectDomainStateConfig.getActions(),
+  ...projectAppStateConfig.getActions(),
+  openProject: createAction(projectDomainStateConfig.getActionType('Open Project')),
 };

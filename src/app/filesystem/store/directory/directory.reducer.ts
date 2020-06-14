@@ -1,11 +1,11 @@
 import { Action, createReducer } from '@ngrx/store';
 
-import { Directories, directoryEntityAppStateConfig, directoryEntityStateConfig } from './directory.state';
+import { Directories, directoryAppStateConfig, directoryDomainStateConfig } from './directory.state';
 
 const reducer = createReducer(
-  directoryEntityStateConfig.getInitialState(),
-  ...directoryEntityStateConfig.getReducerFunctions(),
-  ...directoryEntityAppStateConfig.getReducerFunctions(),
+  directoryDomainStateConfig.getInitialState(),
+  ...directoryDomainStateConfig.getReducerFunctions(),
+  ...directoryAppStateConfig.getReducerFunctions(),
 );
 
 export function directoriesReducer(state: Directories | undefined, action: Action) {

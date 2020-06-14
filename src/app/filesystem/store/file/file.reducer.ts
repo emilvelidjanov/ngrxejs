@@ -1,11 +1,11 @@
 import { Action, createReducer } from '@ngrx/store';
 
-import { fileEntityAppStateConfig, fileEntityStateConfig, Files } from './file.state';
+import { fileAppStateConfig, fileDomainStateConfig, Files } from './file.state';
 
 const reducer = createReducer(
-  fileEntityStateConfig.getInitialState(),
-  ...fileEntityStateConfig.getReducerFunctions(),
-  ...fileEntityAppStateConfig.getReducerFunctions(),
+  fileDomainStateConfig.getInitialState(),
+  ...fileDomainStateConfig.getReducerFunctions(),
+  ...fileAppStateConfig.getReducerFunctions(),
 );
 
 export function filesReducer(state: Files | undefined, action: Action) {

@@ -1,13 +1,10 @@
-import { EntityState } from '@ngrx/entity';
-import { Entity, Id } from 'src/app/core/ngrx/entity-configurer/entity';
-import { EntityAppState } from 'src/app/core/ngrx/entity-configurer/entity-app-state';
-import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-app-state-configurer';
-import { EntityStateConfigurer } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
+import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface Directories extends EntityState<Directory>, EntityAppState {
-  loadedDirectoryIds: Id[];
-  openedDirectoryIds: Id[];
-}
+export interface Directories extends EntityDomainState<Directory>, EntityAppState {}
 
 export interface Directory extends Entity {
   path: string;
@@ -21,19 +18,15 @@ export const entityName = 'Directory';
 const initialState: Directories = {
   ids: [],
   entities: {},
-  loadedDirectoryIds: [],
-  openedDirectoryIds: [],
-
-  // app state
   loadedIds: [],
   openedIds: [],
 };
 
-export const directoryEntityStateConfig: EntityStateConfigurer<Directory, Directories> = new EntityStateConfigurer(
+export const directoryDomainStateConfig: EntityDomainStateConfigurer<
+  Directory,
+  Directories
+> = new EntityDomainStateConfigurer(entityName, initialState);
+export const directoryAppStateConfig: EntityAppStateConfigurer<Directory, Directories> = new EntityAppStateConfigurer(
   entityName,
   initialState,
 );
-export const directoryEntityAppStateConfig: EntityAppStateConfigurer<
-  Directory,
-  Directories
-> = new EntityAppStateConfigurer(entityName, initialState);

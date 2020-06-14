@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity-configurer/entity';
+import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { directoryActions } from '../../store/directory/directory.actions';
 import { directorySelectors } from '../../store/directory/directory.selectors';

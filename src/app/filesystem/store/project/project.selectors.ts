@@ -1,9 +1,9 @@
 import { selectProjects } from '..';
 
-import { projectEntityAppStateConfig, projectEntityStateConfig } from './project.state';
+import { projectAppStateConfig, projectDomainStateConfig } from './project.state';
 
-const defSelectors = { ...projectEntityStateConfig.getSelectors(selectProjects) };
-const defAppSelectors = { ...projectEntityAppStateConfig.getSelectors(selectProjects, defSelectors) };
+const defSelectors = { ...projectDomainStateConfig.getSelectors(selectProjects) };
+const defAppSelectors = { ...projectAppStateConfig.getSelectors(selectProjects, defSelectors) };
 
 export const projectSelectors = {
   ...defSelectors,

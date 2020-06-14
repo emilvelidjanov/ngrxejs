@@ -1,13 +1,13 @@
 import { createAction, props } from '@ngrx/store';
-import { PropEntity } from 'src/app/core/ngrx/entity-configurer/entity-state-configurer';
+import { PropEntity } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
-import { Directory, directoryEntityAppStateConfig, directoryEntityStateConfig } from './directory.state';
+import { Directory, directoryAppStateConfig, directoryDomainStateConfig } from './directory.state';
 
 export const directoryActions = {
-  ...directoryEntityStateConfig.getActions(),
-  ...directoryEntityAppStateConfig.getActions(),
+  ...directoryDomainStateConfig.getActions(),
+  ...directoryAppStateConfig.getActions(),
   openDirectory: createAction(
-    directoryEntityStateConfig.getActionType('Open Directory'),
+    directoryDomainStateConfig.getActionType('Open Directory'),
     props<PropEntity<Directory>>(),
   ),
 };
