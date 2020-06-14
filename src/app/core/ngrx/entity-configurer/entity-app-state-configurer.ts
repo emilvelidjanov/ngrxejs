@@ -4,7 +4,7 @@ import { TypedAction } from '@ngrx/store/src/models';
 
 import { Entity, Id } from './entity';
 import { EntityAppState } from './entity-app-state';
-import { DefaultSelectors, PropId } from './entity-state-configurer';
+import { DefaultSelectors, PropId, PropIds } from './entity-state-configurer';
 
 export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType extends EntityAppState> {
   private entityName: string;
@@ -46,11 +46,19 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
         appStateSelector,
         (appState: AppStateType) => appState.openedIds,
       );
+      defaultAppSelectors.selectFirstOpenedId = createSelector(
+        defaultAppSelectors.selectOpenedIds,
+        (ids: Id[]) => ids[0],
+      );
       if (entityStateSelectors) {
         defaultAppSelectors.selectOpenedEntities = createSelector(
           defaultAppSelectors.selectOpenedIds,
           entityStateSelectors.selectEntities,
           (ids: Id[], entities: Dictionary<EntityType>) => ids.map((id: Id) => entities[id]),
+        );
+        defaultAppSelectors.selectFirstOpenedEntity = createSelector(
+          defaultAppSelectors.selectOpenedEntities,
+          (entities: EntityType[]) => entities[0],
         );
       }
       defaultAppSelectors.selectIsOpenedId = createSelector(
@@ -99,6 +107,7 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
     if (this.initialState.openedIds !== undefined) {
       defaultAppActions.addOpenedId = createAction(this.getActionType('Add Opened Id'), props<PropId>());
       defaultAppActions.removeOpenedId = createAction(this.getActionType('Remove Opened Id'), props<PropId>());
+      defaultAppActions.setOpenedIds = createAction(this.getActionType('Set Opened Ids'), props<PropIds>());
     }
     if (this.initialState.focusedId !== undefined) {
       defaultAppActions.setFocusedId = createAction(this.getActionType('Set Focused Id'), props<PropId>());
@@ -123,6 +132,9 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
         on(this.actions.removeOpenedId, (state: AppStateType, props: PropId) => {
           return { ...state, openedIds: state.openedIds.filter((id: Id) => id !== props.id) };
         }),
+        on(this.actions.setOpenedIds, (state: AppStateType, props: PropIds) => {
+          return { ...state, openedIds: props.ids };
+        }),
       );
     }
     if (this.initialState.focusedId !== undefined) {
@@ -141,18 +153,19 @@ export interface DefaultAppSelectors<T extends Entity> {
   selectLoadedEntities?: (state: object) => T[];
   selectIsLoadedId?: (state: object, props: PropId) => boolean;
   selectOpenedIds?: (state: object) => Id[];
+  selectFirstOpenedId?: (state: object) => Id;
   selectOpenedEntities?: (state: object) => T[];
+  selectFirstOpenedEntity?: (state: object) => T;
   selectIsOpenedId?: (state: object, props: PropId) => boolean;
   selectFocusedId?: (state: object) => Id;
   selectFocusedEntity?: (state: object) => T;
   selectIsFocusedId?: (state: object, props: PropId) => boolean;
 }
 
-export type AppAction = ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
-
 export interface DefaultAppActions {
-  addLoadedId?: AppAction;
-  addOpenedId?: AppAction;
-  removeOpenedId?: AppAction;
-  setFocusedId?: AppAction;
+  addLoadedId?: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
+  addOpenedId?: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
+  removeOpenedId?: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
+  setOpenedIds?: ActionCreator<string, (props: PropIds) => PropIds & TypedAction<string>>;
+  setFocusedId?: ActionCreator<string, (props: PropId) => PropId & TypedAction<string>>;
 }

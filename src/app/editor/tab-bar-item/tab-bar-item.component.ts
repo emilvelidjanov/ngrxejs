@@ -23,6 +23,6 @@ export class TabBarItemComponent implements OnInit {
   }
 
   public focusTab() {
-    this.store.dispatch(fileActions.setFocusedFileId({ id: this.fileId }));
+    this.store.dispatch(fileActions.setFocusedId({ id: this.fileId }));
   }
 }

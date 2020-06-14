@@ -14,7 +14,7 @@ export class EditorComponent implements OnInit {
   public file$: Observable<File>;
 
   constructor(private store: Store<Files>) {
-    this.file$ = this.store.pipe(select(fileSelectors.selectFocusedFile));
+    this.file$ = this.store.pipe(select(fileSelectors.selectFocusedEntity));
   }
 
   public ngOnInit(): void {}

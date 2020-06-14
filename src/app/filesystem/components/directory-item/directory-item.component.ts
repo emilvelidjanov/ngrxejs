@@ -23,9 +23,7 @@ export class DirectoryItemComponent implements OnInit {
 
   public ngOnInit(): void {
     this.directory$ = this.store.pipe(select(directorySelectors.selectEntityById, { id: this.directoryId }));
-    this.isOpenedDirectory$ = this.store.pipe(
-      select(directorySelectors.selectIsOpenedDirectoryId, { id: this.directoryId }),
-    );
+    this.isOpenedDirectory$ = this.store.pipe(select(directorySelectors.selectIsOpenedId, { id: this.directoryId }));
   }
 
   public openDirectory(): void {

@@ -45,7 +45,7 @@ export class DefaultProjectService implements ProjectService {
     this.fileService.dispatchSetAll(content.files);
     this.directoryService.dispatchSetAll(content.directories);
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
-    this.store.dispatch(projectActions.setOpenProjectId({ id: project.id }));
+    this.store.dispatch(projectActions.setOpenedIds({ ids: [project.id] }));
   }
 
   private mapToProject(id: Id, openDialogResult: OpenDialogResult, content: DirectoryContent): Project {

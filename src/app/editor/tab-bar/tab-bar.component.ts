@@ -17,6 +17,6 @@ export class TabBarComponent implements OnInit {
   constructor(private store: Store<Files>) {}
 
   public ngOnInit(): void {
-    this.fileIds$ = this.store.pipe(select(fileSelectors.selectOpenedFileIds));
+    this.fileIds$ = this.store.pipe(select(fileSelectors.selectOpenedIds));
   }
 }

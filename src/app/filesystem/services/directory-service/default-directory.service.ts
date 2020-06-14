@@ -76,7 +76,7 @@ export class DefaultDirectoryService implements DirectoryService {
         },
       }),
     );
-    this.store.dispatch(directoryActions.addLoadedDirectoryId({ id: loadedDirectory.id }));
+    this.store.dispatch(directoryActions.addLoadedId({ id: loadedDirectory.id }));
   }
 
   public dispatchToggleOpenedDirectory(directory: Directory): void {
@@ -87,19 +87,19 @@ export class DefaultDirectoryService implements DirectoryService {
   }
 
   public dispatchOpenedDirectory(directory: Directory): void {
-    this.store.dispatch(directoryActions.addOpenedDirectoryId({ id: directory.id }));
+    this.store.dispatch(directoryActions.addOpenedId({ id: directory.id }));
   }
 
   public dispatchClosedDirectory(directory: Directory): void {
-    this.store.dispatch(directoryActions.removeOpenedDirectoryId({ id: directory.id }));
+    this.store.dispatch(directoryActions.removeOpenedId({ id: directory.id }));
   }
 
   public selectIsLoadedDirectory(directory: Directory): Observable<boolean> {
-    return this.store.pipe(select(directorySelectors.selectIsLoadedDirectoryId, { id: directory.id }), take(1));
+    return this.store.pipe(select(directorySelectors.selectIsLoadedId, { id: directory.id }), take(1));
   }
 
   public selectIsOpenedDirectory(directory: Directory): Observable<boolean> {
-    return this.store.pipe(select(directorySelectors.selectIsOpenedDirectoryId, { id: directory.id }), take(1));
+    return this.store.pipe(select(directorySelectors.selectIsOpenedId, { id: directory.id }), take(1));
   }
 
   private mapToDirectories(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): Directory[] {
