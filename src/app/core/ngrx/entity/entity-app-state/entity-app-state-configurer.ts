@@ -29,6 +29,10 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
     const defaultAppSelectors: EntityAppSelectors<T> = {};
     if (this.initialState.loadedIds !== undefined) {
       defaultAppSelectors.selectLoadedIds = createSelector(appStateSelector, (appState: A) => appState.loadedIds);
+      defaultAppSelectors.selectIsLoadedId = createSelector(
+        defaultAppSelectors.selectLoadedIds,
+        (ids: Id[], props: PropId) => ids.includes(props.id),
+      );
       if (entityStateSelectors) {
         defaultAppSelectors.selectLoadedEntities = createSelector(
           defaultAppSelectors.selectLoadedIds,
@@ -36,16 +40,16 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
           (ids: Id[], entities: Dictionary<T>) => ids.map((id: Id) => entities[id]),
         );
       }
-      defaultAppSelectors.selectIsLoadedId = createSelector(
-        defaultAppSelectors.selectLoadedIds,
-        (ids: Id[], props: PropId) => ids.includes(props.id),
-      );
     }
     if (this.initialState.openedIds !== undefined) {
       defaultAppSelectors.selectOpenedIds = createSelector(appStateSelector, (appState: A) => appState.openedIds);
       defaultAppSelectors.selectFirstOpenedId = createSelector(
         defaultAppSelectors.selectOpenedIds,
         (ids: Id[]) => ids[0],
+      );
+      defaultAppSelectors.selectIsOpenedId = createSelector(
+        defaultAppSelectors.selectOpenedIds,
+        (ids: Id[], props: PropId) => ids.includes(props.id),
       );
       if (entityStateSelectors) {
         defaultAppSelectors.selectOpenedEntities = createSelector(
@@ -58,13 +62,13 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
           (entities: T[]) => entities[0],
         );
       }
-      defaultAppSelectors.selectIsOpenedId = createSelector(
-        defaultAppSelectors.selectOpenedIds,
-        (ids: Id[], props: PropId) => ids.includes(props.id),
-      );
     }
     if (this.initialState.focusedId !== undefined) {
       defaultAppSelectors.selectFocusedId = createSelector(appStateSelector, (appState: A) => appState.focusedId);
+      defaultAppSelectors.selectIsFocusedId = createSelector(
+        defaultAppSelectors.selectFocusedId,
+        (id: Id, props: PropId) => id === props.id,
+      );
       if (entityStateSelectors) {
         defaultAppSelectors.selectFocusedEntity = createSelector(
           defaultAppSelectors.selectFocusedId,
@@ -72,10 +76,6 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
           (id: Id, entities: Dictionary<T>) => entities[id],
         );
       }
-      defaultAppSelectors.selectIsFocusedId = createSelector(
-        defaultAppSelectors.selectFocusedId,
-        (id: Id, props: PropId) => id === props.id,
-      );
     }
     return defaultAppSelectors;
   }

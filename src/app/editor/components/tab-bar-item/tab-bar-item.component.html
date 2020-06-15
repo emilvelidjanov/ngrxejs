@@ -1,3 +1,6 @@
 <ng-container *ngIf="file$ | async as file">
   <button (click)="focusTab()">{{ file.name }}{{ file.extension }}</button>
+  <button (click)="closeTab()">
+    <span class="closeIcon"></span>
+  </button>
 </ng-container>

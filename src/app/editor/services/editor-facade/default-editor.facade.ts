@@ -20,4 +20,9 @@ export class DefaultEditorFacade implements EditorFacade {
     this.editorService.dispatchToggleOpenedFile(file);
     this.editorService.dispatchFocusedFile(file);
   }
+
+  public closeFile(file: File): void {
+    this.editorService.dispatchUnfocusedFile(file);
+    this.editorService.dispatchClosedFile(file);
+  }
 }

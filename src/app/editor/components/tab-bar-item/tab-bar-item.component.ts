@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
 import { File } from 'src/app/filesystem/store/file/file.state';
@@ -24,6 +25,20 @@ export class TabBarItemComponent implements OnInit {
   }
 
   public focusTab() {
-    this.store.dispatch(editorActions.setFocusedId({ id: this.fileId }));
+    this.file$
+      .pipe(
+        tap((file: File) => this.store.dispatch(editorActions.openFile({ entity: file }))),
+        take(1),
+      )
+      .subscribe();
+  }
+
+  public closeTab() {
+    this.file$
+      .pipe(
+        tap((file: File) => this.store.dispatch(editorActions.closeFile({ entity: file }))),
+        take(1),
+      )
+      .subscribe();
   }
 }

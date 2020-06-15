@@ -19,4 +19,13 @@ export class EditorEffects {
       ),
     { dispatch: false },
   );
+
+  public closeFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.closeFile),
+        tap((action) => this.editorFacade.closeFile(action.entity)),
+      ),
+    { dispatch: false },
+  );
 }
