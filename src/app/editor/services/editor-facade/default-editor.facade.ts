@@ -1,4 +1,5 @@
 import { Inject } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { FilesystemFacade } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade.dependency';
 import { File } from 'src/app/filesystem/store/file/file.state';
@@ -15,6 +16,8 @@ export class DefaultEditorFacade implements EditorFacade {
   ) {}
 
   public openFile(file: File): void {
-    throw new Error('Method not implemented.');
+    this.filesystemFacade.loadFile(file).pipe(take(1)).subscribe();
+    this.editorService.dispatchToggleOpenedFile(file);
+    this.editorService.dispatchFocusedFile(file);
   }
 }

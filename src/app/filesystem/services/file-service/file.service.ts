@@ -9,9 +9,5 @@ export interface FileService {
   dispatchSetAll(files: File[]): void;
   dispatchAddMany(file: File[]): void;
   selectIsLoadedFile(file: File): Observable<boolean>;
-  selectIsOpenedFile(file: File): Observable<boolean>;
-  dispatchToggleOpenedFile(file: File): void;
   dispatchLoadedFile(file: File, content: string): void;
-  dispatchOpenedFile(file: File): void;
-  dispatchFocusedFile(file: File): void;
 }

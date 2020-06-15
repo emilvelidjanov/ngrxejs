@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { share, switchMap, takeWhile } from 'rxjs/operators';
+import { share, switchMap, takeWhile, tap } from 'rxjs/operators';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
 import { Directory } from '../../store/directory/directory.state';
@@ -58,15 +58,14 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     this.directoryService.dispatchToggleOpenedDirectory(directory);
   }
 
-  public openFile(file: File): void {
+  public loadFile(file: File): Observable<string> {
     const isLoadedFile$ = this.fileService.selectIsLoadedFile(file);
     const loadFile$ = isLoadedFile$.pipe(
       takeWhile((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.filesystemService.loadFile(file.path)),
+      tap((content: string) => this.fileService.dispatchLoadedFile(file, content)),
     );
-    loadFile$.subscribe((content: string) => this.fileService.dispatchLoadedFile(file, content));
-    this.fileService.dispatchToggleOpenedFile(file);
-    this.fileService.dispatchFocusedFile(file);
+    return loadFile$;
   }
 
   private loadAndCreateDirectoryContent(path: string): Observable<DirectoryContent> {

@@ -19,8 +19,6 @@ const initialState: Files = {
   ids: [],
   entities: {},
   loadedIds: [],
-  openedIds: [],
-  focusedId: null,
 };
 
 export const fileDomainStateConfig: EntityDomainStateConfigurer<File, Files> = new EntityDomainStateConfigurer(

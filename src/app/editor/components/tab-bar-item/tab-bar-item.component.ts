@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/core/ngrx/entity/entity';
-import { fileActions } from 'src/app/filesystem/store/file/file.actions';
 import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
 import { File } from 'src/app/filesystem/store/file/file.state';
+
+import { editorActions } from '../../store/editor/editor.actions';
 
 @Component({
   selector: 'app-tab-bar-item[fileId]',
@@ -23,6 +24,6 @@ export class TabBarItemComponent implements OnInit {
   }
 
   public focusTab() {
-    this.store.dispatch(fileActions.setFocusedId({ id: this.fileId }));
+    this.store.dispatch(editorActions.setFocusedId({ id: this.fileId }));
   }
 }

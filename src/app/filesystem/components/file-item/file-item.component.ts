@@ -3,8 +3,8 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
+import { editorActions } from 'src/app/editor/store/editor/editor.actions';
 
-import { fileActions } from '../../store/file/file.actions';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { File, Files } from '../../store/file/file.state';
 
@@ -27,7 +27,7 @@ export class FileItemComponent implements OnInit {
   public openFile(): void {
     this.file$
       .pipe(
-        tap((file: File) => this.store.dispatch(fileActions.openFile({ entity: file }))),
+        tap((file: File) => this.store.dispatch(editorActions.openFile({ entity: file }))),
         take(1),
       )
       .subscribe();
