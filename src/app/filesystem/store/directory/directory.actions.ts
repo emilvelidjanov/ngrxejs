@@ -6,8 +6,5 @@ import { Directory, directoryAppStateConfig, directoryDomainStateConfig } from '
 export const directoryActions = {
   ...directoryDomainStateConfig.getActions(),
   ...directoryAppStateConfig.getActions(),
-  openDirectory: createAction(
-    directoryDomainStateConfig.getActionType('Open Directory'),
-    props<PropEntity<Directory>>(),
-  ),
+  openDirectory: createAction(directoryAppStateConfig.getActionType('Open Directory'), props<PropEntity<Directory>>()),
 };

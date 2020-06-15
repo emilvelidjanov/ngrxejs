@@ -30,7 +30,7 @@ export class FilesystemModule {
     return {
       ngModule: FilesystemModule,
       providers: [
-        filesystemServiceDep.getProvider(),
+        filesystemServiceDep.getProvider(), // TODO: don't expose services
         filesystemFacadeDep.getProvider(),
         fileServiceDep.getProvider(),
         directoryServiceDep.getProvider(),

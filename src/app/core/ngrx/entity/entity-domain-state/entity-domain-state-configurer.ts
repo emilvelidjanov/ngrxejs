@@ -79,7 +79,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
   }
 
   public getActionType(type: string) {
-    const actionType = `[${this.entityName}] ${type}`;
+    const actionType = `[Domain][${this.entityName}] ${type}`;
     return actionType;
   }
 

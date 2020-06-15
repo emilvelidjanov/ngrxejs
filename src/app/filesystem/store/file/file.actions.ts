@@ -6,5 +6,5 @@ import { File, fileAppStateConfig, fileDomainStateConfig } from './file.state';
 export const fileActions = {
   ...fileDomainStateConfig.getActions(),
   ...fileAppStateConfig.getActions(),
-  openFile: createAction(fileDomainStateConfig.getActionType('Open File'), props<PropEntity<File>>()),
+  openFile: createAction(fileAppStateConfig.getActionType('Open File'), props<PropEntity<File>>()),
 };

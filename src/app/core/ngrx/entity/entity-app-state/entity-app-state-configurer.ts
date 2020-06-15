@@ -85,12 +85,16 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
   }
 
   public getActionType(type: string) {
-    const actionType = `[${this.entityName}] ${type}`;
+    const actionType = `[App][${this.entityName}] ${type}`;
     return actionType;
   }
 
   public getReducerFunctions(): On<A>[] {
     return this.reducers;
+  }
+
+  public getInitialState(): A {
+    return this.initialState;
   }
 
   private initActions(): EntityAppActions {

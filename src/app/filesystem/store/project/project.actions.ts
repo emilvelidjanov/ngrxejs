@@ -5,5 +5,5 @@ import { projectAppStateConfig, projectDomainStateConfig } from './project.state
 export const projectActions = {
   ...projectDomainStateConfig.getActions(),
   ...projectAppStateConfig.getActions(),
-  openProject: createAction(projectDomainStateConfig.getActionType('Open Project')),
+  openProject: createAction(projectAppStateConfig.getActionType('Open Project')),
 };

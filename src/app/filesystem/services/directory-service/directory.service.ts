@@ -4,6 +4,7 @@ import { Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
 import { LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 
+// TODO: cleanup all services, unused methods and rename methods --> dispatchLoadedDirectory > addLoadedDirectory
 export interface DirectoryService {
   createDirectoryContent(loadDirectoryResults: LoadDirectoryResult[]): Observable<DirectoryContent>;
   createDirectories(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]>;

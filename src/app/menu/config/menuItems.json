@@ -2,7 +2,7 @@
   {
     "id": "openProject",
     "label": "Open project...",
-    "clickAction": "[Project] Open Project",
+    "clickAction": "[App][Project] Open Project",
     "menuItemIds": []
   },
   {
