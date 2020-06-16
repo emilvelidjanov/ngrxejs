@@ -1,3 +1,6 @@
+import { MenuItem } from '../../store/menu-item/menu-item.state';
+import { Menu } from '../../store/menu/menu.state';
+
 export interface MenuFacade {
-  // TODO: init menu in app.component.ts
+  createMenu(menu: Menu, menuItems: MenuItem[]): void;
 }

@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
+import mainMenuBar from '../config/menu/mainMenuBar.json';
+import menuItems from '../config/menu/menuItems.json';
+
 import { FilesystemFacade } from './filesystem/services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from './filesystem/services/filesystem-facade/filesystem.facade.dependency';
 import { MenuFacade } from './menu/services/menu-facade/menu.facade';
@@ -24,5 +27,7 @@ export class AppComponent implements OnInit {
     this.mainMenuId = 'mainMenuBar';
   }
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    this.menuFacade.createMenu(mainMenuBar, menuItems);
+  }
 }
