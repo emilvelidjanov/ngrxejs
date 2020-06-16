@@ -1,0 +1,13 @@
+:host {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea {
+  flex-grow: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  word-wrap: normal;
+}

@@ -1,10 +1,9 @@
-import { createAction, props } from '@ngrx/store';
-import { PropId } from 'src/app/core/ngrx/store-configurer';
+import { createAction } from '@ngrx/store';
 
-import { projectStoreConfig } from './project.state';
+import { projectAppStateConfig, projectDomainStateConfig } from './project.state';
 
 export const projectActions = {
-  ...projectStoreConfig.getActions(),
-  setOpenProjectId: createAction(projectStoreConfig.getActionType('Set Open Project Id'), props<PropId>()),
-  openProject: createAction(projectStoreConfig.getActionType('Open Project')),
+  ...projectDomainStateConfig.getActions(),
+  ...projectAppStateConfig.getActions(),
+  openProject: createAction(projectAppStateConfig.getActionType('Open Project')),
 };

@@ -1,21 +1,5 @@
 <ng-container *ngIf="file$ | async as file">
-  <ng-container *ngIf="file.isDirectory; else fileTemplate">
-    <button class="directory" (click)="openDirectory()">
-      <ng-container *ngTemplateOutlet="label"></ng-container>
-    </button>
-  </ng-container>
-  <ng-template #fileTemplate>
-    <button>
-      <ng-container *ngTemplateOutlet="label"></ng-container>
-    </button>
-  </ng-template>
-  <ng-container *ngIf="isOpenedDirectory$ | async as isOpenedDirectory">
-    <ng-container *ngFor="let nestedFileId of file.fileIds">
-      <app-file-item [fileId]="nestedFileId"></app-file-item>
-    </ng-container>
-  </ng-container>
-
-  <ng-template #label>
-    <span class="file-label"> {{ file.name }}{{ file.extension }} </span>
-  </ng-template>
+  <button (click)="openFile()">
+    <span class="file-label">{{ file.name }}{{ file.extension }}</span>
+  </button>
 </ng-container>

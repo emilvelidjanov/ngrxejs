@@ -1,8 +1,8 @@
 import { selectMenus } from '..';
 
-import { menuStoreConfig } from './menu.state';
+import { menuDomainStateConfig } from './menu.state';
 
-const defSelectors = { ...menuStoreConfig.getSelectors(selectMenus) };
+const defSelectors = { ...menuDomainStateConfig.getSelectors(selectMenus) };
 
 export const menuSelectors = {
   ...defSelectors,

@@ -1,8 +1,8 @@
-import { EntityState } from '@ngrx/entity';
-import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
-import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface MenuItems extends EntityState<MenuItem>, EntityAppState {}
+export interface MenuItems extends EntityDomainState<MenuItem> {}
 
 export interface MenuItem extends Entity {
   label: string;
@@ -17,4 +17,7 @@ const initialState: MenuItems = {
   entities: {},
 };
 
-export const menuItemStoreConfig: StoreConfigurer<MenuItem, MenuItems> = new StoreConfigurer(entityName, initialState);
+export const menuItemDomainStateConfig: EntityDomainStateConfigurer<
+  MenuItem,
+  MenuItems
+> = new EntityDomainStateConfigurer(entityName, initialState);

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, take, tap } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity';
+import { take, takeWhile, tap } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
@@ -26,7 +26,7 @@ export class MenuItemComponent implements OnInit {
   public click(): void {
     this.menuItem$
       .pipe(
-        filter((menuItem: MenuItem) => menuItem.clickAction !== undefined),
+        takeWhile((menuItem: MenuItem) => menuItem.clickAction !== undefined),
         tap((menuItem: MenuItem) => this.store.dispatch({ type: menuItem.clickAction })),
         take(1),
       )

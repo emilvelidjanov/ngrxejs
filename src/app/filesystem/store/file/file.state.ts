@@ -1,18 +1,16 @@
-import { EntityState } from '@ngrx/entity';
-import { Entity, EntityAppState, Id } from 'src/app/core/ngrx/entity';
-import { StoreConfigurer } from 'src/app/core/ngrx/store-configurer';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
+import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface Files extends EntityState<File>, EntityAppState {
-  loadedDirectoryIds: Id[];
-  openedDirectoryIds: Id[];
-}
+export interface Files extends EntityDomainState<File>, EntityAppState {}
 
 export interface File extends Entity {
   path: string;
   name: string;
   extension: string;
-  isDirectory: boolean;
-  fileIds: Id[];
+  content: string;
 }
 
 export const entityName = 'File';
@@ -20,8 +18,14 @@ export const entityName = 'File';
 const initialState: Files = {
   ids: [],
   entities: {},
-  loadedDirectoryIds: [],
-  openedDirectoryIds: [],
+  loadedIds: [],
 };
 
-export const fileStoreConfig: StoreConfigurer<File, Files> = new StoreConfigurer(entityName, initialState);
+export const fileDomainStateConfig: EntityDomainStateConfigurer<File, Files> = new EntityDomainStateConfigurer(
+  entityName,
+  initialState,
+);
+export const fileAppStateConfig: EntityAppStateConfigurer<File, Files> = new EntityAppStateConfigurer(
+  entityName,
+  initialState,
+);

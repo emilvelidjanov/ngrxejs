@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity';
+import { Id } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -28,10 +28,13 @@ export class DefaultFileService implements FileService {
   }
 
   public createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
-    const size: number = loadDirectoryResults.length;
+    const files: LoadDirectoryResult[] = loadDirectoryResults.filter(
+      (result: LoadDirectoryResult) => !result.isDirectory,
+    );
+    const size: number = files.length;
     const files$ = this.fileIds$.pipe(
       map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((nextIds: Id[]) => this.mapToFiles(nextIds, loadDirectoryResults)),
+      map((nextIds: Id[]) => this.mapToFiles(nextIds, files)),
       take(1),
     );
     return files$;
@@ -39,18 +42,7 @@ export class DefaultFileService implements FileService {
 
   public sortFilesDefault(files: File[]): File[] {
     return this.sortService.sort(files, {
-      primarySort: (a, b) => {
-        if (a.isDirectory === b.isDirectory) {
-          return 0;
-        }
-        if (a.isDirectory) {
-          return -1;
-        }
-        if (b.isDirectory) {
-          return 1;
-        }
-      },
-      secondarySort: (a, b) => a.name.localeCompare(b.name),
+      primarySort: (a, b) => a.name.localeCompare(b.name),
     });
   }
 
@@ -58,35 +50,35 @@ export class DefaultFileService implements FileService {
     this.store.dispatch(fileActions.setAll({ entities: files }));
   }
 
-  public dispatchLoadedDirectory(directory: File, files: File[]): void {
+  public dispatchAddMany(files: File[]): void {
     this.store.dispatch(fileActions.addMany({ entities: files }));
+  }
+
+  public selectIsLoadedFile(file: File): Observable<boolean> {
+    return this.store.pipe(select(fileSelectors.selectIsLoadedId, { id: file.id }), take(1));
+  }
+
+  public dispatchLoadedFile(file: File, content: string): void {
     this.store.dispatch(
       fileActions.updateOne({
         update: {
-          id: directory.id as number,
+          id: file.id as number,
           changes: {
-            fileIds: this.sortFilesDefault(files).map((file: File) => file.id),
+            content,
           },
         },
       }),
     );
-    this.store.dispatch(fileActions.addLoadedDirectoryId({ id: directory.id }));
-  }
-
-  public dispatchOpenedDirectory(directory: File): void {
-    this.store.dispatch(fileActions.toggleOpenedDirectoryId({ id: directory.id }));
-  }
-
-  public selectIsLoadedDirectory(directory: File): Observable<boolean> {
-    return this.store.pipe(select(fileSelectors.selectIsLoadedDirectoryId, { id: directory.id }));
+    this.store.dispatch(fileActions.addLoadedId({ id: file.id }));
   }
 
   private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     const files: File[] = ids.map((id: Id, index: number) => {
+      const { isDirectory, ...toFile } = loadDirectoryResults[index];
       const file: File = {
         id,
-        fileIds: [],
-        ...loadDirectoryResults[index],
+        content: null,
+        ...toFile,
       };
       return file;
     });

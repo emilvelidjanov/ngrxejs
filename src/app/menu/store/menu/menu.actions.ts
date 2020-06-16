@@ -1,5 +1,5 @@
-import { menuStoreConfig } from './menu.state';
+import { menuDomainStateConfig } from './menu.state';
 
 export const menuActions = {
-  ...menuStoreConfig.getActions(),
+  ...menuDomainStateConfig.getActions(),
 };

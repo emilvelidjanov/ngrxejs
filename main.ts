@@ -4,6 +4,7 @@ import { IpcChannel, IpcRequest } from './electron/ipc/ipc';
 import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel';
 import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
 import { PathUtils } from './electron/utils/path.utils';
+import { LoadFileChannel } from './electron/ipc/filesystem/load-file-channel';
 
 class Main {
   static PROD_SWITCH: string = 'prod';
@@ -52,9 +53,10 @@ class Main {
   }
 
   private createIpcChannels(): IpcChannel<any>[] {
-    let openDialogChannel: OpenDialogChannel = new OpenDialogChannel(this.mainWindow);
-    let loadDirectoryChannel: LoadDirectoryChannel = new LoadDirectoryChannel();
-    let channels: IpcChannel<any>[] = [openDialogChannel, loadDirectoryChannel];
+    const openDialogChannel: OpenDialogChannel = new OpenDialogChannel(this.mainWindow);
+    const loadDirectoryChannel: LoadDirectoryChannel = new LoadDirectoryChannel();
+    const loadFileChannel: LoadFileChannel = new LoadFileChannel();
+    const channels: IpcChannel<any>[] = [openDialogChannel, loadDirectoryChannel, loadFileChannel];
     return channels;
   }
 

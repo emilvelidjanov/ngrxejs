@@ -26,4 +26,12 @@ export class LocalFilesystemService implements FilesystemService {
     const response$ = this.ipcService.send<string, LoadDirectoryResult[]>(IpcChannelName.LOAD_DIRECTORY, request);
     return response$;
   }
+
+  public loadFile(path: string): Observable<string> {
+    const request: IpcRequest<string> = {
+      params: path,
+    };
+    const response$ = this.ipcService.send<string, string>(IpcChannelName.LOAD_FILE, request);
+    return response$;
+  }
 }

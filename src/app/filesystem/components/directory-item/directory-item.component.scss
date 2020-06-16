@@ -1,0 +1,23 @@
+@import 'src/mixins.scss';
+
+:host {
+  display: block;
+  width: fit-content;
+
+  app-directory-item,
+  app-file-item {
+    position: relative;
+    left: 21px;
+  }
+}
+
+button {
+  @include label();
+}
+
+.directory-label {
+  &::before {
+    @include utf8-symbol('25B6');
+    margin-right: 0.25rem;
+  }
+}

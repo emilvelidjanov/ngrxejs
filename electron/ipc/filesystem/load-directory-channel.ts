@@ -19,9 +19,7 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
         let response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
         event.reply(request.responseChannel, response);
       },
-      (error: any) => {
-        console.error(error);
-      },
+      (error: any) => console.error(error),
     );
   }
 

@@ -1,0 +1,11 @@
+@import 'src/mixins.scss';
+
+:host {
+  display: inline-block;
+}
+
+.closeIcon {
+  &:before {
+    @include utf8-symbol('2716');
+  }
+}

@@ -25,8 +25,6 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
         };
         event.reply(request.responseChannel, response);
       })
-      .catch((error: any) => {
-        console.error(error);
-      });
+      .catch((error: any) => console.error(error));
   }
 }
