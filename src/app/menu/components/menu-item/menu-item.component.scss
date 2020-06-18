@@ -3,14 +3,10 @@
 :host {
   display: inline-block;
   position: relative;
+}
 
-  app-menu-item {
-    width: 100%;
-  }
-
-  &:hover > .nested-menu-items {
-    @include show(block);
-  }
+app-menu-item {
+  width: 100%;
 }
 
 button {
@@ -19,12 +15,7 @@ button {
 }
 
 .nested-menu-items {
-  @include hide();
   position: absolute;
   left: 0px;
   z-index: 100;
-
-  &:hover {
-    @include show(block);
-  }
 }

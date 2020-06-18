@@ -1,28 +1,29 @@
 [
   {
+    "id": "file",
+    "label": "File",
+    "menuItemIds": ["openProject"]
+  },
+  {
     "id": "openProject",
     "label": "Open project...",
-    "clickAction": "[App][Project] Open Project",
-    "menuItemIds": []
+    "clickAction": "[App][Project] Open Project"
   },
   {
-    "id": "test",
-    "label": "Test menu item",
-    "menuItemIds": ["nestedTest1", "nestedTest2", "nestedTest3"]
+    "id": "editor",
+    "label": "Editor",
+    "menuItemIds": ["A", "B", "C"]
   },
   {
-    "id": "nestedTest1",
-    "label": "Nested test button 1",
-    "menuItemIds": []
+    "id": "A",
+    "label": "Test Option 1"
   },
   {
-    "id": "nestedTest2",
-    "label": "Nested 2",
-    "menuItemIds": []
+    "id": "B",
+    "label": "Longer Test Option 2"
   },
   {
-    "id": "nestedTest3",
-    "label": "Nested 3",
-    "menuItemIds": []
+    "id": "C",
+    "label": "Longest Test Option 3"
   }
 ]

@@ -20,4 +20,18 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.addMenuItems(menuItems);
     this.menuService.addMenu(menu);
   }
+
+  public click(menuItem: MenuItem): void {
+    if (menuItem.menuItemIds && menuItem.menuItemIds.length) {
+      this.menuItemService.dispatchToggleOpenedMenuItem(menuItem);
+    }
+    if (menuItem.clickAction) {
+      this.menuItemService.dispatchMenuItemClickAction(menuItem);
+      this.menuItemService.dispatchCloseAll();
+    }
+  }
+
+  public clickOff(): void {
+    this.menuItemService.dispatchCloseAll();
+  }
 }

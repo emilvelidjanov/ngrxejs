@@ -17,13 +17,13 @@ import { Directories, Directory } from '../../store/directory/directory.state';
 export class DirectoryItemComponent implements OnInit {
   @Input() public directoryId: Id;
   public directory$: Observable<Directory>;
-  public isOpenedDirectory$: Observable<boolean>;
+  public isOpened$: Observable<boolean>;
 
   constructor(private store: Store<Directories>) {}
 
   public ngOnInit(): void {
     this.directory$ = this.store.pipe(select(directorySelectors.selectEntityById, { id: this.directoryId }));
-    this.isOpenedDirectory$ = this.store.pipe(select(directorySelectors.selectIsOpenedId, { id: this.directoryId }));
+    this.isOpened$ = this.store.pipe(select(directorySelectors.selectIsOpenedId, { id: this.directoryId }));
   }
 
   public openDirectory(): void {
