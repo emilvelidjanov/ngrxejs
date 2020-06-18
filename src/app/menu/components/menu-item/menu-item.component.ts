@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { take, takeWhile, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
+import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
 
@@ -16,20 +17,29 @@ import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
 export class MenuItemComponent implements OnInit {
   @Input() public menuItemId: Id;
   public menuItem$: Observable<MenuItem>;
+  public isOpened$: Observable<boolean>;
+  public readonly menuItemButtonClass: string = 'menu-item-button';
 
   constructor(private store: Store<MenuItems>) {}
 
   public ngOnInit(): void {
     this.menuItem$ = this.store.pipe(select(menuItemSelectors.selectEntityById, { id: this.menuItemId }));
+    this.isOpened$ = this.store.pipe(select(menuItemSelectors.selectIsOpenedId, { id: this.menuItemId }));
   }
 
   public click(): void {
     this.menuItem$
       .pipe(
-        takeWhile((menuItem: MenuItem) => menuItem.clickAction !== undefined),
-        tap((menuItem: MenuItem) => this.store.dispatch({ type: menuItem.clickAction })),
+        tap((menuItem: MenuItem) => this.store.dispatch(menuItemActions.click({ entity: menuItem }))),
         take(1),
       )
       .subscribe();
+  }
+
+  public clickOff($event: MouseEvent): void {
+    const target: HTMLElement = $event.target as HTMLElement;
+    if (!(target.className === this.menuItemButtonClass)) {
+      this.store.dispatch(menuItemActions.clickOff());
+    }
   }
 }

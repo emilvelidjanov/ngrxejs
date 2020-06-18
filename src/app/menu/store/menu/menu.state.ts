@@ -5,9 +5,9 @@ import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-dom
 export interface Menus extends EntityDomainState<Menu> {}
 
 export interface Menu extends Entity {
-  title: string;
-  image: string;
-  menuItemIds: Id[];
+  title?: string;
+  image?: string;
+  menuItemIds?: Id[];
 }
 
 export const entityName = 'Menu';

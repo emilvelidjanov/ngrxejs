@@ -2,7 +2,7 @@
   <button (click)="openDirectory()">
     <span class="directory-label">{{ directory.name }}</span>
   </button>
-  <ng-container *ngIf="isOpenedDirectory$ | async as isOpenedDirectory">
+  <ng-container *ngIf="isOpened$ | async as isOpened">
     <ng-container *ngFor="let nestedDirectoryId of directory.directoryIds">
       <app-directory-item [directoryId]="nestedDirectoryId"></app-directory-item>
     </ng-container>
