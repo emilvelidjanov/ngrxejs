@@ -9,13 +9,13 @@ import { EntityAppActions } from './entity-app-actions';
 import { EntityAppSelectors } from './entity-app-selectors';
 import { EntityAppState } from './entity-app-state';
 
-export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState> {
-  private entityName: string;
-  private initialState: A;
-  private actions: EntityAppActions;
-  private reducers: On<A>[];
+export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType extends EntityAppState> {
+  private readonly entityName: string;
+  private readonly initialState: AppStateType;
+  private readonly actions: EntityAppActions;
+  private readonly reducers: On<AppStateType>[];
 
-  constructor(entityName: string, initialState: A) {
+  constructor(entityName: string, initialState: AppStateType) {
     this.entityName = entityName;
     this.initialState = initialState;
     this.actions = this.initActions();
@@ -23,12 +23,15 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
   }
 
   public getSelectors(
-    appStateSelector: (state: object) => A,
-    entityStateSelectors?: EntityDomainSelectors<T>,
-  ): EntityAppSelectors<T> {
-    const defaultAppSelectors: EntityAppSelectors<T> = {};
+    appStateSelector: (state: object) => AppStateType,
+    entityStateSelectors?: EntityDomainSelectors<EntityType>,
+  ): EntityAppSelectors<EntityType> {
+    const defaultAppSelectors: EntityAppSelectors<EntityType> = {};
     if (this.initialState.loadedIds !== undefined) {
-      defaultAppSelectors.selectLoadedIds = createSelector(appStateSelector, (appState: A) => appState.loadedIds);
+      defaultAppSelectors.selectLoadedIds = createSelector(
+        appStateSelector,
+        (appState: AppStateType) => appState.loadedIds,
+      );
       defaultAppSelectors.selectIsLoadedId = createSelector(
         defaultAppSelectors.selectLoadedIds,
         (ids: Id[], props: PropId) => ids.includes(props.id),
@@ -37,12 +40,15 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
         defaultAppSelectors.selectLoadedEntities = createSelector(
           defaultAppSelectors.selectLoadedIds,
           entityStateSelectors.selectEntities,
-          (ids: Id[], entities: Dictionary<T>) => ids.map((id: Id) => entities[id]),
+          (ids: Id[], entities: Dictionary<EntityType>) => ids.map((id: Id) => entities[id]),
         );
       }
     }
     if (this.initialState.openedIds !== undefined) {
-      defaultAppSelectors.selectOpenedIds = createSelector(appStateSelector, (appState: A) => appState.openedIds);
+      defaultAppSelectors.selectOpenedIds = createSelector(
+        appStateSelector,
+        (appState: AppStateType) => appState.openedIds,
+      );
       defaultAppSelectors.selectFirstOpenedId = createSelector(
         defaultAppSelectors.selectOpenedIds,
         (ids: Id[]) => ids[0],
@@ -55,16 +61,19 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
         defaultAppSelectors.selectOpenedEntities = createSelector(
           defaultAppSelectors.selectOpenedIds,
           entityStateSelectors.selectEntities,
-          (ids: Id[], entities: Dictionary<T>) => ids.map((id: Id) => entities[id]),
+          (ids: Id[], entities: Dictionary<EntityType>) => ids.map((id: Id) => entities[id]),
         );
         defaultAppSelectors.selectFirstOpenedEntity = createSelector(
           defaultAppSelectors.selectOpenedEntities,
-          (entities: T[]) => entities[0],
+          (entities: EntityType[]) => entities[0],
         );
       }
     }
     if (this.initialState.focusedId !== undefined) {
-      defaultAppSelectors.selectFocusedId = createSelector(appStateSelector, (appState: A) => appState.focusedId);
+      defaultAppSelectors.selectFocusedId = createSelector(
+        appStateSelector,
+        (appState: AppStateType) => appState.focusedId,
+      );
       defaultAppSelectors.selectIsFocusedId = createSelector(
         defaultAppSelectors.selectFocusedId,
         (id: Id, props: PropId) => id === props.id,
@@ -73,7 +82,7 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
         defaultAppSelectors.selectFocusedEntity = createSelector(
           defaultAppSelectors.selectFocusedId,
           entityStateSelectors.selectEntities,
-          (id: Id, entities: Dictionary<T>) => entities[id],
+          (id: Id, entities: Dictionary<EntityType>) => entities[id],
         );
       }
     }
@@ -89,11 +98,11 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
     return actionType;
   }
 
-  public getReducerFunctions(): On<A>[] {
+  public getReducerFunctions(): On<AppStateType>[] {
     return this.reducers;
   }
 
-  public getInitialState(): A {
+  public getInitialState(): AppStateType {
     return this.initialState;
   }
 
@@ -113,31 +122,31 @@ export class EntityAppStateConfigurer<T extends Entity, A extends EntityAppState
     return defaultAppActions;
   }
 
-  private initReducerFunctions(): On<A>[] {
-    const reducerFunctions: On<A>[] = [];
+  private initReducerFunctions(): On<AppStateType>[] {
+    const reducerFunctions: On<AppStateType>[] = [];
     if (this.initialState.loadedIds !== undefined) {
       reducerFunctions.push(
-        on(this.actions.addLoadedId, (state: A, props: PropId) => {
+        on(this.actions.addLoadedId, (state: AppStateType, props: PropId) => {
           return { ...state, loadedIds: [...state.loadedIds, props.id] };
         }),
       );
     }
     if (this.initialState.openedIds !== undefined) {
       reducerFunctions.push(
-        on(this.actions.addOpenedId, (state: A, props: PropId) => {
+        on(this.actions.addOpenedId, (state: AppStateType, props: PropId) => {
           return { ...state, openedIds: [...state.openedIds, props.id] };
         }),
-        on(this.actions.removeOpenedId, (state: A, props: PropId) => {
+        on(this.actions.removeOpenedId, (state: AppStateType, props: PropId) => {
           return { ...state, openedIds: state.openedIds.filter((id: Id) => id !== props.id) };
         }),
-        on(this.actions.setOpenedIds, (state: A, props: PropIds) => {
+        on(this.actions.setOpenedIds, (state: AppStateType, props: PropIds) => {
           return { ...state, openedIds: props.ids };
         }),
       );
     }
     if (this.initialState.focusedId !== undefined) {
       reducerFunctions.push(
-        on(this.actions.setFocusedId, (state: A, props: PropId) => {
+        on(this.actions.setFocusedId, (state: AppStateType, props: PropId) => {
           return { ...state, focusedId: props.id };
         }),
       );

@@ -4,7 +4,7 @@ import { OpenDialogResult } from '../../../src/app/filesystem/services/filesyste
 import { PathUtils } from '../../utils/path.utils';
 
 export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
-  private window: BrowserWindow;
+  private readonly window: BrowserWindow;
 
   constructor(window: BrowserWindow) {
     this.window = window;
@@ -18,8 +18,8 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
     dialog
       .showOpenDialog(this.window, request.params)
       .then((value: OpenDialogReturnValue) => {
-        let names: string[] = value.filePaths.map((filePath: string) => PathUtils.getFilename(filePath));
-        let response: OpenDialogResult = {
+        const names: string[] = value.filePaths.map((filePath: string) => PathUtils.getFilename(filePath));
+        const response: OpenDialogResult = {
           ...value,
           filenames: names,
         };

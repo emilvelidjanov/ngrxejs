@@ -4,7 +4,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angu
   selector: '[appClickOff]',
 })
 export class ClickOffDirective {
-  @Output() public appClickOff: EventEmitter<MouseEvent>;
+  @Output() public readonly appClickOff: EventEmitter<MouseEvent>;
 
   constructor(private elementRef: ElementRef) {
     this.appClickOff = new EventEmitter<MouseEvent>();

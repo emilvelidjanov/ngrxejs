@@ -7,16 +7,16 @@ import { PathUtils } from './electron/utils/path.utils';
 import { LoadFileChannel } from './electron/ipc/filesystem/load-file-channel';
 
 class Main {
-  static PROD_SWITCH: string = 'prod';
+  private readonly PROD_SWITCH: string = 'prod';
 
   private mainWindow: BrowserWindow;
-  private mainWindowOptions: BrowserWindowConstructorOptions;
-  private indexFile: string;
-  private isProd: boolean;
+  private readonly mainWindowOptions: BrowserWindowConstructorOptions;
+  private readonly indexFile: string;
+  private readonly isProd: boolean;
 
   constructor() {
     this.indexFile = 'dist/index.html';
-    this.isProd = app.commandLine.hasSwitch(Main.PROD_SWITCH);
+    this.isProd = app.commandLine.hasSwitch(this.PROD_SWITCH);
     this.mainWindowOptions = {
       webPreferences: {
         nodeIntegration: true,
@@ -89,7 +89,7 @@ class Main {
   }
 }
 
-if (!app.commandLine.hasSwitch(Main.PROD_SWITCH)) {
+if (!app.commandLine.hasSwitch(this.PROD_SWITCH)) {
   const rootPath = PathUtils.getDirname(__dirname);
   const distPath = PathUtils.joinPath(rootPath, 'dist');
   const electronPath = PathUtils.joinPath(rootPath, 'node_modules', 'electron');

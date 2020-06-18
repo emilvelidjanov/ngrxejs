@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 
 const buildSpecificModules = [
   StoreDevtoolsModule.instrument({
-    maxAge: 25,
+    maxAge: 50,
     logOnly: environment.production,
   }),
 ];

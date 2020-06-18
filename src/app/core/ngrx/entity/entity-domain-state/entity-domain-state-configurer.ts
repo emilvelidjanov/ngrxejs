@@ -18,15 +18,18 @@ import {
   PropUpdates,
 } from './props';
 
-export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomainState<T>> {
-  private adapter: EntityAdapter<T>;
-  private initialState: D;
+export class EntityDomainStateConfigurer<
+  EntityType extends Entity,
+  DomainStateType extends EntityDomainState<EntityType>
+> {
+  private adapter: EntityAdapter<EntityType>;
+  private initialState: DomainStateType;
   private entityName: string;
-  private actions: EntityDomainActions<T>;
-  private reducers: On<D>[];
+  private actions: EntityDomainActions<EntityType>;
+  private reducers: On<DomainStateType>[];
 
-  constructor(entityName: string, initialState: D) {
-    this.adapter = createEntityAdapter<T>();
+  constructor(entityName: string, initialState: DomainStateType) {
+    this.adapter = createEntityAdapter<EntityType>();
     this.initialState = this.adapter.getInitialState(initialState);
     if (entityName) {
       entityName = entityName.charAt(0).toUpperCase() + entityName.slice(1);
@@ -36,20 +39,21 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     this.reducers = this.initReducerFunctions();
   }
 
-  public getSelectors(entityStateSelector: (state: object) => D): EntityDomainSelectors<T> {
+  public getSelectors(entityStateSelector: (state: object) => DomainStateType): EntityDomainSelectors<EntityType> {
     const defSelectors = this.adapter.getSelectors(entityStateSelector);
     const selectEntityById = createSelector(
       defSelectors.selectEntities,
-      (entities: Dictionary<T>, props: PropId) => entities[props.id],
+      (entities: Dictionary<EntityType>, props: PropId) => entities[props.id],
     );
-    const selectEntitiesByIds = createSelector(defSelectors.selectEntities, (entities: Dictionary<T>, props: PropIds) =>
-      props.ids.map((id: Id) => entities[id]),
+    const selectEntitiesByIds = createSelector(
+      defSelectors.selectEntities,
+      (entities: Dictionary<EntityType>, props: PropIds) => props.ids.map((id: Id) => entities[id]),
     );
     const selectIsInStore = createSelector(
       defSelectors.selectEntities,
-      (entities: Dictionary<T>, props: PropId) => entities[props.id] !== undefined,
+      (entities: Dictionary<EntityType>, props: PropId) => entities[props.id] !== undefined,
     );
-    const selectors: EntityDomainSelectors<T> = {
+    const selectors: EntityDomainSelectors<EntityType> = {
       ...defSelectors,
       selectEntityById,
       selectEntitiesByIds,
@@ -58,19 +62,19 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     return selectors;
   }
 
-  public getActions(): EntityDomainActions<T> {
+  public getActions(): EntityDomainActions<EntityType> {
     return this.actions;
   }
 
-  public getReducerFunctions(): On<D>[] {
+  public getReducerFunctions(): On<DomainStateType>[] {
     return this.reducers;
   }
 
-  public getAdapter(): EntityAdapter<T> {
+  public getAdapter(): EntityAdapter<EntityType> {
     return this.adapter;
   }
 
-  public getInitialState(): D {
+  public getInitialState(): DomainStateType {
     return this.initialState;
   }
 
@@ -83,39 +87,39 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     return actionType;
   }
 
-  private initActions(): EntityDomainActions<T> {
+  private initActions(): EntityDomainActions<EntityType> {
     return {
-      addOne: createAction(this.getActionType('Add One'), props<PropEntity<T>>()),
-      addMany: createAction(this.getActionType('Add Many'), props<PropEntities<T>>()),
-      setOne: createAction(this.getActionType('Set One'), props<PropEntity<T>>()),
-      setAll: createAction(this.getActionType('Set All'), props<PropEntities<T>>()),
+      addOne: createAction(this.getActionType('Add One'), props<PropEntity<EntityType>>()),
+      addMany: createAction(this.getActionType('Add Many'), props<PropEntities<EntityType>>()),
+      setOne: createAction(this.getActionType('Set One'), props<PropEntity<EntityType>>()),
+      setAll: createAction(this.getActionType('Set All'), props<PropEntities<EntityType>>()),
       removeOne: createAction(this.getActionType('Remove One'), props<PropId>()),
       removeMany: createAction(this.getActionType('Remove Many'), props<PropIds>()),
-      removeByPredicate: createAction(this.getActionType('Remove By Predicate'), props<PropPredicate<T>>()),
+      removeByPredicate: createAction(this.getActionType('Remove By Predicate'), props<PropPredicate<EntityType>>()),
       removeAll: createAction(this.getActionType('Remove All')),
-      updateOne: createAction(this.getActionType('Update One'), props<PropUpdate<T>>()),
-      updateMany: createAction(this.getActionType('Update Many'), props<PropUpdates<T>>()),
-      upsertOne: createAction(this.getActionType('Upsert One'), props<PropEntity<T>>()),
-      upsertMany: createAction(this.getActionType('Upsert Many'), props<PropEntities<T>>()),
-      map: createAction(this.getActionType('Map'), props<PropEntityMap<T>>()),
+      updateOne: createAction(this.getActionType('Update One'), props<PropUpdate<EntityType>>()),
+      updateMany: createAction(this.getActionType('Update Many'), props<PropUpdates<EntityType>>()),
+      upsertOne: createAction(this.getActionType('Upsert One'), props<PropEntity<EntityType>>()),
+      upsertMany: createAction(this.getActionType('Upsert Many'), props<PropEntities<EntityType>>()),
+      map: createAction(this.getActionType('Map'), props<PropEntityMap<EntityType>>()),
     };
   }
 
-  private initReducerFunctions(): On<D>[] {
+  private initReducerFunctions(): On<DomainStateType>[] {
     return [
-      on(this.actions.addOne, (state: D, props: PropEntity<T>) => {
+      on(this.actions.addOne, (state: DomainStateType, props: PropEntity<EntityType>) => {
         return this.adapter.addOne(props.entity, state);
       }),
-      on(this.actions.addMany, (state: D, props: PropEntities<T>) => {
+      on(this.actions.addMany, (state: DomainStateType, props: PropEntities<EntityType>) => {
         return this.adapter.addMany(props.entities, state);
       }),
-      on(this.actions.setAll, (state: D, props: PropEntities<T>) => {
+      on(this.actions.setAll, (state: DomainStateType, props: PropEntities<EntityType>) => {
         return this.adapter.setAll(props.entities, state);
       }),
-      on(this.actions.setOne, (state: D, props: PropEntity<T>) => {
+      on(this.actions.setOne, (state: DomainStateType, props: PropEntity<EntityType>) => {
         return this.adapter.setOne(props.entity, state);
       }),
-      on(this.actions.removeOne, (state: D, props: PropId) => {
+      on(this.actions.removeOne, (state: DomainStateType, props: PropId) => {
         let typedId: any;
         if (typeof props.id === 'number') {
           typedId = props.id as number;
@@ -124,30 +128,30 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
         }
         return this.adapter.removeOne(typedId, state);
       }),
-      on(this.actions.removeMany, (state: D, props: PropIds) => {
+      on(this.actions.removeMany, (state: DomainStateType, props: PropIds) => {
         const numberIds: number[] = props.ids.filter((id: Id) => typeof id === 'number') as number[];
         const stringIds: string[] = props.ids.filter((id: Id) => typeof id === 'string') as string[];
         return this.adapter.removeMany(stringIds, this.adapter.removeMany(numberIds, state));
       }),
-      on(this.actions.removeByPredicate, (state: D, props: PropPredicate<T>) => {
+      on(this.actions.removeByPredicate, (state: DomainStateType, props: PropPredicate<EntityType>) => {
         return this.adapter.removeMany(props.predicate, state);
       }),
-      on(this.actions.removeAll, (state: D) => {
+      on(this.actions.removeAll, (state: DomainStateType) => {
         return this.adapter.removeAll(state);
       }),
-      on(this.actions.updateOne, (state: D, props: PropUpdate<T>) => {
+      on(this.actions.updateOne, (state: DomainStateType, props: PropUpdate<EntityType>) => {
         return this.adapter.updateOne(props.update, state);
       }),
-      on(this.actions.updateMany, (state: D, props: PropUpdates<T>) => {
+      on(this.actions.updateMany, (state: DomainStateType, props: PropUpdates<EntityType>) => {
         return this.adapter.updateMany(props.updates, state);
       }),
-      on(this.actions.upsertOne, (state: D, props: PropEntity<T>) => {
+      on(this.actions.upsertOne, (state: DomainStateType, props: PropEntity<EntityType>) => {
         return this.adapter.upsertOne(props.entity, state);
       }),
-      on(this.actions.upsertMany, (state: D, props: PropEntities<T>) => {
+      on(this.actions.upsertMany, (state: DomainStateType, props: PropEntities<EntityType>) => {
         return this.adapter.upsertMany(props.entities, state);
       }),
-      on(this.actions.map, (state: D, props: PropEntityMap<T>) => {
+      on(this.actions.map, (state: DomainStateType, props: PropEntityMap<EntityType>) => {
         return this.adapter.map(props.entityMap, state);
       }),
     ];
