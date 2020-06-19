@@ -1,5 +1,5 @@
 <ng-container *ngIf="menuItem$ | async as menuItem">
-  <button [class]="menuItemButtonClass" (click)="click()">
+  <button (click)="click()">
     {{ menuItem.label }}
   </button>
   <ng-container *ngIf="isOpened$ | async as isOpened">

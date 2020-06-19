@@ -2,7 +2,7 @@ import { MenuItem } from '../../store/menu-item/menu-item.state';
 import { Menu } from '../../store/menu/menu.state';
 
 export interface MenuFacade {
-  createMenu(menu: Menu, menuItems: MenuItem[]): void;
-  click(menuItem: MenuItem): void;
-  clickOff(): void;
+  addMenus(menus: Menu[], menuItems: MenuItem[]): void;
+  onClickMenuItem(menuItem: MenuItem): void;
+  onClickOffMenuItem(htmlNodeName: string): void;
 }

@@ -16,22 +16,22 @@ export class DefaultMenuFacade implements MenuFacade {
     @Inject(menuServiceDep.getToken) private menuService: MenuService,
   ) {}
 
-  public createMenu(menu: Menu, menuItems: MenuItem[]): void {
-    this.menuItemService.addMenuItems(menuItems);
-    this.menuService.addMenu(menu);
+  public addMenus(menu: Menu[], menuItems: MenuItem[]): void {
+    this.menuItemService.addMany(menuItems);
+    this.menuService.addMany(menu);
   }
 
-  public click(menuItem: MenuItem): void {
-    if (menuItem.menuItemIds && menuItem.menuItemIds.length) {
-      this.menuItemService.dispatchToggleOpenedMenuItem(menuItem);
-    }
+  public onClickMenuItem(menuItem: MenuItem): void {
+    this.menuItemService.toggleOpened(menuItem);
     if (menuItem.clickAction) {
-      this.menuItemService.dispatchMenuItemClickAction(menuItem);
-      this.menuItemService.dispatchCloseAll();
+      this.menuItemService.dispatchClickAction(menuItem);
+      this.menuItemService.closeAll();
     }
   }
 
-  public clickOff(): void {
-    this.menuItemService.dispatchCloseAll();
+  public onClickOffMenuItem(htmlNodeName: string): void {
+    if (htmlNodeName !== this.menuItemService.getHtmlNodeName()) {
+      this.menuItemService.closeAll();
+    }
   }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 
 import mainMenuBar from '../config/menu/mainMenuBar.json';
-import menuItems from '../config/menu/menuItems.json';
+import mainMenuItems from '../config/menu/mainMenuItems.json';
 
 import { MenuFacade } from './menu/services/menu-facade/menu.facade';
 import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependency';
@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.menuFacade.createMenu(mainMenuBar, menuItems);
+    this.menuFacade.addMenus([mainMenuBar], mainMenuItems);
   }
 }

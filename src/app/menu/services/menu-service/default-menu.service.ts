@@ -10,7 +10,7 @@ import { MenuService } from './menu.service';
 export class DefaultMenuService implements MenuService {
   constructor(private store: Store<Menus>) {}
 
-  public addMenu(menu: Menu): void {
-    this.store.dispatch(menuActions.addOne({ entity: menu }));
+  public addMany(menus: Menu[]): void {
+    this.store.dispatch(menuActions.addMany({ entities: menus }));
   }
 }

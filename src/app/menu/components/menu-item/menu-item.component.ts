@@ -18,7 +18,6 @@ export class MenuItemComponent implements OnInit {
   @Input() public menuItemId: Id;
   public menuItem$: Observable<MenuItem>;
   public isOpened$: Observable<boolean>;
-  public readonly menuItemButtonClass: string = 'menu-item-button';
 
   constructor(private store: Store<MenuItems>) {}
 
@@ -37,9 +36,7 @@ export class MenuItemComponent implements OnInit {
   }
 
   public clickOff($event: MouseEvent): void {
-    const target: HTMLElement = $event.target as HTMLElement;
-    if (!(target.className === this.menuItemButtonClass)) {
-      this.store.dispatch(menuItemActions.clickOff());
-    }
+    const target = $event.target as HTMLElement;
+    this.store.dispatch(menuItemActions.clickOff({ htmlNodeName: target.parentElement.nodeName }));
   }
 }

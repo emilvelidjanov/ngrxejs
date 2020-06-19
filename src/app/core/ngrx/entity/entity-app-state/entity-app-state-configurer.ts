@@ -110,11 +110,16 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
     const defaultAppActions: EntityAppActions = {};
     if (this.initialState.loadedIds !== undefined) {
       defaultAppActions.addLoadedId = createAction(this.getActionType('Add Loaded Id'), props<PropId>());
+      defaultAppActions.removeLoadedId = createAction(this.getActionType('Remove Loaded Id'), props<PropId>());
+      defaultAppActions.setLoadedIds = createAction(this.getActionType('Set Loaded Id'), props<PropIds>());
+      defaultAppActions.insertLoadedId = createAction(this.getActionType('Insert Loaded Id'), props<PropId>());
     }
     if (this.initialState.openedIds !== undefined) {
       defaultAppActions.addOpenedId = createAction(this.getActionType('Add Opened Id'), props<PropId>());
       defaultAppActions.removeOpenedId = createAction(this.getActionType('Remove Opened Id'), props<PropId>());
       defaultAppActions.setOpenedIds = createAction(this.getActionType('Set Opened Ids'), props<PropIds>());
+      defaultAppActions.insertOpenedId = createAction(this.getActionType('Insert Opened Id'), props<PropId>());
+      defaultAppActions.toggleOpenedId = createAction(this.getActionType('Toggle Opened Id'), props<PropId>());
     }
     if (this.initialState.focusedId !== undefined) {
       defaultAppActions.setFocusedId = createAction(this.getActionType('Set Focused Id'), props<PropId>());
@@ -129,6 +134,18 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
         on(this.actions.addLoadedId, (state: AppStateType, props: PropId) => {
           return { ...state, loadedIds: [...state.loadedIds, props.id] };
         }),
+        on(this.actions.removeLoadedId, (state: AppStateType, props: PropId) => {
+          return { ...state, loadedIds: state.loadedIds.filter((id: Id) => id !== props.id) };
+        }),
+        on(this.actions.setLoadedIds, (state: AppStateType, props: PropIds) => {
+          return { ...state, loadedIds: props.ids };
+        }),
+        on(this.actions.insertLoadedId, (state: AppStateType, props: PropId) => {
+          return {
+            ...state,
+            loadedIds: state.loadedIds.includes(props.id) ? state.loadedIds : [...state.loadedIds, props.id],
+          };
+        }),
       );
     }
     if (this.initialState.openedIds !== undefined) {
@@ -141,6 +158,20 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
         }),
         on(this.actions.setOpenedIds, (state: AppStateType, props: PropIds) => {
           return { ...state, openedIds: props.ids };
+        }),
+        on(this.actions.insertOpenedId, (state: AppStateType, props: PropId) => {
+          return {
+            ...state,
+            openedIds: state.openedIds.includes(props.id) ? state.openedIds : [...state.openedIds, props.id],
+          };
+        }),
+        on(this.actions.toggleOpenedId, (state: AppStateType, props: PropId) => {
+          return {
+            ...state,
+            openedIds: state.openedIds.includes(props.id)
+              ? state.openedIds.filter((id: Id) => id !== props.id)
+              : [...state.openedIds, props.id],
+          };
         }),
       );
     }

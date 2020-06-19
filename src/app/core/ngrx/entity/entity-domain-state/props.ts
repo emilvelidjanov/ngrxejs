@@ -33,3 +33,7 @@ export interface PropUpdates<EntityType extends Entity> {
 export interface PropEntityMap<EntityType extends Entity> {
   entityMap: EntityMap<EntityType>;
 }
+
+export interface PropHtmlNodeName {
+  htmlNodeName: string;
+}

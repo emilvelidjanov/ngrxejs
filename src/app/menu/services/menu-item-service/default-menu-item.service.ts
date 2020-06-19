@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
@@ -13,34 +12,29 @@ import { MenuItemService } from './menu-item.service';
 export class DefaultMenuItemService implements MenuItemService {
   constructor(private store: Store<MenuItems>) {}
 
-  public addMenuItems(menuItems: MenuItem[]): void {
+  public addMany(menuItems: MenuItem[]): void {
     this.store.dispatch(menuItemActions.addMany({ entities: menuItems }));
   }
 
-  public dispatchToggleOpenedMenuItem(menuItem: MenuItem): void {
-    const isOpened$ = this.selectIsOpenedMenuItem(menuItem).pipe(take(1));
-    isOpened$.subscribe((isOpened: boolean) => {
-      isOpened ? this.dispatchClosedMenuItem(menuItem) : this.dispatchOpenedMenuItem(menuItem);
-    });
+  public toggleOpened(menuItem: MenuItem): void {
+    if (menuItem.menuItemIds && menuItem.menuItemIds.length) {
+      this.store.dispatch(menuItemActions.toggleOpenedId({ id: menuItem.id }));
+    }
   }
 
-  public dispatchOpenedMenuItem(menuItem: MenuItem): void {
-    this.store.dispatch(menuItemActions.setOpenedIds({ ids: [menuItem.id] }));
-  }
-
-  public dispatchMenuItemClickAction(menuItem: MenuItem): void {
+  public dispatchClickAction(menuItem: MenuItem): void {
     this.store.dispatch({ type: menuItem.clickAction });
   }
 
-  public dispatchClosedMenuItem(menuItem: MenuItem): void {
-    this.store.dispatch(menuItemActions.removeOpenedId({ id: menuItem.id }));
-  }
-
-  public dispatchCloseAll(): void {
+  public closeAll(): void {
     this.store.dispatch(menuItemActions.setOpenedIds({ ids: [] }));
   }
 
-  public selectIsOpenedMenuItem(menuItem: any): Observable<boolean> {
+  public isOpened(menuItem: any): Observable<boolean> {
     return this.store.pipe(select(menuItemSelectors.selectIsOpenedId, { id: menuItem.id }));
+  }
+
+  public getHtmlNodeName(): string {
+    return 'APP-MENU-ITEM';
   }
 }
