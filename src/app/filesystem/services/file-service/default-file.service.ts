@@ -27,38 +27,38 @@ export class DefaultFileService implements FileService {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
-  public createFiles(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
+  public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
     const files: LoadDirectoryResult[] = loadDirectoryResults.filter(
       (result: LoadDirectoryResult) => !result.isDirectory,
     );
     const size: number = files.length;
     const files$ = this.fileIds$.pipe(
       map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((nextIds: Id[]) => this.mapToFiles(nextIds, files)),
+      map((nextIds: Id[]) => this.mapTo(nextIds, files)),
       take(1),
     );
     return files$;
   }
 
-  public sortFilesDefault(files: File[]): File[] {
+  public sortDefault(files: File[]): File[] {
     return this.sortService.sort(files, {
       primarySort: (a, b) => a.name.localeCompare(b.name),
     });
   }
 
-  public dispatchSetAll(files: File[]): void {
+  public setAll(files: File[]): void {
     this.store.dispatch(fileActions.setAll({ entities: files }));
   }
 
-  public dispatchAddMany(files: File[]): void {
-    this.store.dispatch(fileActions.addMany({ entities: files }));
+  public upsertMany(files: File[]): void {
+    this.store.dispatch(fileActions.upsertMany({ entities: files }));
   }
 
-  public selectIsLoadedFile(file: File): Observable<boolean> {
+  public isLoaded(file: File): Observable<boolean> {
     return this.store.pipe(select(fileSelectors.selectIsLoadedId, { id: file.id }), take(1));
   }
 
-  public dispatchLoadedFile(file: File, content: string): void {
+  public updateLoaded(file: File, content: string): void {
     this.store.dispatch(
       fileActions.updateOne({
         update: {
@@ -69,10 +69,10 @@ export class DefaultFileService implements FileService {
         },
       }),
     );
-    this.store.dispatch(fileActions.addLoadedId({ id: file.id }));
+    this.store.dispatch(fileActions.insertLoadedId({ id: file.id }));
   }
 
-  private mapToFiles(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
+  private mapTo(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
     const files: File[] = ids.map((id: Id, index: number) => {
       const { isDirectory, ...toFile } = loadDirectoryResults[index];
       const file: File = {

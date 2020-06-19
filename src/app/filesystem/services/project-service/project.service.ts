@@ -5,6 +5,6 @@ import { DirectoryContent } from '../directory-service/directory.service';
 import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 
 export interface ProjectService {
-  createProject(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project>;
-  dispatchOpenedProject(project: Project, content: DirectoryContent): void;
+  create(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project>;
+  open(project: Project, content: DirectoryContent): void;
 }

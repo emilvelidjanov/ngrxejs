@@ -32,7 +32,7 @@ export class DefaultProjectService implements ProjectService {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
-  public createProject(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project> {
+  public create(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project> {
     const project$ = this.projectIds$.pipe(
       map((ids: Id[]) => this.idGeneratorService.nextId(ids)),
       map((nextId: Id) => this.mapToProject(nextId, openDialogResult, directoryContent)),
@@ -41,9 +41,9 @@ export class DefaultProjectService implements ProjectService {
     return project$;
   }
 
-  public dispatchOpenedProject(project: Project, content: DirectoryContent): void {
-    this.fileService.dispatchSetAll(content.files);
-    this.directoryService.dispatchSetAll(content.directories);
+  public open(project: Project, content: DirectoryContent): void {
+    this.fileService.setAll(content.files);
+    this.directoryService.setAll(content.directories);
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
     this.store.dispatch(projectActions.setOpenedIds({ ids: [project.id] }));
   }
@@ -53,10 +53,8 @@ export class DefaultProjectService implements ProjectService {
       id,
       directory: openDialogResult.filePaths[0],
       name: openDialogResult.filenames[0],
-      fileIds: this.fileService.sortFilesDefault(content.files).map((file: File) => file.id),
-      directoryIds: this.directoryService
-        .sortDirectoriesDefault(content.directories)
-        .map((directory: Directory) => directory.id),
+      fileIds: this.fileService.sortDefault(content.files).map((file: File) => file.id),
+      directoryIds: this.directoryService.sortDefault(content.directories).map((directory: Directory) => directory.id),
     };
   }
 }

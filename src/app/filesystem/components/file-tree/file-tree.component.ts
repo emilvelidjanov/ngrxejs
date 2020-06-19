@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { projectSelectors } from '../../store/project/project.selectors';
 import { Project, Projects } from '../../store/project/project.state';
@@ -18,9 +17,6 @@ export class FileTreeComponent implements OnInit {
   constructor(private store: Store<Projects>) {}
 
   public ngOnInit(): void {
-    this.project$ = this.store.pipe(
-      select(projectSelectors.selectOpenedEntities),
-      map((projects: Project[]) => projects[0]),
-    );
+    this.project$ = this.store.pipe(select(projectSelectors.selectFirstOpenedEntity));
   }
 }

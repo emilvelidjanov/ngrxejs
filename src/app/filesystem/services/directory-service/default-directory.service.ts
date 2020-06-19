@@ -32,77 +32,58 @@ export class DefaultDirectoryService implements DirectoryService {
   }
 
   public createDirectoryContent(loadDirectoryResults: LoadDirectoryResult[]): Observable<DirectoryContent> {
-    const createFiles$ = this.fileService.createFiles(loadDirectoryResults);
-    const createDirectories$ = this.createDirectories(loadDirectoryResults);
+    const createFiles$ = this.fileService.createMany(loadDirectoryResults);
+    const createDirectories$ = this.createMany(loadDirectoryResults);
     return zip(createFiles$, createDirectories$).pipe(map(([files, directories]) => ({ files, directories })));
   }
 
-  public createDirectories(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]> {
+  public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]> {
     const directories = loadDirectoryResults.filter((result: LoadDirectoryResult) => result.isDirectory);
     const size: number = directories.length;
     const directories$ = this.directoryIds$.pipe(
       map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((nextIds: Id[]) => this.mapToDirectories(nextIds, directories)),
+      map((nextIds: Id[]) => this.mapTo(nextIds, directories)),
       take(1),
     );
     return directories$;
   }
 
-  public sortDirectoriesDefault(directories: Directory[]): Directory[] {
+  public sortDefault(directories: Directory[]): Directory[] {
     return this.sortService.sort(directories, {
       primarySort: (a, b) => a.name.localeCompare(b.name),
     });
   }
 
-  public dispatchSetAll(directories: Directory[]): void {
+  public setAll(directories: Directory[]): void {
     this.store.dispatch(directoryActions.setAll({ entities: directories }));
   }
 
-  public dispatchAddMany(directories: Directory[]): void {
-    this.store.dispatch(directoryActions.addMany({ entities: directories }));
-  }
-
-  public dispatchLoadedDirectory(loadedDirectory: Directory, content: DirectoryContent): void {
-    this.fileService.dispatchAddMany(content.files);
-    this.dispatchAddMany(content.directories);
+  public updateLoaded(loadedDirectory: Directory, content: DirectoryContent): void {
+    this.fileService.upsertMany(content.files);
+    this.store.dispatch(directoryActions.addMany({ entities: content.directories }));
     this.store.dispatch(
       directoryActions.updateOne({
         update: {
           id: loadedDirectory.id as number,
           changes: {
-            fileIds: this.fileService.sortFilesDefault(content.files).map((file: File) => file.id),
-            directoryIds: this.sortDirectoriesDefault(content.directories).map((directory: Directory) => directory.id),
+            fileIds: this.fileService.sortDefault(content.files).map((file: File) => file.id),
+            directoryIds: this.sortDefault(content.directories).map((directory: Directory) => directory.id),
           },
         },
       }),
     );
-    this.store.dispatch(directoryActions.addLoadedId({ id: loadedDirectory.id }));
+    this.store.dispatch(directoryActions.insertLoadedId({ id: loadedDirectory.id }));
   }
 
-  public dispatchToggleOpenedDirectory(directory: Directory): void {
-    const isOpened$ = this.selectIsOpenedDirectory(directory);
-    isOpened$.subscribe((isOpened: boolean) => {
-      isOpened ? this.dispatchClosedDirectory(directory) : this.dispatchOpenedDirectory(directory);
-    });
+  public toggleOpened(directory: Directory): void {
+    this.store.dispatch(directoryActions.toggleOpenedId({ id: directory.id }));
   }
 
-  public dispatchOpenedDirectory(directory: Directory): void {
-    this.store.dispatch(directoryActions.addOpenedId({ id: directory.id }));
-  }
-
-  public dispatchClosedDirectory(directory: Directory): void {
-    this.store.dispatch(directoryActions.removeOpenedId({ id: directory.id }));
-  }
-
-  public selectIsLoadedDirectory(directory: Directory): Observable<boolean> {
+  public isLoaded(directory: Directory): Observable<boolean> {
     return this.store.pipe(select(directorySelectors.selectIsLoadedId, { id: directory.id }), take(1));
   }
 
-  public selectIsOpenedDirectory(directory: Directory): Observable<boolean> {
-    return this.store.pipe(select(directorySelectors.selectIsOpenedId, { id: directory.id }), take(1));
-  }
-
-  private mapToDirectories(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): Directory[] {
+  private mapTo(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): Directory[] {
     const directories: Directory[] = ids.map((id: Id, index: number) => {
       const { isDirectory, ...toDirectory } = loadDirectoryResults[index];
       const directory: Directory = {

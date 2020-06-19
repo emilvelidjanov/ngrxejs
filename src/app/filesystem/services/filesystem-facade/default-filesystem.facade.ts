@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { share, switchMap, takeWhile, tap } from 'rxjs/operators';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
@@ -30,48 +30,46 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       takeWhile((result: OpenDialogResult) => !result.canceled),
       share(),
     );
-    const loadAndCreateDirectoryContent$ = openDialog$.pipe(
-      switchMap((result: OpenDialogResult) => this.loadAndCreateDirectoryContent(result.filePaths[0])),
+    const loadDirectoryContent$ = openDialog$.pipe(
+      switchMap((result: OpenDialogResult) => this.loadDirectoryContent(result.filePaths[0])),
       share(),
     );
-    const openDirectory$ = forkJoin([openDialog$, loadAndCreateDirectoryContent$]);
+    const openDirectory$ = zip(openDialog$, loadDirectoryContent$);
     const createProject$ = openDirectory$.pipe(
-      switchMap(([openedDialog, directoryContent]) =>
-        this.projectService.createProject(openedDialog, directoryContent),
-      ),
+      switchMap(([openedDialog, directoryContent]) => this.projectService.create(openedDialog, directoryContent)),
     );
-    const dispatch$ = forkJoin([loadAndCreateDirectoryContent$, createProject$]);
-    dispatch$.subscribe(([directoryContent, createdProject]) => {
-      this.projectService.dispatchOpenedProject(createdProject, directoryContent);
-    }, console.error);
+    const dispatch$ = zip(loadDirectoryContent$, createProject$);
+    dispatch$.subscribe(([directoryContent, createdProject]) =>
+      this.projectService.open(createdProject, directoryContent),
+    );
   }
 
   public openDirectory(directory: Directory): void {
-    const isLoadedDirectory$ = this.directoryService.selectIsLoadedDirectory(directory);
+    const isLoadedDirectory$ = this.directoryService.isLoaded(directory);
     const loadAndCreateDirectoryContent$ = isLoadedDirectory$.pipe(
       takeWhile((isLoaded: boolean) => !isLoaded),
-      switchMap(() => this.loadAndCreateDirectoryContent(directory.path)),
+      switchMap(() => this.loadDirectoryContent(directory.path)),
     );
     loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) => {
-      this.directoryService.dispatchLoadedDirectory(directory, directoryContent);
+      this.directoryService.updateLoaded(directory, directoryContent);
     });
-    this.directoryService.dispatchToggleOpenedDirectory(directory);
+    this.directoryService.toggleOpened(directory);
   }
 
   public loadFile(file: File): Observable<string> {
-    const isLoadedFile$ = this.fileService.selectIsLoadedFile(file);
+    const isLoadedFile$ = this.fileService.isLoaded(file);
     const loadFile$ = isLoadedFile$.pipe(
       takeWhile((isLoaded: boolean) => !isLoaded),
       switchMap(() => this.filesystemService.loadFile(file.path)),
-      tap((content: string) => this.fileService.dispatchLoadedFile(file, content)),
+      tap((content: string) => this.fileService.updateLoaded(file, content)),
     );
     return loadFile$;
   }
 
-  private loadAndCreateDirectoryContent(path: string): Observable<DirectoryContent> {
-    const loadAndCreateDirectoryContent$ = this.filesystemService
+  private loadDirectoryContent(path: string): Observable<DirectoryContent> {
+    const loadDirectoryContent$ = this.filesystemService
       .loadDirectory(path)
       .pipe(switchMap((results: LoadDirectoryResult[]) => this.directoryService.createDirectoryContent(results)));
-    return loadAndCreateDirectoryContent$;
+    return loadDirectoryContent$;
   }
 }
