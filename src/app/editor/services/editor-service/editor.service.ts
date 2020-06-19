@@ -1,8 +1,8 @@
 import { File } from 'src/app/filesystem/store/file/file.state';
 
 export interface EditorService {
-  dispatchToggleOpenedFile(file: File): void;
-  dispatchFocusedFile(file: File): void;
-  dispatchUnfocusedFile(file: File): void;
-  dispatchClosedFile(file: File): void;
+  open(file: File): void;
+  focus(file: File): void;
+  unfocus(file: File): void;
+  close(file: File): void;
 }

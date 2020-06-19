@@ -22,7 +22,7 @@ export class DefaultMenuFacade implements MenuFacade {
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
-    this.menuItemService.toggleOpened(menuItem);
+    this.menuItemService.open(menuItem);
     if (menuItem.clickAction) {
       this.menuItemService.dispatchClickAction(menuItem);
       this.menuItemService.closeAll();

@@ -11,22 +11,15 @@ import { EditorService } from './editor.service';
 export class DefaultEditorService implements EditorService {
   constructor(private store: Store<Files>) {}
 
-  public dispatchToggleOpenedFile(file: File): void {
-    const isOpened$ = this.store.pipe(
-      select(editorSelectors.selectIsOpenedId, { id: file.id }),
-      takeWhile((isOpened: boolean) => !isOpened),
-      take(1),
-    );
-    isOpened$.subscribe(() => {
-      this.store.dispatch(editorActions.addOpenedId({ id: file.id }));
-    });
+  public open(file: File): void {
+    this.store.dispatch(editorActions.insertOpenedId({ id: file.id }));
   }
 
-  public dispatchFocusedFile(file: File): void {
+  public focus(file: File): void {
     this.store.dispatch(editorActions.setFocusedId({ id: file.id }));
   }
 
-  public dispatchUnfocusedFile(file: File): void {
+  public unfocus(file: File): void {
     const isFocused$ = this.store.pipe(
       select(editorSelectors.selectIsFocusedId, { id: file.id }),
       takeWhile((isFocused: boolean) => isFocused),
@@ -40,7 +33,7 @@ export class DefaultEditorService implements EditorService {
         const indexOf: number = files.indexOf(file);
         files.splice(indexOf, 1);
         const neighbor: File = files[indexOf] ? files[indexOf] : files[indexOf - 1];
-        this.dispatchFocusedFile(neighbor);
+        this.focus(neighbor);
       } else {
         const initialFocusedId = editorAppStateConfig.getInitialState().focusedId;
         this.store.dispatch(editorActions.setFocusedId({ id: initialFocusedId }));
@@ -48,7 +41,7 @@ export class DefaultEditorService implements EditorService {
     });
   }
 
-  public dispatchClosedFile(file: File): void {
+  public close(file: File): void {
     this.store.dispatch(editorActions.removeOpenedId({ id: file.id }));
   }
 }

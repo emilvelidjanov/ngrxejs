@@ -17,12 +17,12 @@ export class DefaultEditorFacade implements EditorFacade {
 
   public openFile(file: File): void {
     this.filesystemFacade.loadFile(file).pipe(take(1)).subscribe();
-    this.editorService.dispatchToggleOpenedFile(file);
-    this.editorService.dispatchFocusedFile(file);
+    this.editorService.open(file);
+    this.editorService.focus(file);
   }
 
   public closeFile(file: File): void {
-    this.editorService.dispatchUnfocusedFile(file);
-    this.editorService.dispatchClosedFile(file);
+    this.editorService.unfocus(file);
+    this.editorService.close(file);
   }
 }

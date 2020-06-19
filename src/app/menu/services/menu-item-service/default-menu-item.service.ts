@@ -16,9 +16,9 @@ export class DefaultMenuItemService implements MenuItemService {
     this.store.dispatch(menuItemActions.addMany({ entities: menuItems }));
   }
 
-  public toggleOpened(menuItem: MenuItem): void {
+  public open(menuItem: MenuItem): void {
     if (menuItem.menuItemIds && menuItem.menuItemIds.length) {
-      this.store.dispatch(menuItemActions.toggleOpenedId({ id: menuItem.id }));
+      this.store.dispatch(menuItemActions.setOpenedIds({ ids: [menuItem.id] }));
     }
   }
 
