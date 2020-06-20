@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { take, tap } from 'rxjs/operators';
 
 import { MenuItem } from '../../store/menu-item/menu-item.state';
 import { Menu } from '../../store/menu/menu.state';
@@ -22,14 +23,20 @@ export class DefaultMenuFacade implements MenuFacade {
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
-    this.menuItemService.open(menuItem);
+    const isOpened$ = this.menuItemService.isOpened(menuItem);
+    isOpened$
+      .pipe(
+        tap((isOpened: boolean) => (isOpened ? this.menuItemService.closeAll() : this.menuItemService.open(menuItem))),
+        take(1),
+      )
+      .subscribe();
     if (menuItem.clickAction) {
       this.menuItemService.dispatchClickAction(menuItem);
       this.menuItemService.closeAll();
     }
   }
 
-  public onClickOffMenuItem(htmlNodeName: string): void {
+  public onClickOffNestedMenuItems(htmlNodeName: string): void {
     if (htmlNodeName !== this.menuItemService.getHtmlNodeName()) {
       this.menuItemService.closeAll();
     }

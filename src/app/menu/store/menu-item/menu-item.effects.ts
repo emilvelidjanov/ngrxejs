@@ -24,7 +24,7 @@ export class MenuItemEffects {
     () =>
       this.actions$.pipe(
         ofType(menuItemActions.clickOff),
-        tap((action) => this.menuFacade.onClickOffMenuItem(action.htmlNodeName)),
+        tap((action) => this.menuFacade.onClickOffNestedMenuItems(action.htmlNodeName)),
       ),
     { dispatch: false },
   );

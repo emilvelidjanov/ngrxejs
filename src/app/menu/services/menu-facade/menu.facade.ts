@@ -4,5 +4,5 @@ import { Menu } from '../../store/menu/menu.state';
 export interface MenuFacade {
   addMenus(menus: Menu[], menuItems: MenuItem[]): void;
   onClickMenuItem(menuItem: MenuItem): void;
-  onClickOffMenuItem(htmlNodeName: string): void;
+  onClickOffNestedMenuItems(htmlNodeName: string): void;
 }
