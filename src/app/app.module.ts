@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
-import { buildSpecificModules } from 'src/build-specifics/index';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
@@ -31,7 +32,10 @@ import { metaReducers, reducers } from './store';
       routerState: RouterState.Minimal,
     }),
     EffectsModule.forRoot(),
-    buildSpecificModules,
+    StoreDevtoolsModule.instrument({
+      maxAge: 50,
+      logOnly: environment.production,
+    }),
     CoreModule.forRoot(),
     MenuModule.forRoot(),
     FilesystemModule.forRoot(),
