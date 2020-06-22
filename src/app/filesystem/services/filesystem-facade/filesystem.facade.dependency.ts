@@ -1,4 +1,6 @@
 import { DependencyConfigurer } from 'src/app/core/angular/dependency-configurer';
+import { MenuFacade } from 'src/app/menu/services/menu-facade/menu.facade';
+import { menuFacadeDep } from 'src/app/menu/services/menu-facade/menu.facade.dependency';
 
 import { DirectoryService } from '../directory-service/directory.service';
 import { directoryServiceDep } from '../directory-service/directory.service.dependency';
@@ -19,13 +21,15 @@ export const filesystemFacadeDep: DependencyConfigurer<FilesystemFacade> = new D
     projectServiceDep.getToken(),
     directoryServiceDep.getToken(),
     fileServiceDep.getToken(),
+    menuFacadeDep.getToken(),
   ],
   factory: (
     filesystemService: FilesystemService,
     projectService: ProjectService,
     directoryService: DirectoryService,
     fileService: FileService,
+    menuFacade: MenuFacade,
   ) => {
-    return new DefaultFilesystemFacade(filesystemService, projectService, directoryService, fileService);
+    return new DefaultFilesystemFacade(filesystemService, projectService, directoryService, fileService, menuFacade);
   },
 });

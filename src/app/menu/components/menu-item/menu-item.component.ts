@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { take, takeWhile, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
@@ -35,8 +35,8 @@ export class MenuItemComponent implements OnInit {
       .subscribe();
   }
 
-  public clickOff($event: MouseEvent): void {
+  public offClick($event: MouseEvent): void {
     const target = $event.target as HTMLElement;
-    this.store.dispatch(menuItemActions.clickOff({ htmlNodeName: target.parentElement.nodeName }));
+    this.store.dispatch(menuItemActions.offClick({ htmlNodeName: target.parentElement.nodeName }));
   }
 }

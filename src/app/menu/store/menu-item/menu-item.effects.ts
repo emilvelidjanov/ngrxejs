@@ -15,16 +15,16 @@ export class MenuItemEffects {
     () =>
       this.actions$.pipe(
         ofType(menuItemActions.click),
-        tap((action) => this.menuFacade.onClickMenuItem(action.entity)),
+        tap((action) => this.menuFacade.click(action.entity)),
       ),
     { dispatch: false },
   );
 
-  public clickOff$ = createEffect(
+  public offClick$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuItemActions.clickOff),
-        tap((action) => this.menuFacade.onClickOffNestedMenuItems(action.htmlNodeName)),
+        ofType(menuItemActions.offClick),
+        tap((action) => this.menuFacade.offClick(action.htmlNodeName)),
       ),
     { dispatch: false },
   );

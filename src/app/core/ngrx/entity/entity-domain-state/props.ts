@@ -37,3 +37,8 @@ export interface PropEntityMap<EntityType extends Entity> {
 export interface PropHtmlNodeName {
   htmlNodeName: string;
 }
+
+export interface PropCoordinates {
+  x: number;
+  y: number;
+}

@@ -3,7 +3,7 @@
     {{ menuItem.label }}
   </button>
   <ng-container *ngIf="isOpened$ | async as isOpened">
-    <div class="nested-menu-items" (appClickOff)="clickOff($event)">
+    <div class="nested-menu-items" (appOffClick)="offClick($event)">
       <ng-container *ngFor="let nestedMenuItemId of menuItem.menuItemIds">
         <app-menu-item [menuItemId]="nestedMenuItemId"></app-menu-item>
       </ng-container>

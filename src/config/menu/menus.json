@@ -1,0 +1,12 @@
+[
+  {
+    "id": "mainMenuBar",
+    "title": "ngrxejs",
+    "image": "assets/img/ngrx.png",
+    "menuItemIds": ["file", "editor"]
+  },
+  {
+    "id": "fileTreeContextMenu",
+    "menuItemIds": ["A", "B", "C"]
+  }
+]

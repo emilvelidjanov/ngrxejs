@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { take, tap } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { MenuItem } from '../../store/menu-item/menu-item.state';
 import { Menu } from '../../store/menu/menu.state';
@@ -22,7 +23,7 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuService.addMany(menu);
   }
 
-  public onClickMenuItem(menuItem: MenuItem): void {
+  public click(menuItem: MenuItem): void {
     const isOpened$ = this.menuItemService.isOpened(menuItem);
     isOpened$
       .pipe(
@@ -36,9 +37,14 @@ export class DefaultMenuFacade implements MenuFacade {
     }
   }
 
-  public onClickOffNestedMenuItems(htmlNodeName: string): void {
+  public offClick(htmlNodeName: string): void {
     if (htmlNodeName !== this.menuItemService.getHtmlNodeName()) {
       this.menuItemService.closeAll();
     }
+  }
+
+  public openContextMenu(menuId: Id, x: number, y: number): void {
+    this.menuService.open(menuId);
+    this.menuService.updatePosition(menuId, x, y);
   }
 }

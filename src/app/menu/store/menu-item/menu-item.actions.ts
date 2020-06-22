@@ -7,5 +7,5 @@ export const menuItemActions = {
   ...menuItemDomainStateConfig.getActions(),
   ...menuItemAppStateConfig.getActions(),
   click: createAction(menuItemAppStateConfig.getActionType('Click'), props<PropEntity<MenuItem>>()),
-  clickOff: createAction(menuItemAppStateConfig.getActionType('Click Off'), props<PropHtmlNodeName>()),
+  offClick: createAction(menuItemAppStateConfig.getActionType('Off Click'), props<PropHtmlNodeName>()),
 };

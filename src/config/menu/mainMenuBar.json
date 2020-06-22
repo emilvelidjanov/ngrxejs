@@ -1,6 +1,0 @@
-{
-  "id": "mainMenuBar",
-  "title": "ngrxejs",
-  "image": "assets/img/ngrx.png",
-  "menuItemIds": ["file", "editor"]
-}

@@ -22,4 +22,13 @@ export class ProjectEffects {
       ),
     { dispatch: false },
   );
+
+  public openContextMenu$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(projectActions.openContextMenu),
+        tap((action) => this.filesystemFacade.openContextMenu(action.id, action.x, action.y)),
+      ),
+    { dispatch: false },
+  );
 }
