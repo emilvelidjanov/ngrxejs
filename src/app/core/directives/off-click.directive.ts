@@ -1,21 +1,22 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appClickOff]',
+  selector: '[appOffClick]',
 })
-export class ClickOffDirective {
-  @Output() public readonly appClickOff: EventEmitter<MouseEvent>;
+export class OffClickDirective {
+  @Output() public readonly appOffClick: EventEmitter<MouseEvent>;
 
   constructor(private elementRef: ElementRef) {
-    this.appClickOff = new EventEmitter<MouseEvent>();
+    this.appOffClick = new EventEmitter<MouseEvent>();
   }
 
   @HostListener('document:click', ['$event'])
   public onDocumentClick($event: MouseEvent): void {
     const targetElement: HTMLElement = $event.target as HTMLElement;
     const refElement: HTMLElement = this.elementRef.nativeElement as HTMLElement;
-    if (targetElement && !refElement.contains(targetElement)) {
-      this.appClickOff.emit($event);
+    const isHidden: boolean = refElement.hidden || refElement.style.display === 'none';
+    if (!isHidden && targetElement && !refElement.contains(targetElement)) {
+      this.appOffClick.emit($event);
     }
   }
 }

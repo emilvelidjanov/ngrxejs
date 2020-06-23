@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable, zip } from 'rxjs';
-import { share, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { share, switchMap, take, takeWhile, tap } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity/entity';
+import { MenuFacade } from 'src/app/menu/services/menu-facade/menu.facade';
+import { menuFacadeDep } from 'src/app/menu/services/menu-facade/menu.facade.dependency';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
 import { Directory } from '../../store/directory/directory.state';
@@ -23,6 +26,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
     @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
     @Inject(fileServiceDep.getToken()) private fileService: FileService,
+    @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
   ) {}
 
   public openProject(): void {
@@ -64,6 +68,21 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       tap((content: string) => this.fileService.updateLoaded(file, content)),
     );
     return loadFile$;
+  }
+
+  public openContextMenuFileTree(contextMenuId: Id, x: number, y: number) {
+    const isAnyOpened$ = this.projectService.isAnyOpened();
+    isAnyOpened$
+      .pipe(
+        takeWhile((isAnyOpened: boolean) => isAnyOpened),
+        tap(() => this.openContextMenu(contextMenuId, x, y)),
+        take(1),
+      )
+      .subscribe();
+  }
+
+  public openContextMenu(contextMenuId: Id, x: number, y: number) {
+    this.menuFacade.openContextMenu(contextMenuId, x, y);
   }
 
   private loadDirectoryContent(path: string): Observable<DirectoryContent> {

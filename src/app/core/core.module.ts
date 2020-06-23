@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
-import { ClickOffDirective } from './directives/click-off.directive';
+import { OffClickDirective } from './directives/off-click.directive';
 import { ElectronService } from './electron/electron-service/electron.service';
 import { ipcServiceDep } from './electron/ipc-service/ipc-service.dependency';
 import {
@@ -11,9 +11,9 @@ import {
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';
 
 @NgModule({
-  declarations: [ClickOffDirective],
+  declarations: [OffClickDirective],
   imports: [CommonModule],
-  exports: [ClickOffDirective],
+  exports: [OffClickDirective],
 })
 export class CoreModule {
   public static forRoot(): ModuleWithProviders {

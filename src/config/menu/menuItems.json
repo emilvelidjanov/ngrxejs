@@ -7,7 +7,7 @@
   {
     "id": "openProject",
     "label": "Open project...",
-    "clickAction": "[App][Project] Open Project"
+    "clickAction": "[Effect][Project] Open Project"
   },
   {
     "id": "editor",
@@ -24,6 +24,6 @@
   },
   {
     "id": "C",
-    "label": "Longest Test Option 3"
+    "label": "The Longest Test Option 3"
   }
 ]

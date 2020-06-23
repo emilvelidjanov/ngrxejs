@@ -87,6 +87,11 @@ export class EntityDomainStateConfigurer<
     return actionType;
   }
 
+  public getEffectActionType(type: string) {
+    const actionType = `[Effect][${this.entityName}] ${type}`;
+    return actionType;
+  }
+
   private initActions(): EntityDomainActions<EntityType> {
     return {
       addOne: createAction(this.getActionType('Add One'), props<PropEntity<EntityType>>()),

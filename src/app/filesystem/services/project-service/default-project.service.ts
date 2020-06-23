@@ -5,6 +5,7 @@ import { map, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
+import { menuActions } from 'src/app/menu/store/menu/menu.actions';
 
 import { Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
@@ -46,6 +47,13 @@ export class DefaultProjectService implements ProjectService {
     this.directoryService.setAll(content.directories);
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
     this.store.dispatch(projectActions.setOpenedIds({ ids: [project.id] }));
+  }
+
+  public isAnyOpened(): Observable<boolean> {
+    return this.store.pipe(
+      select(projectSelectors.selectOpenedIds),
+      map((ids: Id[]) => !!ids.length),
+    );
   }
 
   private mapToProject(id: Id, openDialogResult: OpenDialogResult, content: DirectoryContent): Project {
