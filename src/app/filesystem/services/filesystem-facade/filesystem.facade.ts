@@ -8,5 +8,6 @@ export interface FilesystemFacade {
   openProject(): void;
   openDirectory(directory: Directory): void;
   loadFile(file: File): Observable<string>;
+  openContextMenuFileTree(contextMenuId: Id, x: number, y: number): void;
   openContextMenu(contextMenuId: Id, x: number, y: number): void;
 }

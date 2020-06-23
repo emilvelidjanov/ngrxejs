@@ -70,15 +70,19 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return loadFile$;
   }
 
-  public openContextMenu(contextMenuId: Id, x: number, y: number) {
+  public openContextMenuFileTree(contextMenuId: Id, x: number, y: number) {
     const isAnyOpened$ = this.projectService.isAnyOpened();
     isAnyOpened$
       .pipe(
         takeWhile((isAnyOpened: boolean) => isAnyOpened),
-        tap(() => this.menuFacade.openContextMenu(contextMenuId, x, y)),
+        tap(() => this.openContextMenu(contextMenuId, x, y)),
         take(1),
       )
       .subscribe();
+  }
+
+  public openContextMenu(contextMenuId: Id, x: number, y: number) {
+    this.menuFacade.openContextMenu(contextMenuId, x, y);
   }
 
   private loadDirectoryContent(path: string): Observable<DirectoryContent> {

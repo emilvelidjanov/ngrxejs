@@ -27,7 +27,7 @@ export class ProjectEffects {
     () =>
       this.actions$.pipe(
         ofType(projectActions.openContextMenu),
-        tap((action) => this.filesystemFacade.openContextMenu(action.id, action.x, action.y)),
+        tap((action) => this.filesystemFacade.openContextMenuFileTree(action.id, action.x, action.y)),
       ),
     { dispatch: false },
   );

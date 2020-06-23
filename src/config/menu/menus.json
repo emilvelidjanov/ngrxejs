@@ -8,5 +8,9 @@
   {
     "id": "fileTreeContextMenu",
     "menuItemIds": ["A", "B", "C"]
+  },
+  {
+    "id": "directoryContextMenu",
+    "menuItemIds": ["A", "B"]
   }
 ]

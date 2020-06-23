@@ -22,4 +22,13 @@ export class DirectoryEffects {
       ),
     { dispatch: false },
   );
+
+  public openContextMenu$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(directoryActions.openContextMenu),
+        tap((action) => this.filesystemFacade.openContextMenu(action.id, action.x, action.y)),
+      ),
+    { dispatch: false },
+  );
 }
