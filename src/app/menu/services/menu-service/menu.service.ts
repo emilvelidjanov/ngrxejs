@@ -6,4 +6,5 @@ export interface MenuService {
   addMany(menus: Menu[]): void;
   open(menuId: Id): void;
   updatePosition(menuId: Id, x: number, y: number): void;
+  close(menuId: Id): void;
 }

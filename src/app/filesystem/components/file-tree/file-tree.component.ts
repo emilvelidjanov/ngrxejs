@@ -14,7 +14,7 @@ import { Project, Projects } from '../../store/project/project.state';
 })
 export class FileTreeComponent implements OnInit {
   public project$: Observable<Project>;
-  public contextMenuId: string;
+  public readonly contextMenuId: string;
 
   constructor(private store: Store<Projects>) {
     this.contextMenuId = 'fileTreeContextMenu';

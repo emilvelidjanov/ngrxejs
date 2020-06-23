@@ -47,4 +47,8 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuService.open(menuId);
     this.menuService.updatePosition(menuId, x, y);
   }
+
+  public close(menuId: Id): void {
+    this.menuService.close(menuId);
+  }
 }

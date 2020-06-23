@@ -32,4 +32,8 @@ export class DefaultMenuService implements MenuService {
       }),
     );
   }
+
+  public close(menuId: Id): void {
+    this.store.dispatch(menuActions.removeOpenedId({ id: menuId }));
+  }
 }

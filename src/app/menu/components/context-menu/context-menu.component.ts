@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
+import { menuActions } from '../../store/menu/menu.actions';
 import { menuSelectors } from '../../store/menu/menu.selectors';
 import { Menu, Menus } from '../../store/menu/menu.state';
 
@@ -32,6 +33,10 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
       this.left = menu.x + 'px';
       this.top = menu.y + 'px';
     });
+  }
+
+  public offClick(): void {
+    this.store.dispatch(menuActions.close({ id: this.menuId }));
   }
 
   public ngOnDestroy(): void {

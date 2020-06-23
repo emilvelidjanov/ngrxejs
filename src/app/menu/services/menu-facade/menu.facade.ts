@@ -8,4 +8,5 @@ export interface MenuFacade {
   click(menuItem: MenuItem): void;
   offClick(htmlNodeName: string): void;
   openContextMenu(menuId: Id, x: number, y: number): void;
+  close(menuId: Id): void;
 }
