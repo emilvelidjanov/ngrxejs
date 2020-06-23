@@ -6,6 +6,12 @@ import { MenuItem, menuItemAppStateConfig, menuItemDomainStateConfig } from './m
 export const menuItemActions = {
   ...menuItemDomainStateConfig.getActions(),
   ...menuItemAppStateConfig.getActions(),
-  click: createAction(menuItemAppStateConfig.getActionType('Click'), props<PropEntity<MenuItem>>()),
-  offClick: createAction(menuItemAppStateConfig.getActionType('Off Click'), props<PropHtmlNodeName>()),
+  clickMenuItem: createAction(
+    menuItemAppStateConfig.getEffectActionType('Click Menu Item'),
+    props<PropEntity<MenuItem>>(),
+  ),
+  offClickMenuItem: createAction(
+    menuItemAppStateConfig.getEffectActionType('Off Click Menu Item'),
+    props<PropHtmlNodeName>(),
+  ),
 };

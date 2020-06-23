@@ -14,8 +14,8 @@ export class MenuItemEffects {
   public click$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuItemActions.click),
-        tap((action) => this.menuFacade.click(action.entity)),
+        ofType(menuItemActions.clickMenuItem),
+        tap((action) => this.menuFacade.clickMenuItem(action.entity)),
       ),
     { dispatch: false },
   );
@@ -23,8 +23,8 @@ export class MenuItemEffects {
   public offClick$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuItemActions.offClick),
-        tap((action) => this.menuFacade.offClick(action.htmlNodeName)),
+        ofType(menuItemActions.offClickMenuItem),
+        tap((action) => this.menuFacade.offClickMenuItem(action.htmlNodeName)),
       ),
     { dispatch: false },
   );

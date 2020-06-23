@@ -6,9 +6,12 @@ import { Directory, directoryAppStateConfig, directoryDomainStateConfig } from '
 export const directoryActions = {
   ...directoryDomainStateConfig.getActions(),
   ...directoryAppStateConfig.getActions(),
-  openDirectory: createAction(directoryAppStateConfig.getActionType('Open Directory'), props<PropEntity<Directory>>()),
+  openDirectory: createAction(
+    directoryAppStateConfig.getEffectActionType('Open Directory'),
+    props<PropEntity<Directory>>(),
+  ),
   openContextMenu: createAction(
-    directoryAppStateConfig.getActionType('Open Context Menu'),
+    directoryAppStateConfig.getEffectActionType('Open Context Menu'),
     props<PropId & PropCoordinates>(),
   ),
 };

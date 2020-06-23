@@ -7,7 +7,7 @@
   {
     "id": "openProject",
     "label": "Open project...",
-    "clickAction": "[App][Project] Open Project"
+    "clickAction": "[Effect][Project] Open Project"
   },
   {
     "id": "editor",

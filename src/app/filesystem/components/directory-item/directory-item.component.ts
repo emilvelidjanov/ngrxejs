@@ -21,7 +21,7 @@ export class DirectoryItemComponent implements OnInit {
   public readonly contextMenuId: string;
 
   constructor(private store: Store<Directories>) {
-    this.contextMenuId = 'directoryContextMenu';
+    this.contextMenuId = 'directoryItemContextMenu';
   }
 
   public ngOnInit(): void {

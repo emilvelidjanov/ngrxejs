@@ -5,8 +5,8 @@ import { Menu } from '../../store/menu/menu.state';
 
 export interface MenuFacade {
   addMenus(menus: Menu[], menuItems: MenuItem[]): void;
-  click(menuItem: MenuItem): void;
-  offClick(htmlNodeName: string): void;
+  clickMenuItem(menuItem: MenuItem): void;
+  offClickMenuItem(htmlNodeName: string): void;
   openContextMenu(menuId: Id, x: number, y: number): void;
-  close(menuId: Id): void;
+  closeMenu(menuId: Id): void;
 }

@@ -29,7 +29,7 @@ export class MenuItemComponent implements OnInit {
   public click(): void {
     this.menuItem$
       .pipe(
-        tap((menuItem: MenuItem) => this.store.dispatch(menuItemActions.click({ entity: menuItem }))),
+        tap((menuItem: MenuItem) => this.store.dispatch(menuItemActions.clickMenuItem({ entity: menuItem }))),
         take(1),
       )
       .subscribe();
@@ -37,6 +37,6 @@ export class MenuItemComponent implements OnInit {
 
   public offClick($event: MouseEvent): void {
     const target = $event.target as HTMLElement;
-    this.store.dispatch(menuItemActions.offClick({ htmlNodeName: target.parentElement.nodeName }));
+    this.store.dispatch(menuItemActions.offClickMenuItem({ htmlNodeName: target.parentElement.nodeName }));
   }
 }

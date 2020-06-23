@@ -98,6 +98,11 @@ export class EntityAppStateConfigurer<EntityType extends Entity, AppStateType ex
     return actionType;
   }
 
+  public getEffectActionType(type: string) {
+    const actionType = `[Effect][${this.entityName}] ${type}`;
+    return actionType;
+  }
+
   public getReducerFunctions(): On<AppStateType>[] {
     return this.reducers;
   }

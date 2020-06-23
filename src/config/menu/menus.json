@@ -10,7 +10,11 @@
     "menuItemIds": ["A", "B", "C"]
   },
   {
-    "id": "directoryContextMenu",
+    "id": "directoryItemContextMenu",
     "menuItemIds": ["A", "B"]
+  },
+  {
+    "id": "fileItemContextMenu",
+    "menuItemIds": ["A"]
   }
 ]

@@ -6,9 +6,9 @@ import { projectAppStateConfig, projectDomainStateConfig } from './project.state
 export const projectActions = {
   ...projectDomainStateConfig.getActions(),
   ...projectAppStateConfig.getActions(),
-  openProject: createAction(projectAppStateConfig.getActionType('Open Project')),
+  openProject: createAction(projectAppStateConfig.getEffectActionType('Open Project')),
   openContextMenu: createAction(
-    projectAppStateConfig.getActionType('Open Context Menu'),
+    projectAppStateConfig.getEffectActionType('Open Context Menu'),
     props<PropId & PropCoordinates>(),
   ),
 };

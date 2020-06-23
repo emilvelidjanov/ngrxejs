@@ -36,7 +36,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
   }
 
   public offClick(): void {
-    this.store.dispatch(menuActions.close({ id: this.menuId }));
+    this.store.dispatch(menuActions.closeMenu({ id: this.menuId }));
   }
 
   public ngOnDestroy(): void {

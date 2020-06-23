@@ -23,7 +23,7 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuService.addMany(menu);
   }
 
-  public click(menuItem: MenuItem): void {
+  public clickMenuItem(menuItem: MenuItem): void {
     const isOpened$ = this.menuItemService.isOpened(menuItem);
     isOpened$
       .pipe(
@@ -37,18 +37,18 @@ export class DefaultMenuFacade implements MenuFacade {
     }
   }
 
-  public offClick(htmlNodeName: string): void {
+  public offClickMenuItem(htmlNodeName: string): void {
     if (htmlNodeName !== this.menuItemService.getHtmlNodeName()) {
       this.menuItemService.closeAll();
     }
   }
 
   public openContextMenu(menuId: Id, x: number, y: number): void {
-    this.menuService.open(menuId);
     this.menuService.updatePosition(menuId, x, y);
+    this.menuService.open(menuId);
   }
 
-  public close(menuId: Id): void {
+  public closeMenu(menuId: Id): void {
     this.menuService.close(menuId);
   }
 }
