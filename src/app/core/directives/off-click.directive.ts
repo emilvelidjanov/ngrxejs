@@ -1,4 +1,7 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Inject, Output } from '@angular/core';
+
+import { DomService } from '../services/DOM-service/dom.service';
+import { domServiceDep } from '../services/DOM-service/dom.service.dependency';
 
 @Directive({
   selector: '[appOffClick]',
@@ -6,7 +9,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angu
 export class OffClickDirective {
   @Output() public readonly appOffClick: EventEmitter<MouseEvent>;
 
-  constructor(private elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef, @Inject(domServiceDep.getToken()) private domService: DomService) {
     this.appOffClick = new EventEmitter<MouseEvent>();
   }
 
@@ -15,7 +18,7 @@ export class OffClickDirective {
     const targetElement: HTMLElement = $event.target as HTMLElement;
     const refElement: HTMLElement = this.elementRef.nativeElement as HTMLElement;
     const isHidden: boolean = refElement.hidden || refElement.style.display === 'none';
-    if (!isHidden && targetElement && !refElement.contains(targetElement)) {
+    if (!isHidden && targetElement && !this.domService.contains(refElement, targetElement)) {
       this.appOffClick.emit($event);
     }
   }

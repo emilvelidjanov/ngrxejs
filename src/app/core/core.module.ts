@@ -8,6 +8,7 @@ import {
   numberIdGeneratorServiceDep,
   uuidGeneratorServiceDep,
 } from './ngrx/services/id-generator-service/id-generator.service.dependency';
+import { domServiceDep } from './services/DOM-service/dom.service.dependency';
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';
 
 @NgModule({
@@ -25,6 +26,7 @@ export class CoreModule {
         numberIdGeneratorServiceDep.getProvider(),
         uuidGeneratorServiceDep.getProvider(),
         sortServiceDep.getProvider(),
+        domServiceDep.getProvider(),
       ],
     };
   }
