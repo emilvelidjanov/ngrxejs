@@ -1,7 +1,6 @@
 <ng-container *ngIf="file$ | async as file">
-  <button (click)="openFile()">
+  <button (click)="openFile()" [appContextMenuTrigger]="contextMenuId">
     <span class="file-label">{{ file.name }}{{ file.extension }}</span>
   </button>
+  <app-context-menu [menuId]="contextMenuId"></app-context-menu>
 </ng-container>
-
-<app-context-menu [menuId]="contextMenuId"></app-context-menu>

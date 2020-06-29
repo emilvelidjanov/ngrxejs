@@ -5,7 +5,6 @@ import { map, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
-import { menuActions } from 'src/app/menu/store/menu/menu.actions';
 
 import { Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';

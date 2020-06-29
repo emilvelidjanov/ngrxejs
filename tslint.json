@@ -48,7 +48,10 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "no-shadowed-variable": false,
-    "no-empty-interface": false
+    "no-empty-interface": false,
+    "variable-name": {
+      "options": ["check-format", "allow-leading-underscore"]
+    }
   },
   "rulesDirectory": ["codelyzer"]
 }

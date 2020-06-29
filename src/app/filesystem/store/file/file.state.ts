@@ -1,4 +1,4 @@
-import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
+import { Entity } from 'src/app/core/ngrx/entity/entity';
 import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
 import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
 import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';

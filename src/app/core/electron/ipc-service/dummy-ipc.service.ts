@@ -8,7 +8,7 @@ import { IpcService } from './ipc-service';
 export class DummyIpcService implements IpcService {
   constructor() {}
 
-  public send<ParamType, ReturnType>(channel: string, request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
+  public send<ParamType, ReturnType>(_channel: string, _request: IpcRequest<ParamType> = {}): Observable<ReturnType> {
     throw new Error('DummyIpcService#send is dummy method. Do not call.');
   }
 }

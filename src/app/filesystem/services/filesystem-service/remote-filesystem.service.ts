@@ -7,15 +7,15 @@ import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from './file
 export class RemoteFilesystemService implements FilesystemService {
   constructor() {}
 
-  public openDialog(options?: any): Observable<OpenDialogResult> {
+  public openDialog(_options?: any): Observable<OpenDialogResult> {
     throw new Error('RemoteFilesystemService#openDialog not implemented.');
   }
 
-  public loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
+  public loadDirectory(_path: string): Observable<LoadDirectoryResult[]> {
     throw new Error('RemoteFilesystemService#loadDirectory not implemented.');
   }
 
-  public loadFile(path: string): Observable<string> {
+  public loadFile(_path: string): Observable<string> {
     throw new Error('RemoteFilesystemService#loadFile not implemented.');
   }
 }

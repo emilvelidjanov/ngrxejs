@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { editorActions } from 'src/app/editor/store/editor/editor.actions';
 
-import { fileActions } from '../../store/file/file.actions';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { File, Files } from '../../store/file/file.state';
 
@@ -35,17 +34,5 @@ export class FileItemComponent implements OnInit {
         take(1),
       )
       .subscribe();
-  }
-
-  @HostListener('contextmenu', ['$event'])
-  public onContextMenu($event: MouseEvent): void {
-    $event.stopPropagation();
-    this.store.dispatch(
-      fileActions.openContextMenu({
-        id: this.contextMenuId,
-        x: $event.x,
-        y: $event.y,
-      }),
-    );
   }
 }

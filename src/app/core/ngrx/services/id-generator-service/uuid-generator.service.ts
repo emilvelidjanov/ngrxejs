@@ -5,7 +5,7 @@ export class UuidGeneratorService implements IdGeneratorService {
     throw new Error('Method not implemented.');
   }
 
-  public nextNIds(n: number): string[] {
+  public nextNIds(_n: number): string[] {
     throw new Error('Method not implemented.');
   }
 }
