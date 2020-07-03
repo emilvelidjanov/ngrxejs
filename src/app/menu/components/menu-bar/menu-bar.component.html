@@ -1,7 +1,9 @@
 <ng-container *ngIf="menu$ | async as menu">
-  <ng-container *ngIf="menu.title || menu.image">
+  <ng-container *ngIf="menu.title">
     <span class="menu-title">
-      <img [src]="menu.image" height="16" />
+      <ng-container *ngIf="menu.image">
+        <img [src]="menu.image" height="16" />
+      </ng-container>
       {{ menu.title }}
     </span>
   </ng-container>

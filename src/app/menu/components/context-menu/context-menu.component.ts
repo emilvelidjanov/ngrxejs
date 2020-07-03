@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { menuActions } from '../../store/menu/menu.actions';
@@ -17,7 +17,6 @@ import { Menu, Menus } from '../../store/menu/menu.state';
 export class ContextMenuComponent implements OnInit, OnDestroy {
   @Input() public menuId: Id;
   public menu$: Observable<Menu>;
-  public isOpened$: Observable<boolean>;
   private unsubscribe: Subject<void>;
   @HostBinding('style.top') public top: string;
   @HostBinding('style.left') public left: string;
@@ -28,7 +27,6 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.menu$ = this.store.pipe(select(menuSelectors.selectEntityById, { id: this.menuId }));
-    this.isOpened$ = this.store.pipe(select(menuSelectors.selectIsOpenedId, { id: this.menuId }));
     this.menu$.pipe(takeUntil(this.unsubscribe)).subscribe((menu: Menu) => {
       this.left = menu.x + 'px';
       this.top = menu.y + 'px';
@@ -36,7 +34,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
   }
 
   public offClick(): void {
-    this.store.dispatch(menuActions.closeMenu({ id: this.menuId }));
+    this.menu$.pipe(take(1)).subscribe((menu: Menu) => this.store.dispatch(menuActions.close({ entity: menu })));
   }
 
   public ngOnDestroy(): void {

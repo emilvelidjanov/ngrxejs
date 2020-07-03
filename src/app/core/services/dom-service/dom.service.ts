@@ -1,3 +1,3 @@
 export interface DomService {
-  contains(parent: HTMLElement, child: HTMLElement);
+  containsOrIsEqual(parent: HTMLElement, child: HTMLElement);
 }

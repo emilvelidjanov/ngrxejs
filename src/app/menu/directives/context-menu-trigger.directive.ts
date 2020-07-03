@@ -1,8 +1,10 @@
 import { Directive, HostListener, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 import { menuActions } from '../store/menu/menu.actions';
-import { Menus } from '../store/menu/menu.state';
+import { menuSelectors } from '../store/menu/menu.selectors';
+import { Menu, Menus } from '../store/menu/menu.state';
 
 @Directive({
   selector: '[appContextMenuTrigger]',
@@ -18,13 +20,18 @@ export class ContextMenuTriggerDirective implements OnInit {
   public onContextMenu($event: MouseEvent): void {
     if (this.contextMenuId) {
       $event.stopPropagation();
-      this.store.dispatch(
-        menuActions.openContextMenu({
-          id: this.contextMenuId,
-          x: $event.x,
-          y: $event.y,
-        }),
-      );
+      this.store
+        .pipe(select(menuSelectors.selectEntityById, { id: this.contextMenuId }))
+        .pipe(take(1))
+        .subscribe((menu: Menu) => {
+          this.store.dispatch(
+            menuActions.openContextMenu({
+              entity: menu,
+              x: $event.x,
+              y: $event.y,
+            }),
+          );
+        });
     }
   }
 }

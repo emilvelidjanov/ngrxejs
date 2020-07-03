@@ -18,7 +18,7 @@ export class OffClickDirective {
     const targetElement: HTMLElement = $event.target as HTMLElement;
     const refElement: HTMLElement = this.elementRef.nativeElement as HTMLElement;
     const isHidden: boolean = refElement.hidden || refElement.style.display === 'none';
-    if (!isHidden && targetElement && !this.domService.contains(refElement, targetElement)) {
+    if (!isHidden && targetElement && !this.domService.containsOrIsEqual(refElement, targetElement)) {
       this.appOffClick.emit($event);
     }
   }

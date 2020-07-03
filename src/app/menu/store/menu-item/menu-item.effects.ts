@@ -11,20 +11,20 @@ import { menuItemActions } from './menu-item.actions';
 export class MenuItemEffects {
   constructor(private actions$: Actions, @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade) {}
 
-  public click$ = createEffect(
+  public onClick$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuItemActions.clickMenuItem),
-        tap((action) => this.menuFacade.clickMenuItem(action.entity)),
+        ofType(menuItemActions.onClick),
+        tap((action) => this.menuFacade.onClickMenuItem(action.entity)),
       ),
     { dispatch: false },
   );
 
-  public offClick$ = createEffect(
+  public offClickNestedMenuItems$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuItemActions.offClickMenuItem),
-        tap((action) => this.menuFacade.offClickMenuItem(action.htmlNodeName)),
+        ofType(menuItemActions.offClickNestedMenuItems),
+        tap(() => this.menuFacade.offClickMenuItemNestedMenuItems()),
       ),
     { dispatch: false },
   );

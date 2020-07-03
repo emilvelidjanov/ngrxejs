@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { take, tap } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { MenuItem } from '../../store/menu-item/menu-item.state';
 import { Menu } from '../../store/menu/menu.state';
@@ -18,37 +16,30 @@ export class DefaultMenuFacade implements MenuFacade {
     @Inject(menuServiceDep.getToken) private menuService: MenuService,
   ) {}
 
-  public addMenus(menu: Menu[], menuItems: MenuItem[]): void {
+  public addMenusConfiguration(menus: Menu[], menuItems: MenuItem[]): void {
+    this.menuItemService.populateOptionals(menuItems);
     this.menuItemService.addMany(menuItems);
-    this.menuService.addMany(menu);
+    this.menuService.populateOptionals(menus);
+    this.menuService.addMany(menus);
   }
 
-  public clickMenuItem(menuItem: MenuItem): void {
-    const isOpened$ = this.menuItemService.isOpened(menuItem);
-    isOpened$
-      .pipe(
-        tap((isOpened: boolean) => (isOpened ? this.menuItemService.closeAll() : this.menuItemService.open(menuItem))),
-        take(1),
-      )
-      .subscribe();
-    if (menuItem.clickAction) {
-      this.menuItemService.dispatchClickAction(menuItem);
-      this.menuItemService.closeAll();
-    }
+  public onClickMenuItem(menuItem: MenuItem): void {
+    this.menuItemService.closeAll();
+    this.menuItemService.open(menuItem);
+    this.menuItemService.dispatchClickAction(menuItem);
   }
 
-  public offClickMenuItem(htmlNodeName: string): void {
-    if (htmlNodeName !== this.menuItemService.getHtmlNodeName()) {
-      this.menuItemService.closeAll();
-    }
+  public offClickMenuItemNestedMenuItems(): void {
+    this.menuItemService.closeAll();
   }
 
-  public openContextMenu(menuId: Id, x: number, y: number): void {
-    this.menuService.updatePosition(menuId, x, y);
-    this.menuService.open(menuId);
+  public openContextMenu(menu: Menu, x: number, y: number): void {
+    this.menuService.closeAll();
+    this.menuService.updatePosition(menu, x, y);
+    this.menuService.open(menu);
   }
 
-  public closeMenu(menuId: Id): void {
-    this.menuService.close(menuId);
+  public closeMenu(menu: Menu): void {
+    this.menuService.close(menu);
   }
 }

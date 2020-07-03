@@ -9,6 +9,7 @@ import {
   PropEntityMap,
   PropId,
   PropIds,
+  PropPartial,
   PropPredicate,
   PropUpdate,
   PropUpdates,
@@ -25,6 +26,7 @@ export interface EntityDomainActions<T extends Entity> {
   removeAll: DefaultActionCreator;
   updateOne: UpdateActionCreator<T>;
   updateMany: UpdatesActionCreator<T>;
+  updateAll: UpdateAll<T>;
   upsertOne: EntityActionCreator<T>;
   upsertMany: EntitiesActionCreator<T>;
   map: EntityMapActionCreator<T>;
@@ -52,6 +54,10 @@ export type UpdateActionCreator<T extends Entity> = ActionCreator<
 export type UpdatesActionCreator<T extends Entity> = ActionCreator<
   string,
   (props: PropUpdates<T>) => PropUpdates<T> & TypedAction<string>
+>;
+export type UpdateAll<T extends Entity> = ActionCreator<
+  string,
+  (props: PropPartial<T>) => PropPartial<T> & TypedAction<string>
 >;
 export type EntityMapActionCreator<T extends Entity> = ActionCreator<
   string,

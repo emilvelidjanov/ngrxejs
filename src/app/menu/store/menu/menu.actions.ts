@@ -1,14 +1,13 @@
 import { createAction, props } from '@ngrx/store';
-import { PropCoordinates, PropId } from 'src/app/core/ngrx/entity/entity-domain-state/props';
+import { PropCoordinates, PropEntity } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
-import { menuAppStateConfig, menuDomainStateConfig } from './menu.state';
+import { Menu, menuDomainStateConfig } from './menu.state';
 
 export const menuActions = {
   ...menuDomainStateConfig.getActions(),
-  ...menuAppStateConfig.getActions(),
-  closeMenu: createAction(menuAppStateConfig.getEffectActionType('Close Menu'), props<PropId>()),
+  close: createAction(menuDomainStateConfig.getEffectActionType('Close'), props<PropEntity<Menu>>()),
   openContextMenu: createAction(
-    menuAppStateConfig.getEffectActionType('Open Context Menu'),
-    props<PropId & PropCoordinates>(),
+    menuDomainStateConfig.getEffectActionType('Open Context Menu'),
+    props<PropEntity<Menu> & PropCoordinates>(),
   ),
 };

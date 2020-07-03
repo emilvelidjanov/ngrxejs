@@ -14,8 +14,8 @@ export class MenuEffects {
   public close$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuActions.closeMenu),
-        tap((action) => this.menuFacade.closeMenu(action.id)),
+        ofType(menuActions.close),
+        tap((action) => this.menuFacade.closeMenu(action.entity)),
       ),
     { dispatch: false },
   );
@@ -24,7 +24,7 @@ export class MenuEffects {
     () =>
       this.actions$.pipe(
         ofType(menuActions.openContextMenu),
-        tap((action) => this.menuFacade.openContextMenu(action.id, action.x, action.y)),
+        tap((action) => this.menuFacade.openContextMenu(action.entity, action.x, action.y)),
       ),
     { dispatch: false },
   );

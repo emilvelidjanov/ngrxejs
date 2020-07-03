@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.menuFacade.addMenus(menus, menuItems);
+    this.menuFacade.addMenusConfiguration(menus, menuItems);
   }
 }

@@ -1,9 +1,9 @@
-<ng-container *ngIf="isOpened$ | async as isOpened">
-  <span (appOffClick)="offClick()">
-    <ng-container *ngIf="menu$ | async as menu">
+<ng-container *ngIf="menu$ | async as menu">
+  <ng-container *ngIf="menu.isOpened">
+    <div (appOffClick)="offClick()">
       <ng-container *ngFor="let menuItemId of menu.menuItemIds">
         <app-menu-item [menuItemId]="menuItemId"></app-menu-item>
       </ng-container>
-    </ng-container>
-  </span>
+    </div>
+  </ng-container>
 </ng-container>
