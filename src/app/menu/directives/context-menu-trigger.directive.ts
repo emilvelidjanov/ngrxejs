@@ -2,9 +2,9 @@ import { Directive, HostListener, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 
-import { menuActions } from '../store/menu/menu.actions';
-import { menuSelectors } from '../store/menu/menu.selectors';
-import { Menu, Menus } from '../store/menu/menu.state';
+import { contextMenuActions } from '../store/context-menu/context-menu.actions';
+import { contextMenuSelectors } from '../store/context-menu/context-menu.selectors';
+import { ContextMenu, ContextMenus } from '../store/context-menu/context-menu.state';
 
 @Directive({
   selector: '[appContextMenuTrigger]',
@@ -12,7 +12,7 @@ import { Menu, Menus } from '../store/menu/menu.state';
 export class ContextMenuTriggerDirective implements OnInit {
   @Input('appContextMenuTrigger') public contextMenuId: string;
 
-  constructor(private store: Store<Menus>) {}
+  constructor(private store: Store<ContextMenus>) {}
 
   public ngOnInit(): void {}
 
@@ -21,12 +21,12 @@ export class ContextMenuTriggerDirective implements OnInit {
     if (this.contextMenuId) {
       $event.stopPropagation();
       this.store
-        .pipe(select(menuSelectors.selectEntityById, { id: this.contextMenuId }))
+        .pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }))
         .pipe(take(1))
-        .subscribe((menu: Menu) => {
+        .subscribe((contextMenu: ContextMenu) => {
           this.store.dispatch(
-            menuActions.openContextMenu({
-              entity: menu,
+            contextMenuActions.open({
+              entity: contextMenu,
               x: $event.x,
               y: $event.y,
             }),

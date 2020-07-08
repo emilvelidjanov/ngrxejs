@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 
+import { ContextMenu } from '../../store/context-menu/context-menu.state';
+import { MenuBar } from '../../store/menu-bar/menu-bar.state';
 import { MenuItem } from '../../store/menu-item/menu-item.state';
-import { Menu } from '../../store/menu/menu.state';
+import { ContextMenuService } from '../context-menu-service/context-menu.service';
+import { contextMenuServiceDep } from '../context-menu-service/context-menu.service.dependency';
+import { MenuBarService } from '../menu-bar-service/menu-bar.service';
+import { menuBarServiceDep } from '../menu-bar-service/menu-bar.service.dependency';
 import { MenuItemService } from '../menu-item-service/menu-item.service';
 import { menuItemServiceDep } from '../menu-item-service/menu-item.service.dependency';
-import { MenuService } from '../menu-service/menu.service';
-import { menuServiceDep } from '../menu-service/menu.service.dependency';
 
 import { MenuFacade } from './menu.facade';
 
@@ -13,18 +16,28 @@ import { MenuFacade } from './menu.facade';
 export class DefaultMenuFacade implements MenuFacade {
   constructor(
     @Inject(menuItemServiceDep.getToken()) private menuItemService: MenuItemService,
-    @Inject(menuServiceDep.getToken) private menuService: MenuService,
+    @Inject(menuBarServiceDep.getToken) private menuBarService: MenuBarService,
+    @Inject(contextMenuServiceDep.getToken()) private contextMenuService: ContextMenuService,
   ) {}
 
-  public addMenusConfiguration(menus: Menu[], menuItems: MenuItem[]): void {
-    this.menuItemService.populateOptionals(menuItems);
+  public addMenuItemsConfig(menuItems: MenuItem[]): void {
+    menuItems = this.menuItemService.populateOptionals(menuItems);
     this.menuItemService.addMany(menuItems);
-    this.menuService.populateOptionals(menus);
-    this.menuService.addMany(menus);
+  }
+
+  public addMenuBarsConfig(menuBars: MenuBar[]): void {
+    menuBars = this.menuBarService.populateOptionals(menuBars);
+    this.menuBarService.addMany(menuBars);
+  }
+
+  public addContextMenusConfig(contextMenus: ContextMenu[]): void {
+    contextMenus = this.contextMenuService.populateOptionals(contextMenus);
+    this.contextMenuService.addMany(contextMenus);
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
     this.menuItemService.closeAll();
+    this.contextMenuService.closeAll();
     this.menuItemService.open(menuItem);
     this.menuItemService.dispatchClickAction(menuItem);
   }
@@ -33,13 +46,13 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.closeAll();
   }
 
-  public openContextMenu(menu: Menu, x: number, y: number): void {
-    this.menuService.closeAll();
-    this.menuService.updatePosition(menu, x, y);
-    this.menuService.open(menu);
+  public openContextMenu(menu: ContextMenu, x: number, y: number): void {
+    this.contextMenuService.closeAll();
+    this.contextMenuService.updatePosition(menu, x, y);
+    this.contextMenuService.open(menu);
   }
 
-  public closeMenu(menu: Menu): void {
-    this.menuService.close(menu);
+  public closeContextMenu(menu: ContextMenu): void {
+    this.contextMenuService.close(menu);
   }
 }

@@ -2,25 +2,22 @@ import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
 import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
 import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
-export interface Menus extends EntityDomainState<Menu> {}
+export interface MenuBars extends EntityDomainState<MenuBar> {}
 
-export interface Menu extends Entity {
+export interface MenuBar extends Entity {
   title?: string;
   image?: string;
-  menuItemIds?: Id[];
-  isOpened?: boolean;
-  x?: number;
-  y?: number;
+  menuItemIds: Id[];
 }
 
-export const entityName = 'Menu';
+export const entityName = 'MenuBar';
 
-const initialState: Menus = {
+const initialState: MenuBars = {
   ids: [],
   entities: {},
 };
 
-export const menuDomainStateConfig: EntityDomainStateConfigurer<Menu, Menus> = new EntityDomainStateConfigurer(
+export const menuBarDomainStateConfig: EntityDomainStateConfigurer<MenuBar, MenuBars> = new EntityDomainStateConfigurer(
   entityName,
   initialState,
 );

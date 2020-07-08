@@ -1,10 +1,13 @@
+import { ContextMenu } from '../../store/context-menu/context-menu.state';
+import { MenuBar } from '../../store/menu-bar/menu-bar.state';
 import { MenuItem } from '../../store/menu-item/menu-item.state';
-import { Menu } from '../../store/menu/menu.state';
 
 export interface MenuFacade {
-  addMenusConfiguration(menus: Menu[], menuItems: MenuItem[]): void;
+  addMenuItemsConfig(menuItems: MenuItem[]): void;
+  addMenuBarsConfig(menuBars: MenuBar[]): void;
+  addContextMenusConfig(contextMenus: ContextMenu[]): void;
   onClickMenuItem(menuItem: MenuItem): void;
   offClickMenuItemNestedMenuItems(): void;
-  openContextMenu(menu: Menu, x: number, y: number): void;
-  closeMenu(menu: Menu): void;
+  openContextMenu(menu: MenuBar, x: number, y: number): void;
+  closeContextMenu(menu: MenuBar): void;
 }

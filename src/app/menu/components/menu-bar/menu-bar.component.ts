@@ -3,22 +3,22 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
-import { menuSelectors } from '../../store/menu/menu.selectors';
-import { Menu, Menus } from '../../store/menu/menu.state';
+import { menuBarSelectors } from '../../store/menu-bar/menu-bar.selectors';
+import { MenuBar, MenuBars } from '../../store/menu-bar/menu-bar.state';
 
 @Component({
-  selector: 'app-menu-bar[menuId]',
+  selector: 'app-menu-bar[menuBarId]',
   templateUrl: './menu-bar.component.html',
   styleUrls: ['./menu-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuBarComponent implements OnInit {
-  @Input() private menuId: Id;
-  public menu$: Observable<Menu>;
+  @Input() private menuBarId: Id;
+  public menuBar$: Observable<MenuBar>;
 
-  constructor(private store: Store<Menus>) {}
+  constructor(private store: Store<MenuBars>) {}
 
   public ngOnInit(): void {
-    this.menu$ = this.store.pipe(select(menuSelectors.selectEntityById, { id: this.menuId }));
+    this.menuBar$ = this.store.pipe(select(menuBarSelectors.selectEntityById, { id: this.menuBarId }));
   }
 }

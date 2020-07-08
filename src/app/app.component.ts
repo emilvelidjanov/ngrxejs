@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 
+import contextMenus from '../config/menu/contextMenus.json';
+import menuBars from '../config/menu/menuBars.json';
 import menuItems from '../config/menu/menuItems.json';
-import menus from '../config/menu/menus.json';
 
 import { MenuFacade } from './menu/services/menu-facade/menu.facade';
 import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependency';
@@ -13,13 +14,15 @@ import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependenc
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  public mainMenuId: string;
+  public mainMenuBarId: string;
 
   constructor(@Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade) {
-    this.mainMenuId = 'mainMenuBar';
+    this.mainMenuBarId = 'mainMenuBar';
   }
 
   public ngOnInit(): void {
-    this.menuFacade.addMenusConfiguration(menus, menuItems);
+    this.menuFacade.addMenuItemsConfig(menuItems);
+    this.menuFacade.addMenuBarsConfig(menuBars);
+    this.menuFacade.addContextMenusConfig(contextMenus);
   }
 }

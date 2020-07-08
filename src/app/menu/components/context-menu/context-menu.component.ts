@@ -4,37 +4,39 @@ import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
-import { menuActions } from '../../store/menu/menu.actions';
-import { menuSelectors } from '../../store/menu/menu.selectors';
-import { Menu, Menus } from '../../store/menu/menu.state';
+import { contextMenuActions } from '../../store/context-menu/context-menu.actions';
+import { contextMenuSelectors } from '../../store/context-menu/context-menu.selectors';
+import { ContextMenu, ContextMenus } from '../../store/context-menu/context-menu.state';
 
 @Component({
-  selector: 'app-context-menu[menuId]',
+  selector: 'app-context-menu[contextMenuId]',
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContextMenuComponent implements OnInit, OnDestroy {
-  @Input() public menuId: Id;
-  public menu$: Observable<Menu>;
+  @Input() public contextMenuId: Id;
+  public contextMenu$: Observable<ContextMenu>;
   private unsubscribe: Subject<void>;
   @HostBinding('style.top') public top: string;
   @HostBinding('style.left') public left: string;
 
-  constructor(private store: Store<Menus>) {
+  constructor(private store: Store<ContextMenus>) {
     this.unsubscribe = new Subject();
   }
 
   public ngOnInit(): void {
-    this.menu$ = this.store.pipe(select(menuSelectors.selectEntityById, { id: this.menuId }));
-    this.menu$.pipe(takeUntil(this.unsubscribe)).subscribe((menu: Menu) => {
-      this.left = menu.x + 'px';
-      this.top = menu.y + 'px';
+    this.contextMenu$ = this.store.pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }));
+    this.contextMenu$.pipe(takeUntil(this.unsubscribe)).subscribe((contextMenu: ContextMenu) => {
+      this.left = contextMenu.x + 'px';
+      this.top = contextMenu.y + 'px';
     });
   }
 
   public offClick(): void {
-    this.menu$.pipe(take(1)).subscribe((menu: Menu) => this.store.dispatch(menuActions.close({ entity: menu })));
+    this.contextMenu$
+      .pipe(take(1))
+      .subscribe((contextMenu: ContextMenu) => this.store.dispatch(contextMenuActions.close({ entity: contextMenu })));
   }
 
   public ngOnDestroy(): void {

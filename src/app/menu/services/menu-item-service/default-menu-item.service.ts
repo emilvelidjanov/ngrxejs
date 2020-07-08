@@ -11,12 +11,19 @@ export class DefaultMenuItemService implements MenuItemService {
   constructor(private store: Store<MenuItems>) {}
 
   public populateOptionals(menuItems: MenuItem[]): MenuItem[] {
-    menuItems.forEach((menuItem: MenuItem) => {
+    const result: MenuItem[] = menuItems.map((menuItem: MenuItem) => {
       if (menuItem.isOpened === undefined) {
         menuItem.isOpened = false;
       }
+      if (menuItem.menuItemIds === undefined) {
+        menuItem.menuItemIds = null;
+      }
+      if (menuItem.clickAction === undefined) {
+        menuItem.clickAction = null;
+      }
+      return { ...menuItem };
     });
-    return [...menuItems];
+    return result;
   }
 
   public addMany(menuItems: MenuItem[]): void {

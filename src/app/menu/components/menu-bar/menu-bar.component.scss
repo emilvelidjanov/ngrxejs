@@ -4,7 +4,7 @@
   display: block;
 }
 
-.menu-title {
+.menu-bar-title {
   @include label();
   @include padx(0.5);
 }

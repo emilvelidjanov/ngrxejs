@@ -5,25 +5,25 @@ import { tap } from 'rxjs/operators';
 import { MenuFacade } from '../../services/menu-facade/menu.facade';
 import { menuFacadeDep } from '../../services/menu-facade/menu.facade.dependency';
 
-import { menuActions } from './menu.actions';
+import { contextMenuActions } from './context-menu.actions';
 
 @Injectable()
-export class MenuEffects {
+export class ContextMenuEffects {
   constructor(private actions$: Actions, @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade) {}
 
   public close$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuActions.close),
-        tap((action) => this.menuFacade.closeMenu(action.entity)),
+        ofType(contextMenuActions.close),
+        tap((action) => this.menuFacade.closeContextMenu(action.entity)),
       ),
     { dispatch: false },
   );
 
-  public openContextMenu$ = createEffect(
+  public open$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(menuActions.openContextMenu),
+        ofType(contextMenuActions.open),
         tap((action) => this.menuFacade.openContextMenu(action.entity, action.x, action.y)),
       ),
     { dispatch: false },

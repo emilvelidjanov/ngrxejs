@@ -1,13 +1,13 @@
-<ng-container *ngIf="menu$ | async as menu">
-  <ng-container *ngIf="menu.title">
-    <span class="menu-title">
-      <ng-container *ngIf="menu.image">
-        <img [src]="menu.image" height="16" />
+<ng-container *ngIf="menuBar$ | async as menuBar">
+  <ng-container *ngIf="menuBar.title">
+    <span class="menu-bar-title">
+      <ng-container *ngIf="menuBar.image">
+        <img [src]="menuBar.image" height="16" />
       </ng-container>
-      {{ menu.title }}
+      {{ menuBar.title }}
     </span>
   </ng-container>
-  <ng-container *ngFor="let menuItemId of menu.menuItemIds">
+  <ng-container *ngFor="let menuItemId of menuBar.menuItemIds">
     <app-menu-item [menuItemId]="menuItemId"></app-menu-item>
   </ng-container>
 </ng-container>
