@@ -5,8 +5,8 @@ import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-dom
 export interface MenuBars extends EntityDomainState<MenuBar> {}
 
 export interface MenuBar extends Entity {
-  title?: string;
-  image?: string;
+  title: string;
+  image: string;
   menuItemIds: Id[];
 }
 

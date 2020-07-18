@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { IpcRequest } from 'electron/ipc/ipc';
 import { fromEvent, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, share, take } from 'rxjs/operators';
 
 import { ElectronService } from '../electron-service/electron.service';
 
@@ -27,6 +27,7 @@ export class DefaultIpcService implements IpcService {
     const response$ = fromEvent<[IpcRendererEvent, any]>(ipcRenderer, request.responseChannel).pipe(
       map(([_event, response]) => response),
       take(1),
+      share(),
     );
     return response$;
   }

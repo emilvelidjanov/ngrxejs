@@ -10,8 +10,8 @@ import { MenuBarService } from './menu-bar.service';
 export class DefaultMenuBarService implements MenuBarService {
   constructor(private store: Store<MenuBars>) {}
 
-  public populateOptionals(menuBars: MenuBar[]): MenuBar[] {
-    const result: MenuBar[] = menuBars.map((menuBar: MenuBar) => {
+  public populateOptionals(partialMenuBars: Partial<MenuBar>[]): MenuBar[] {
+    const result: MenuBar[] = partialMenuBars.map((menuBar: MenuBar) => {
       if (menuBar.title === undefined) {
         menuBar.title = null;
       }

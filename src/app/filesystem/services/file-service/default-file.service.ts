@@ -5,8 +5,6 @@ import { map, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
-import { SortService } from 'src/app/core/services/sort-service/sort.service';
-import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
 import { fileActions } from '../../store/file/file.actions';
 import { fileSelectors } from '../../store/file/file.selectors';
@@ -22,7 +20,6 @@ export class DefaultFileService implements FileService {
   constructor(
     private store: Store<Files>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
-    @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
@@ -40,22 +37,12 @@ export class DefaultFileService implements FileService {
     return files$;
   }
 
-  public sortDefault(files: File[]): File[] {
-    return this.sortService.sort(files, {
-      primarySort: (a, b) => a.name.localeCompare(b.name),
-    });
-  }
-
   public setAll(files: File[]): void {
     this.store.dispatch(fileActions.setAll({ entities: files }));
   }
 
-  public upsertMany(files: File[]): void {
-    this.store.dispatch(fileActions.upsertMany({ entities: files }));
-  }
-
-  public isLoaded(file: File): Observable<boolean> {
-    return this.store.pipe(select(fileSelectors.selectIsLoadedId, { id: file.id }), take(1));
+  public addMany(files: File[]): void {
+    this.store.dispatch(fileActions.addMany({ entities: files }));
   }
 
   public updateLoaded(file: File, content: string): void {
@@ -65,11 +52,11 @@ export class DefaultFileService implements FileService {
           id: file.id as number,
           changes: {
             content,
+            isLoaded: true,
           },
         },
       }),
     );
-    this.store.dispatch(fileActions.insertLoadedId({ id: file.id }));
   }
 
   private mapTo(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
@@ -78,6 +65,7 @@ export class DefaultFileService implements FileService {
       const file: File = {
         id,
         content: null,
+        isLoaded: false,
         ...toFile,
       };
       return file;

@@ -1,3 +1,4 @@
+import { ActionDescriptor } from 'src/app/core/ngrx/action-descriptor';
 import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
 import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
 import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
@@ -6,9 +7,9 @@ export interface MenuItems extends EntityDomainState<MenuItem> {}
 
 export interface MenuItem extends Entity {
   label: string;
-  clickAction?: string;
-  menuItemIds?: Id[];
-  isOpened?: boolean;
+  clickAction: ActionDescriptor;
+  menuItemIds: Id[];
+  isOpened: boolean;
 }
 
 export const entityName = 'MenuItem';

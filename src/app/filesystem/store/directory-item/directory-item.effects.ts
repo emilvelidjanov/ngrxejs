@@ -5,20 +5,20 @@ import { tap } from 'rxjs/operators';
 import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
 
-import { projectActions } from './project.actions';
+import { directoryItemActions } from './directory-item.actions';
 
 @Injectable()
-export class ProjectEffects {
+export class DirectoryItemEffects {
   constructor(
     private actions$: Actions,
     @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
   ) {}
 
-  public openProject$ = createEffect(
+  public open$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(projectActions.openProject),
-        tap(() => this.filesystemFacade.openProject()),
+        ofType(directoryItemActions.open),
+        tap((action) => this.filesystemFacade.openDirectoryItem(action.entity)),
       ),
     { dispatch: false },
   );

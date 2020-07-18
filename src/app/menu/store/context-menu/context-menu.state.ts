@@ -6,9 +6,9 @@ export interface ContextMenus extends EntityDomainState<ContextMenu> {}
 
 export interface ContextMenu extends Entity {
   menuItemIds: Id[];
-  isOpened?: boolean;
-  x?: number;
-  y?: number;
+  isOpened: boolean;
+  x: number;
+  y: number;
 }
 
 export const entityName = 'ContextMenu';

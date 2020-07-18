@@ -1,18 +1,28 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable, zip } from 'rxjs';
-import { share, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { share, switchMap, take, takeWhile } from 'rxjs/operators';
+import { Id } from 'src/app/core/ngrx/entity/entity';
 import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
 
+import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
+import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
-import { DirectoryContent, DirectoryService } from '../directory-service/directory.service';
+import { ProjectTree } from '../../store/project-tree/project-tree.state';
+import { DirectoryItemService } from '../directory-item-service/directory.service';
+import { directoryItemServiceDep } from '../directory-item-service/directory.service.dependency';
+import { DirectoryService } from '../directory-service/directory.service';
 import { directoryServiceDep } from '../directory-service/directory.service.dependency';
+import { FileItemService } from '../file-item-service/file-item.service';
+import { fileItemServiceDep } from '../file-item-service/file-item.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { fileServiceDep } from '../file-service/file.service.dependency';
 import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
 import { projectServiceDep } from '../project-service/project.service.dependency';
+import { ProjectTreeService } from '../project-tree-service/project.service';
+import { projectTreeServiceDep } from '../project-tree-service/project.service.dependency';
 
 import { FilesystemFacade } from './filesystem.facade';
 
@@ -21,55 +31,94 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   constructor(
     @Inject(filesystemServiceDep.getToken()) private filesystemService: FilesystemService,
     @Inject(projectServiceDep.getToken()) private projectService: ProjectService,
+    @Inject(projectTreeServiceDep.getToken()) private projectTreeService: ProjectTreeService,
     @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
+    @Inject(directoryItemServiceDep.getToken()) private directoryItemService: DirectoryItemService,
     @Inject(fileServiceDep.getToken()) private fileService: FileService,
+    @Inject(fileItemServiceDep.getToken()) private fileItemService: FileItemService,
   ) {}
 
-  public openProject(): void {
+  public selectProjectTree(id: Id): Observable<ProjectTree> {
+    return this.projectTreeService.selectById(id);
+  }
+
+  public addProjectTreesConfig(partialProjectTrees: Partial<ProjectTree>[]): void {
+    const projectTrees: ProjectTree[] = this.projectTreeService.populateOptionals(partialProjectTrees);
+    this.projectTreeService.addMany(projectTrees);
+  }
+
+  public openProject(projectTree: ProjectTree): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
       takeWhile((result: OpenDialogResult) => !result.canceled),
       share(),
     );
-    const loadDirectoryContent$ = openDialog$.pipe(
-      switchMap((result: OpenDialogResult) => this.loadDirectoryContent(result.filePaths[0])),
+    const loadDirectory$ = openDialog$.pipe(
+      switchMap((result: OpenDialogResult) => this.filesystemService.loadDirectory(result.filePaths[0])),
+    );
+    const filesAndDirs$ = loadDirectory$.pipe(
+      switchMap((results: LoadDirectoryResult[]) => this.createFilesAndDirectories(results)),
       share(),
     );
-    const openDirectory$ = zip(openDialog$, loadDirectoryContent$);
-    const createProject$ = openDirectory$.pipe(
-      switchMap(([openedDialog, directoryContent]) => this.projectService.create(openedDialog, directoryContent)),
+    const project$ = forkJoin([openDialog$, filesAndDirs$]).pipe(
+      switchMap(([openDialogResult, [files, directories]]) =>
+        this.projectService.createOne(openDialogResult, files, directories),
+      ),
     );
-    const dispatch$ = zip(loadDirectoryContent$, createProject$);
-    dispatch$.subscribe(([directoryContent, createdProject]) =>
-      this.projectService.open(createdProject, directoryContent),
+    const items$ = filesAndDirs$.pipe(switchMap(([files, directories]) => this.createItems(files, directories)));
+    forkJoin([filesAndDirs$, items$, project$]).subscribe(
+      ([[files, directories], [fileItems, directoryItems], project]) => {
+        this.fileService.setAll(files);
+        this.directoryService.setAll(directories);
+        this.projectService.set(project);
+        this.fileItemService.setAll(fileItems);
+        this.directoryItemService.setAll(directoryItems);
+        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems);
+      },
     );
   }
 
-  public openDirectory(directory: Directory): void {
-    const isLoadedDirectory$ = this.directoryService.isLoaded(directory);
-    const loadAndCreateDirectoryContent$ = isLoadedDirectory$.pipe(
-      takeWhile((isLoaded: boolean) => !isLoaded),
-      switchMap(() => this.loadDirectoryContent(directory.path)),
+  public openDirectoryItem(directoryItem: DirectoryItem): void {
+    const selectDirectory$ = this.directoryService.select(directoryItem.directoryId).pipe(take(1), share());
+    const loadDirectory$ = selectDirectory$.pipe(
+      takeWhile((directory: Directory) => !directory.isLoaded),
+      switchMap((directory: Directory) => this.filesystemService.loadDirectory(directory.path)),
     );
-    loadAndCreateDirectoryContent$.subscribe((directoryContent: DirectoryContent) => {
-      this.directoryService.updateLoaded(directory, directoryContent);
-    });
-    this.directoryService.toggleOpened(directory);
+    const filesAndDirs$ = loadDirectory$.pipe(
+      switchMap((results: LoadDirectoryResult[]) => this.createFilesAndDirectories(results)),
+      share(),
+    );
+    const items$ = filesAndDirs$.pipe(switchMap(([files, directories]) => this.createItems(files, directories)));
+    forkJoin([selectDirectory$, filesAndDirs$, items$]).subscribe(
+      ([selectDirectory, [files, directories], [fileItems, directoryItems]]) => {
+        this.fileService.addMany(files);
+        this.directoryService.addMany(directories);
+        this.directoryService.updateLoaded(selectDirectory, files, directories);
+        this.fileItemService.addMany(fileItems);
+        this.directoryItemService.addMany(directoryItems);
+        this.directoryItemService.updateLoaded(directoryItem, fileItems, directoryItems);
+      },
+    );
+    this.directoryItemService.toggleOpened(directoryItem);
   }
 
-  public loadFile(file: File): Observable<string> {
-    const isLoadedFile$ = this.fileService.isLoaded(file);
-    const loadFile$ = isLoadedFile$.pipe(
-      takeWhile((isLoaded: boolean) => !isLoaded),
-      switchMap(() => this.filesystemService.loadFile(file.path)),
-      tap((content: string) => this.fileService.updateLoaded(file, content)),
-    );
-    return loadFile$;
+  public loadFile(file: File): void {
+    const loadFile$ = this.filesystemService.loadFile(file.path).pipe(take(1));
+    loadFile$.subscribe((content: string) => this.fileService.updateLoaded(file, content));
   }
 
-  private loadDirectoryContent(path: string): Observable<DirectoryContent> {
-    const loadDirectoryContent$ = this.filesystemService
-      .loadDirectory(path)
-      .pipe(switchMap((results: LoadDirectoryResult[]) => this.directoryService.createDirectoryContent(results)));
-    return loadDirectoryContent$;
+  private createFilesAndDirectories(results: LoadDirectoryResult[]): Observable<[File[], Directory[]]> {
+    const filesAndDirs$ = forkJoin([
+      this.fileService.createMany(results),
+      this.directoryService.createMany(results),
+    ]).pipe(take(1));
+    return filesAndDirs$;
+  }
+
+  private createItems(files: File[], directories: Directory[]): Observable<[FileItem[], DirectoryItem[]]> {
+    const items$ = forkJoin([
+      this.fileItemService.createMany(files),
+      this.directoryItemService.createMany(directories),
+    ]).pipe(take(1));
+    return items$;
   }
 }

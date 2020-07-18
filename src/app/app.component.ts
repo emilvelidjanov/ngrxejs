@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 
-import contextMenus from '../config/menu/contextMenus.json';
-import menuBars from '../config/menu/menuBars.json';
-import menuItems from '../config/menu/menuItems.json';
+import projectTreesConfig from '../config/filesystem/projectTrees.json';
+import contextMenusConfig from '../config/menu/contextMenus.json';
+import menuBarsConfig from '../config/menu/menuBars.json';
+import menuItemsConfig from '../config/menu/menuItems.json';
 
+import { FilesystemFacade } from './filesystem/services/filesystem-facade/filesystem.facade';
+import { filesystemFacadeDep } from './filesystem/services/filesystem-facade/filesystem.facade.dependency';
 import { MenuFacade } from './menu/services/menu-facade/menu.facade';
 import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependency';
 
@@ -15,14 +18,20 @@ import { menuFacadeDep } from './menu/services/menu-facade/menu.facade.dependenc
 })
 export class AppComponent implements OnInit {
   public mainMenuBarId: string;
+  public mainProjectTreeId: string;
 
-  constructor(@Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade) {
+  constructor(
+    @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
+    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
+  ) {
     this.mainMenuBarId = 'mainMenuBar';
+    this.mainProjectTreeId = 'mainProjectTree';
   }
 
   public ngOnInit(): void {
-    this.menuFacade.addMenuItemsConfig(menuItems);
-    this.menuFacade.addMenuBarsConfig(menuBars);
-    this.menuFacade.addContextMenusConfig(contextMenus);
+    this.menuFacade.addMenuItemsConfig(menuItemsConfig);
+    this.menuFacade.addMenuBarsConfig(menuBarsConfig);
+    this.menuFacade.addContextMenusConfig(contextMenusConfig);
+    this.filesystemFacade.addProjectTreesConfig(projectTreesConfig);
   }
 }

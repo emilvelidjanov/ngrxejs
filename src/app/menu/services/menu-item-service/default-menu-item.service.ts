@@ -10,8 +10,8 @@ import { MenuItemService } from './menu-item.service';
 export class DefaultMenuItemService implements MenuItemService {
   constructor(private store: Store<MenuItems>) {}
 
-  public populateOptionals(menuItems: MenuItem[]): MenuItem[] {
-    const result: MenuItem[] = menuItems.map((menuItem: MenuItem) => {
+  public populateOptionals(partialMenuItems: Partial<MenuItem>[]): MenuItem[] {
+    const result: MenuItem[] = partialMenuItems.map((menuItem: MenuItem) => {
       if (menuItem.isOpened === undefined) {
         menuItem.isOpened = false;
       }
@@ -47,7 +47,7 @@ export class DefaultMenuItemService implements MenuItemService {
 
   public dispatchClickAction(menuItem: MenuItem): void {
     if (menuItem.clickAction) {
-      this.store.dispatch({ type: menuItem.clickAction });
+      this.store.dispatch(menuItem.clickAction);
     }
   }
 

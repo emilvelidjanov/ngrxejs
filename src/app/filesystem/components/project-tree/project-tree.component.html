@@ -1,0 +1,18 @@
+<ng-container *ngIf="projectTree$ | async as projectTree">
+  <div class="context-menu-trigger" [appContextMenuTrigger]="projectTree.contextMenuId">
+    <ng-container *ngIf="project$ | async as project">
+      <div class="project-name">
+        {{ project.name }}
+      </div>
+      <ng-container *ngFor="let directoryItemId of projectTree.directoryItemIds">
+        <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
+      </ng-container>
+      <ng-container *ngFor="let fileItemId of projectTree.fileItemIds">
+        <app-file-item [fileItemId]="fileItemId"></app-file-item>
+      </ng-container>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="projectTree.contextMenuId">
+    <app-context-menu [contextMenuId]="projectTree.contextMenuId"></app-context-menu>
+  </ng-container>
+</ng-container>

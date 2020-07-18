@@ -20,18 +20,18 @@ export class DefaultMenuFacade implements MenuFacade {
     @Inject(contextMenuServiceDep.getToken()) private contextMenuService: ContextMenuService,
   ) {}
 
-  public addMenuItemsConfig(menuItems: MenuItem[]): void {
-    menuItems = this.menuItemService.populateOptionals(menuItems);
+  public addMenuItemsConfig(partialMenuItems: Partial<MenuItem>[]): void {
+    const menuItems: MenuItem[] = this.menuItemService.populateOptionals(partialMenuItems);
     this.menuItemService.addMany(menuItems);
   }
 
-  public addMenuBarsConfig(menuBars: MenuBar[]): void {
-    menuBars = this.menuBarService.populateOptionals(menuBars);
+  public addMenuBarsConfig(partialMenuBars: Partial<MenuBar>[]): void {
+    const menuBars: MenuBar[] = this.menuBarService.populateOptionals(partialMenuBars);
     this.menuBarService.addMany(menuBars);
   }
 
-  public addContextMenusConfig(contextMenus: ContextMenu[]): void {
-    contextMenus = this.contextMenuService.populateOptionals(contextMenus);
+  public addContextMenusConfig(partialContextMenus: Partial<ContextMenu>[]): void {
+    const contextMenus: ContextMenu[] = this.contextMenuService.populateOptionals(partialContextMenus);
     this.contextMenuService.addMany(contextMenus);
   }
 
@@ -46,13 +46,13 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.closeAll();
   }
 
-  public openContextMenu(menu: ContextMenu, x: number, y: number): void {
+  public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void {
     this.contextMenuService.closeAll();
-    this.contextMenuService.updatePosition(menu, x, y);
-    this.contextMenuService.open(menu);
+    this.contextMenuService.updatePosition(contextMenu, xPosition, yPosition);
+    this.contextMenuService.open(contextMenu);
   }
 
-  public closeContextMenu(menu: ContextMenu): void {
-    this.contextMenuService.close(menu);
+  public closeContextMenu(contextMenu: ContextMenu): void {
+    this.contextMenuService.close(contextMenu);
   }
 }

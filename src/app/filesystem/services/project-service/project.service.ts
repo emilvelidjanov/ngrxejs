@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
 
+import { Directory } from '../../store/directory/directory.state';
+import { File } from '../../store/file/file.state';
 import { Project } from '../../store/project/project.state';
-import { DirectoryContent } from '../directory-service/directory.service';
 import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 
 export interface ProjectService {
-  create(openDialogResult: OpenDialogResult, directoryContent: DirectoryContent): Observable<Project>;
-  open(project: Project, content: DirectoryContent): void;
+  createOne(openDialogResult: OpenDialogResult, files: File[], directories: Directory[]): Observable<Project>;
+  set(project: Project): void;
 }

@@ -10,8 +10,8 @@ import { ContextMenuService } from './context-menu.service';
 export class DefaultContextMenuService implements ContextMenuService {
   constructor(private store: Store<ContextMenus>) {}
 
-  public populateOptionals(contextMenus: ContextMenu[]): ContextMenu[] {
-    const result: ContextMenu[] = contextMenus.map((contextMenu: ContextMenu) => {
+  public populateOptionals(partialContextMenus: Partial<ContextMenu>[]): ContextMenu[] {
+    const result: ContextMenu[] = partialContextMenus.map((contextMenu: ContextMenu) => {
       if (contextMenu.isOpened === undefined) {
         contextMenu.isOpened = false;
       }

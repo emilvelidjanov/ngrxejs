@@ -1,6 +1,11 @@
-<ng-container *ngIf="file$ | async as file">
-  <button (click)="openFile()" [appContextMenuTrigger]="contextMenuId">
-    <span class="file-label">{{ file.name }}{{ file.extension }}</span>
-  </button>
-  <app-context-menu [contextMenuId]="contextMenuId"></app-context-menu>
+<ng-container *ngIf="fileItem$ | async as fileItem">
+  <ng-container *ngIf="file$ | async as file">
+    <button (click)="openFile()" [appContextMenuTrigger]="fileItem.contextMenuId">
+      <span class="file-label">{{ file.name }}{{ file.extension }}</span>
+    </button>
+  </ng-container>
+  <!-- TODO: creating context menu per item when it should actually be context menu per item type -->
+  <ng-container *ngIf="fileItem.contextMenuId">
+    <app-context-menu [contextMenuId]="fileItem.contextMenuId"></app-context-menu>
+  </ng-container>
 </ng-container>

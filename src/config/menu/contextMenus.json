@@ -1,7 +1,7 @@
 [
   {
-    "id": "fileTreeContextMenu",
-    "menuItemIds": ["A", "B", "C"]
+    "id": "projectTreeContextMenu",
+    "menuItemIds": ["openProject", "A", "B", "C"]
   },
   {
     "id": "directoryItemContextMenu",

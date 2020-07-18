@@ -7,7 +7,10 @@
   {
     "id": "openProject",
     "label": "Open project...",
-    "clickAction": "[Effect][Project] Open Project"
+    "clickAction": {
+      "type": "[Effect][ProjectTree] Open Project",
+      "id": "mainProjectTree"
+    }
   },
   {
     "id": "editor",
