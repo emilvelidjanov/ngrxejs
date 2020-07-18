@@ -9,7 +9,9 @@
     "label": "Open project...",
     "clickAction": {
       "type": "[Effect][ProjectTree] Open Project",
-      "id": "mainProjectTree"
+      "props": {
+        "id": "mainProjectTree"
+      }
     }
   },
   {

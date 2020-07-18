@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ActionDescriptor } from 'src/app/core/ngrx/action-descriptor';
 
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
@@ -47,7 +48,12 @@ export class DefaultMenuItemService implements MenuItemService {
 
   public dispatchClickAction(menuItem: MenuItem): void {
     if (menuItem.clickAction) {
-      this.store.dispatch(menuItem.clickAction);
+      const actionDescriptor: ActionDescriptor = menuItem.clickAction;
+      const action = {
+        type: actionDescriptor.type,
+        ...actionDescriptor.props,
+      };
+      this.store.dispatch(action);
     }
   }
 
