@@ -48,8 +48,7 @@ export class DefaultMenuFacade implements MenuFacade {
 
   public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void {
     this.contextMenuService.closeAll();
-    this.contextMenuService.updatePosition(contextMenu, xPosition, yPosition);
-    this.contextMenuService.open(contextMenu);
+    this.contextMenuService.open(contextMenu, xPosition, yPosition);
   }
 
   public closeContextMenu(contextMenu: ContextMenu): void {
