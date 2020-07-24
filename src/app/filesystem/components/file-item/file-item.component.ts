@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
-import { editorActions } from 'src/app/editor/store/editor/editor.actions';
 
 import { fileItemSelectors } from '../../store/file-item/file-item.selectors';
 import { FileItem } from '../../store/file-item/file-item.state';
@@ -33,7 +32,5 @@ export class FileItemComponent implements OnInit {
     );
   }
 
-  public openFile(): void {
-    this.file$.pipe(take(1)).subscribe((file: File) => this.store.dispatch(editorActions.openFile({ entity: file })));
-  }
+  public openFile(): void {}
 }

@@ -1,9 +1,12 @@
 import { Action, createReducer } from '@ngrx/store';
 
-import { Editor, editorAppStateConfig } from './editor.state';
+import { editorDomainStateConfig, Editors } from './editor.state';
 
-const reducer = createReducer(editorAppStateConfig.getInitialState(), ...editorAppStateConfig.getReducerFunctions());
+const reducer = createReducer(
+  editorDomainStateConfig.getInitialState(),
+  ...editorDomainStateConfig.getReducerFunctions(),
+);
 
-export function editorReducer(state: Editor | undefined, action: Action) {
+export function editorsReducer(state: Editors | undefined, action: Action) {
   return reducer(state, action);
 }

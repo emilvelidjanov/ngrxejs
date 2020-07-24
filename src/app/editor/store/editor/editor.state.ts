@@ -1,15 +1,18 @@
-import { EntityAppState } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state';
-import { EntityAppStateConfigurer } from 'src/app/core/ngrx/entity/entity-app-state/entity-app-state-configurer';
-import { entityName, File } from 'src/app/filesystem/store/file/file.state';
+import { Entity } from 'src/app/core/ngrx/entity/entity';
+import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
+import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
+import { entityName } from 'src/app/filesystem/store/file/file.state';
 
-export interface Editor extends EntityAppState {}
+export interface Editors extends EntityDomainState<Editor> {}
 
-const initialState: Editor = {
-  openedIds: [],
-  focusedId: null,
+export interface Editor extends Entity {}
+
+const initialState: Editors = {
+  ids: [],
+  entities: {},
 };
 
-export const editorAppStateConfig: EntityAppStateConfigurer<File, Editor> = new EntityAppStateConfigurer(
+export const editorDomainStateConfig: EntityDomainStateConfigurer<Editor, Editors> = new EntityDomainStateConfigurer(
   entityName,
   initialState,
 );

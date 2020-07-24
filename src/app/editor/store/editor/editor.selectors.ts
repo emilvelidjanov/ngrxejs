@@ -1,10 +1,7 @@
-import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
+import { editorDomainStateConfig } from './editor.state';
+import { selectEditors } from '..';
 
-import { selectEditor } from '..';
-
-import { editorAppStateConfig } from './editor.state';
-
-const defAppSelectors = { ...editorAppStateConfig.getSelectors(selectEditor, fileSelectors) };
+const defAppSelectors = { ...editorDomainStateConfig.getSelectors(selectEditors) };
 
 export const editorSelectors = {
   ...defAppSelectors,

@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { File, Files } from 'src/app/filesystem/store/file/file.state';
-
-import { editorSelectors } from '../../store/editor/editor.selectors';
+import { Store } from '@ngrx/store';
+import { Files } from 'src/app/filesystem/store/file/file.state';
 
 @Component({
   selector: 'app-editor',
@@ -12,11 +9,7 @@ import { editorSelectors } from '../../store/editor/editor.selectors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent implements OnInit {
-  public file$: Observable<File>;
-
-  constructor(private store: Store<Files>) {
-    this.file$ = this.store.pipe(select(editorSelectors.selectFocusedEntity));
-  }
+  constructor(private store: Store<Files>) {}
 
   public ngOnInit(): void {}
 }

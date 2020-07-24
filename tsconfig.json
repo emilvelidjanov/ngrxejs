@@ -13,9 +13,7 @@
     "target": "es2015",
     "lib": ["es2019", "dom"],
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
