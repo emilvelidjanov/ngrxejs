@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { FileItem } from '../../store/file-item/file-item.state';
@@ -15,6 +15,10 @@ import { ProjectTreeService } from './project.service';
 @Injectable()
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
+
+  public createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree {
+    return { ...partial } as ProjectTree;
+  }
 
   public selectById(id: Id): Observable<ProjectTree> {
     return this.store.pipe(select(projectTreeSelectors.selectEntityById, { id }));

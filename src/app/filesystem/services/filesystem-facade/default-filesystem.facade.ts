@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { share, switchMap, take, takeWhile } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity/entity';
-import openProjectOptions from 'src/config/filesystem/openProjectOptions.json';
+import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
+import openProjectOptions from '../../config/openProjectOptions.json';
 import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
@@ -42,8 +42,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return this.projectTreeService.selectById(id);
   }
 
-  public addProjectTreesConfig(partialProjectTrees: Partial<ProjectTree>[]): void {
-    const projectTrees: ProjectTree[] = this.projectTreeService.populateOptionals(partialProjectTrees);
+  public addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void {
+    const projectTrees = partials.map(this.projectTreeService.createFromPartial);
     this.projectTreeService.addMany(projectTrees);
   }
 

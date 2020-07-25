@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 
 import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { MenuBar } from '../../store/menu-bar/menu-bar.state';
@@ -20,18 +21,18 @@ export class DefaultMenuFacade implements MenuFacade {
     @Inject(contextMenuServiceDep.getToken()) private contextMenuService: ContextMenuService,
   ) {}
 
-  public addMenuItemsConfig(partialMenuItems: Partial<MenuItem>[]): void {
-    const menuItems: MenuItem[] = this.menuItemService.populateOptionals(partialMenuItems);
+  public addMenuItemsConfig(partials: EntityPartial<MenuItem>[]): void {
+    const menuItems = partials.map(this.menuItemService.createFromPartial);
     this.menuItemService.addMany(menuItems);
   }
 
-  public addMenuBarsConfig(partialMenuBars: Partial<MenuBar>[]): void {
-    const menuBars: MenuBar[] = this.menuBarService.populateOptionals(partialMenuBars);
+  public addMenuBarsConfig(partials: EntityPartial<MenuBar>[]): void {
+    const menuBars = partials.map(this.menuBarService.createFromPartial);
     this.menuBarService.addMany(menuBars);
   }
 
-  public addContextMenusConfig(partialContextMenus: Partial<ContextMenu>[]): void {
-    const contextMenus: ContextMenu[] = this.contextMenuService.populateOptionals(partialContextMenus);
+  public addContextMenusConfig(partials: EntityPartial<ContextMenu>[]): void {
+    const contextMenus = partials.map(this.contextMenuService.createFromPartial);
     this.contextMenuService.addMany(contextMenus);
   }
 

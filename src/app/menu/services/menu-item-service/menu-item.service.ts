@@ -1,7 +1,9 @@
+import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+
 import { MenuItem } from '../../store/menu-item/menu-item.state';
 
 export interface MenuItemService {
-  populateOptionals(partialMenuItems: Partial<MenuItem>[]): MenuItem[];
+  createFromPartial(partial: EntityPartial<MenuItem>): MenuItem;
   addMany(menuItems: MenuItem[]): void;
   open(menuItem: MenuItem): void;
   closeAll(): void;

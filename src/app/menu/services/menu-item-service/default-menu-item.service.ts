@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActionDescriptor } from 'src/app/core/ngrx/action-descriptor';
+import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
@@ -11,20 +12,8 @@ import { MenuItemService } from './menu-item.service';
 export class DefaultMenuItemService implements MenuItemService {
   constructor(private store: Store<MenuItems>) {}
 
-  public populateOptionals(partialMenuItems: Partial<MenuItem>[]): MenuItem[] {
-    const result: MenuItem[] = partialMenuItems.map((menuItem: MenuItem) => {
-      if (menuItem.isOpened === undefined) {
-        menuItem.isOpened = false;
-      }
-      if (menuItem.menuItemIds === undefined) {
-        menuItem.menuItemIds = null;
-      }
-      if (menuItem.clickAction === undefined) {
-        menuItem.clickAction = null;
-      }
-      return { ...menuItem };
-    });
-    return result;
+  public createFromPartial(partial: EntityPartial<MenuItem>): MenuItem {
+    return { ...partial } as MenuItem;
   }
 
   public addMany(menuItems: MenuItem[]): void {

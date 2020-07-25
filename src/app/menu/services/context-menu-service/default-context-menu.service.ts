@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 
 import { contextMenuActions } from '../../store/context-menu/context-menu.actions';
 import { ContextMenu, ContextMenus } from '../../store/context-menu/context-menu.state';
@@ -10,20 +11,8 @@ import { ContextMenuService } from './context-menu.service';
 export class DefaultContextMenuService implements ContextMenuService {
   constructor(private store: Store<ContextMenus>) {}
 
-  public populateOptionals(partialContextMenus: Partial<ContextMenu>[]): ContextMenu[] {
-    const result: ContextMenu[] = partialContextMenus.map((contextMenu: ContextMenu) => {
-      if (contextMenu.isOpened === undefined) {
-        contextMenu.isOpened = false;
-      }
-      if (contextMenu.x === undefined) {
-        contextMenu.x = 0;
-      }
-      if (contextMenu.y === undefined) {
-        contextMenu.y = 0;
-      }
-      return { ...contextMenu };
-    });
-    return result;
+  public createFromPartial(partial: EntityPartial<ContextMenu>): ContextMenu {
+    return { ...partial } as ContextMenu;
   }
 
   public addMany(contextMenus: ContextMenu[]): void {
