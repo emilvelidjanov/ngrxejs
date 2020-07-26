@@ -47,7 +47,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.store.dispatch(
       directoryItemActions.updateOne({
         update: {
-          id: directoryItem.id as number,
+          id: directoryItem.id,
           changes: {
             isOpened: !directoryItem.isOpened,
           },
@@ -60,7 +60,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.store.dispatch(
       directoryItemActions.updateOne({
         update: {
-          id: directoryItem.id as number,
+          id: directoryItem.id,
           changes: {
             fileItemIds: fileItems.map((item: FileItem) => item.id),
             directoryItemIds: directoryItems.map((item: DirectoryItem) => item.id),

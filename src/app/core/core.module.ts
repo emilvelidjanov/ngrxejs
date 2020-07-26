@@ -4,6 +4,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { OffClickDirective } from './directives/off-click.directive';
 import { ElectronService } from './electron/electron-service/electron.service';
 import { ipcServiceDep } from './electron/ipc-service/ipc-service.dependency';
+import { actionDescriptorServiceDep } from './ngrx/services/action-descriptor-service/action-descriptor.service.dependency';
 import {
   numberIdGeneratorServiceDep,
   uuidGeneratorServiceDep,
@@ -27,6 +28,7 @@ export class CoreModule {
         uuidGeneratorServiceDep.getProvider(),
         sortServiceDep.getProvider(),
         domServiceDep.getProvider(),
+        actionDescriptorServiceDep.getProvider(),
       ],
     };
   }

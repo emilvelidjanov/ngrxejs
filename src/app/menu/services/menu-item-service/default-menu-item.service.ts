@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ActionDescriptor } from 'src/app/core/ngrx/action-descriptor';
 import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { ActionDescriptorService } from 'src/app/core/ngrx/services/action-descriptor-service/action-descriptor.service';
+import { actionDescriptorServiceDep } from 'src/app/core/ngrx/services/action-descriptor-service/action-descriptor.service.dependency';
 
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
@@ -10,7 +11,10 @@ import { MenuItemService } from './menu-item.service';
 
 @Injectable()
 export class DefaultMenuItemService implements MenuItemService {
-  constructor(private store: Store<MenuItems>) {}
+  constructor(
+    private store: Store<MenuItems>,
+    @Inject(actionDescriptorServiceDep.getToken()) private actionDescriptorService: ActionDescriptorService,
+  ) {}
 
   public createFromPartial(partial: EntityPartial<MenuItem>): MenuItem {
     return { ...partial } as MenuItem;
@@ -25,7 +29,7 @@ export class DefaultMenuItemService implements MenuItemService {
       this.store.dispatch(
         menuItemActions.updateOne({
           update: {
-            id: menuItem.id as number,
+            id: menuItem.id,
             changes: {
               isOpened: true,
             },
@@ -36,14 +40,7 @@ export class DefaultMenuItemService implements MenuItemService {
   }
 
   public dispatchClickAction(menuItem: MenuItem): void {
-    if (menuItem.clickAction) {
-      const actionDescriptor: ActionDescriptor = menuItem.clickAction;
-      const action = {
-        type: actionDescriptor.type,
-        ...actionDescriptor.props,
-      };
-      this.store.dispatch(action);
-    }
+    this.actionDescriptorService.dispatch(menuItem.clickAction, this.store);
   }
 
   public closeAll(): void {

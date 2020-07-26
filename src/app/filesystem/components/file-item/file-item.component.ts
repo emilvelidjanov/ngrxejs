@@ -32,5 +32,7 @@ export class FileItemComponent implements OnInit {
     );
   }
 
-  public openFile(): void {}
+  public openFile(): void {
+    throw new Error('openFile unimplemented');
+  }
 }

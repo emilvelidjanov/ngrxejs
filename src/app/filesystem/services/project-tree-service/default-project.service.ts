@@ -24,25 +24,6 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     return this.store.pipe(select(projectTreeSelectors.selectEntityById, { id }));
   }
 
-  public populateOptionals(partialProjectTrees: Partial<ProjectTree>[]): ProjectTree[] {
-    const result: ProjectTree[] = partialProjectTrees.map((projectTree: ProjectTree) => {
-      if (projectTree.projectId === undefined) {
-        projectTree.projectId = null;
-      }
-      if (projectTree.fileItemIds === undefined) {
-        projectTree.fileItemIds = [];
-      }
-      if (projectTree.directoryItemIds === undefined) {
-        projectTree.directoryItemIds = [];
-      }
-      if (projectTree.contextMenuId === undefined) {
-        projectTree.contextMenuId = null;
-      }
-      return { ...projectTree };
-    });
-    return result;
-  }
-
   public updateOpenedProject(
     projectTree: ProjectTree,
     project: Project,
@@ -52,11 +33,11 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     this.store.dispatch(
       projectTreeActions.updateOne({
         update: {
-          id: projectTree.id as string,
+          id: projectTree.id,
           changes: {
             projectId: project.id,
-            directoryItemIds: directoryItems.map((directoryItem: DirectoryItem) => directoryItem.id),
-            fileItemIds: fileItems.map((fileItem: FileItem) => fileItem.id),
+            directoryItemIds: directoryItems.map((directoryItem) => directoryItem.id),
+            fileItemIds: fileItems.map((fileItem) => fileItem.id),
           },
         },
       }),

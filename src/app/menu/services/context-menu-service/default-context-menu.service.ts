@@ -24,7 +24,7 @@ export class DefaultContextMenuService implements ContextMenuService {
       this.store.dispatch(
         contextMenuActions.updateOne({
           update: {
-            id: contextMenu.id as string,
+            id: contextMenu.id,
             changes: {
               isOpened: true,
               x,
@@ -50,7 +50,7 @@ export class DefaultContextMenuService implements ContextMenuService {
     this.store.dispatch(
       contextMenuActions.updateOne({
         update: {
-          id: contextMenu.id as string,
+          id: contextMenu.id,
           changes: {
             isOpened: false,
           },

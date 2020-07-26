@@ -1,5 +1,5 @@
 import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
-import { Dictionary, Update } from '@ngrx/entity/src/models';
+import { Dictionary, Update, UpdateNum, UpdateStr } from '@ngrx/entity/src/models';
 import { createAction, createSelector, on, On, props } from '@ngrx/store';
 
 import { Entity, Id } from '../entity';
@@ -143,10 +143,17 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
         return this.adapter.removeAll(state);
       }),
       on(this.actions.updateOne, (state: D, props: PropUpdate<T>) => {
-        return this.adapter.updateOne(props.update, state);
+        const update =
+          typeof props.update.id === 'number'
+            ? ({ ...props.update } as UpdateNum<T>)
+            : ({ ...props.update } as UpdateStr<T>);
+        return this.adapter.updateOne(update, state);
       }),
       on(this.actions.updateMany, (state: D, props: PropUpdates<T>) => {
-        return this.adapter.updateMany(props.updates, state);
+        const updates = props.updates.map((update) =>
+          typeof update.id === 'number' ? ({ ...update } as UpdateNum<T>) : ({ ...update } as UpdateStr<T>),
+        );
+        return this.adapter.updateMany(updates, state);
       }),
       on(this.actions.updateAll, (state: D, props: PropPartial<T>) => {
         const ids: Id[] = state.ids;

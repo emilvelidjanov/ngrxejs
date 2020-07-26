@@ -16,5 +16,4 @@ export interface ProjectTreeService {
     directoryItems: DirectoryItem[],
     fileItems: FileItem[],
   );
-  populateOptionals(partialProjectTrees: Partial<ProjectTree>[]): ProjectTree[];
 }

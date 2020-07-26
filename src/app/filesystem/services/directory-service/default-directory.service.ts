@@ -51,10 +51,10 @@ export class DefaultDirectoryService implements DirectoryService {
     this.store.dispatch(
       directoryActions.updateOne({
         update: {
-          id: loadedDirectory.id as number,
+          id: loadedDirectory.id,
           changes: {
-            fileIds: files.map((file: File) => file.id),
-            directoryIds: directories.map((directory: Directory) => directory.id),
+            fileIds: files.map((file) => file.id),
+            directoryIds: directories.map((directory) => directory.id),
             isLoaded: true,
           },
         },

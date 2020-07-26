@@ -49,7 +49,7 @@ export class DefaultFileService implements FileService {
     this.store.dispatch(
       fileActions.updateOne({
         update: {
-          id: file.id as number,
+          id: file.id,
           changes: {
             content,
             isLoaded: true,

@@ -1,4 +1,4 @@
-import { EntityMap, Predicate, Update } from '@ngrx/entity/src/models';
+import { EntityMap, Predicate, UpdateNum, UpdateStr } from '@ngrx/entity/src/models';
 
 import { Entity, Id } from '../entity';
 
@@ -22,6 +22,11 @@ export interface PropPredicate<T extends Entity> {
   predicate: Predicate<T>;
 }
 
+export interface UpdateId<T> {
+  id: Id;
+  changes: Partial<T>;
+}
+export type Update<T> = UpdateId<T> | UpdateStr<T> | UpdateNum<T>;
 export interface PropUpdate<T extends Entity> {
   update: Update<T>;
 }
