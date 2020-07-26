@@ -37,15 +37,9 @@ export const reducers: ActionReducerMap<FilesystemState> = {
 export const metaReducers: MetaReducer<FilesystemState>[] = !environment.production ? [] : [];
 
 export const selectFilesystemFeature = createFeatureSelector<FilesystemState>(filesystemFeatureKey);
-export const selectProjects = createSelector(selectFilesystemFeature, (state: FilesystemState) => state.projects);
-export const selectProjectTrees = createSelector(
-  selectFilesystemFeature,
-  (state: FilesystemState) => state.projectTrees,
-);
-export const selectFiles = createSelector(selectFilesystemFeature, (state: FilesystemState) => state.files);
-export const selectFileItems = createSelector(selectFilesystemFeature, (state: FilesystemState) => state.fileItems);
-export const selectDirectories = createSelector(selectFilesystemFeature, (state: FilesystemState) => state.directories);
-export const selectDirectoryItems = createSelector(
-  selectFilesystemFeature,
-  (state: FilesystemState) => state.directoryItems,
-);
+export const selectProjects = createSelector(selectFilesystemFeature, (state) => state.projects);
+export const selectProjectTrees = createSelector(selectFilesystemFeature, (state) => state.projectTrees);
+export const selectFiles = createSelector(selectFilesystemFeature, (state) => state.files);
+export const selectFileItems = createSelector(selectFilesystemFeature, (state) => state.fileItems);
+export const selectDirectories = createSelector(selectFilesystemFeature, (state) => state.directories);
+export const selectDirectoryItems = createSelector(selectFilesystemFeature, (state) => state.directoryItems);

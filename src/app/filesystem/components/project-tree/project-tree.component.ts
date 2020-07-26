@@ -24,8 +24,8 @@ export class ProjectTreeComponent implements OnInit {
   public ngOnInit(): void {
     this.projectTree$ = this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: this.projectTreeId }));
     this.project$ = this.projectTree$.pipe(
-      filter((projectTree: ProjectTree) => !!projectTree),
-      switchMap((projectTree: ProjectTree) =>
+      filter((projectTree) => !!projectTree),
+      switchMap((projectTree) =>
         this.store.pipe(select(projectSelectors.selectEntityById, { id: projectTree.projectId })),
       ),
     );

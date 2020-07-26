@@ -22,17 +22,17 @@ export class DefaultMenuFacade implements MenuFacade {
   ) {}
 
   public addMenuItemsConfig(partials: EntityPartial<MenuItem>[]): void {
-    const menuItems = partials.map(this.menuItemService.createFromPartial);
+    const menuItems = partials.map((partial) => this.menuItemService.createFromPartial(partial));
     this.menuItemService.addMany(menuItems);
   }
 
   public addMenuBarsConfig(partials: EntityPartial<MenuBar>[]): void {
-    const menuBars = partials.map(this.menuBarService.createFromPartial);
+    const menuBars = partials.map((partial) => this.menuBarService.createFromPartial(partial));
     this.menuBarService.addMany(menuBars);
   }
 
   public addContextMenusConfig(partials: EntityPartial<ContextMenu>[]): void {
-    const contextMenus = partials.map(this.contextMenuService.createFromPartial);
+    const contextMenus = partials.map((partial) => this.contextMenuService.createFromPartial(partial));
     this.contextMenuService.addMany(contextMenus);
   }
 

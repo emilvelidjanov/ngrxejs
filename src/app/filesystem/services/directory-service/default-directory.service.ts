@@ -33,11 +33,24 @@ export class DefaultDirectoryService implements DirectoryService {
   }
 
   public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]> {
-    const directories = loadDirectoryResults.filter((result: LoadDirectoryResult) => result.isDirectory);
-    const size: number = directories.length;
+    const directoryResults = loadDirectoryResults.filter((result) => result.isDirectory);
+    const size = directoryResults.length;
     const directories$ = this.directoryIds$.pipe(
-      map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((nextIds: Id[]) => this.mapTo(nextIds, directories)),
+      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
+      map((ids) =>
+        ids.map((id, index) => {
+          const directoryResult = directoryResults[index];
+          const directory: Directory = {
+            id,
+            fileIds: null,
+            directoryIds: null,
+            isLoaded: false,
+            name: directoryResult.name,
+            path: directoryResult.path,
+          };
+          return directory;
+        }),
+      ),
       take(1),
     );
     return directories$;
@@ -60,20 +73,5 @@ export class DefaultDirectoryService implements DirectoryService {
         },
       }),
     );
-  }
-
-  private mapTo(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): Directory[] {
-    const directories: Directory[] = ids.map((id: Id, index: number) => {
-      const { isDirectory, ...toDirectory } = loadDirectoryResults[index];
-      const directory: Directory = {
-        id,
-        fileIds: null,
-        directoryIds: null,
-        isLoaded: false,
-        ...toDirectory,
-      };
-      return directory;
-    });
-    return directories;
   }
 }

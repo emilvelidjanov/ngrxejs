@@ -25,10 +25,19 @@ export class DefaultFileItemService implements FileItemService {
   }
 
   public createMany(files: File[]): Observable<FileItem[]> {
-    const size: number = files.length;
+    const size = files.length;
     const fileItems$ = this.fileItemIds.pipe(
-      map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids: Id[]) => this.mapTo(ids, files)),
+      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
+      map((ids) =>
+        ids.map((id, index) => {
+          const fileItem: FileItem = {
+            id,
+            fileId: files[index].id,
+            contextMenuId: 'fileItemContextMenu',
+          };
+          return fileItem;
+        }),
+      ),
       take(1),
     );
     return fileItems$;
@@ -40,17 +49,5 @@ export class DefaultFileItemService implements FileItemService {
 
   public addMany(fileItems: FileItem[]): void {
     this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
-  }
-
-  private mapTo(ids: Id[], files: File[]): FileItem[] {
-    const fileItems: FileItem[] = ids.map((id: Id, index: number) => {
-      const fileItem: FileItem = {
-        id,
-        fileId: files[index].id,
-        contextMenuId: 'fileItemContextMenu',
-      };
-      return fileItem;
-    });
-    return fileItems;
   }
 }

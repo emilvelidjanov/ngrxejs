@@ -13,7 +13,7 @@ export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new
   tokenDescription: 'FilesystemService',
   dependencies: [ElectronService, ipcServiceDep.getToken()],
   factory: (electronService: ElectronService, ipcService: IpcService) => {
-    const isElectron: boolean = electronService.isElectron();
+    const isElectron = electronService.isElectron();
     const filesystemService: FilesystemService = isElectron
       ? new LocalFilesystemService(ipcService)
       : new RemoteFilesystemService();

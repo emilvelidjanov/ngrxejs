@@ -17,7 +17,7 @@ import { FileItemService } from '../file-item-service/file-item.service';
 import { fileItemServiceDep } from '../file-item-service/file-item.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { fileServiceDep } from '../file-service/file.service.dependency';
-import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from '../filesystem-service/filesystem.service';
+import { FilesystemService, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
 import { projectServiceDep } from '../project-service/project.service.dependency';
@@ -49,14 +49,14 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public openProject(projectTree: ProjectTree): void {
     const openDialog$ = this.filesystemService.openDialog(openProjectOptions).pipe(
-      takeWhile((result: OpenDialogResult) => !result.canceled),
+      takeWhile((result) => !result.canceled),
       share(),
     );
     const loadDirectory$ = openDialog$.pipe(
-      switchMap((result: OpenDialogResult) => this.filesystemService.loadDirectory(result.filePaths[0])),
+      switchMap((result) => this.filesystemService.loadDirectory(result.filePaths[0])),
     );
     const filesAndDirs$ = loadDirectory$.pipe(
-      switchMap((results: LoadDirectoryResult[]) => this.createFilesAndDirectories(results)),
+      switchMap((results) => this.createFilesAndDirectories(results)),
       share(),
     );
     const project$ = forkJoin([openDialog$, filesAndDirs$]).pipe(
@@ -80,11 +80,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   public openDirectoryItem(directoryItem: DirectoryItem): void {
     const selectDirectory$ = this.directoryService.select(directoryItem.directoryId).pipe(take(1), share());
     const loadDirectory$ = selectDirectory$.pipe(
-      takeWhile((directory: Directory) => !directory.isLoaded),
-      switchMap((directory: Directory) => this.filesystemService.loadDirectory(directory.path)),
+      takeWhile((directory) => !directory.isLoaded),
+      switchMap((directory) => this.filesystemService.loadDirectory(directory.path)),
     );
     const filesAndDirs$ = loadDirectory$.pipe(
-      switchMap((results: LoadDirectoryResult[]) => this.createFilesAndDirectories(results)),
+      switchMap((results) => this.createFilesAndDirectories(results)),
       share(),
     );
     const items$ = filesAndDirs$.pipe(switchMap(([files, directories]) => this.createItems(files, directories)));
@@ -103,7 +103,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public loadFile(file: File): void {
     const loadFile$ = this.filesystemService.loadFile(file.path).pipe(take(1));
-    loadFile$.subscribe((content: string) => this.fileService.updateLoaded(file, content));
+    loadFile$.subscribe((content) => this.fileService.updateLoaded(file, content));
   }
 
   private createFilesAndDirectories(results: LoadDirectoryResult[]): Observable<[File[], Directory[]]> {

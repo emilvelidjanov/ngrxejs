@@ -28,8 +28,17 @@ export class DefaultProjectService implements ProjectService {
 
   public createOne(openDialogResult: OpenDialogResult, files: File[], directories: Directory[]): Observable<Project> {
     const project$ = this.projectIds$.pipe(
-      map((ids: Id[]) => this.idGeneratorService.nextId(ids)),
-      map((nextId: Id) => this.mapToProject(nextId, openDialogResult, files, directories)),
+      map((ids) => this.idGeneratorService.nextId(ids)),
+      map((id) => {
+        const project: Project = {
+          id,
+          directory: openDialogResult.filePaths[0],
+          name: openDialogResult.filenames[0],
+          fileIds: files.map((file) => file.id),
+          directoryIds: directories.map((directory) => directory.id),
+        };
+        return project;
+      }),
       take(1),
     );
     return project$;
@@ -37,15 +46,5 @@ export class DefaultProjectService implements ProjectService {
 
   public set(project: Project): void {
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
-  }
-
-  private mapToProject(id: Id, openDialogResult: OpenDialogResult, files: File[], directories: Directory[]): Project {
-    return {
-      id,
-      directory: openDialogResult.filePaths[0],
-      name: openDialogResult.filenames[0],
-      fileIds: files.map((file: File) => file.id),
-      directoryIds: directories.map((directory: Directory) => directory.id),
-    };
   }
 }

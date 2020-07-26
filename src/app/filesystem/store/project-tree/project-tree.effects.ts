@@ -6,7 +6,6 @@ import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.fa
 import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
 
 import { projectTreeActions } from './project-tree.actions';
-import { ProjectTree } from './project-tree.state';
 
 @Injectable()
 export class ProjectTreeEffects {
@@ -20,7 +19,7 @@ export class ProjectTreeEffects {
       this.actions$.pipe(
         ofType(projectTreeActions.openProject),
         switchMap((action) => this.filesystemFacade.selectProjectTree(action.id).pipe(take(1))),
-        tap((projectTree: ProjectTree) => this.filesystemFacade.openProject(projectTree)),
+        tap((projectTree) => this.filesystemFacade.openProject(projectTree)),
       ),
     { dispatch: false },
   );

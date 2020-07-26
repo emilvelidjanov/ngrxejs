@@ -17,4 +17,4 @@ export const reducers: ActionReducerMap<EditorState> = {
 export const metaReducers: MetaReducer<EditorState>[] = !environment.production ? [] : [];
 
 export const selectEditorFeature = createFeatureSelector<EditorState>(editorFeatureKey);
-export const selectEditors = createSelector(selectEditorFeature, (state: EditorState) => state.editors);
+export const selectEditors = createSelector(selectEditorFeature, (state) => state.editors);

@@ -25,15 +25,27 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.directoryItemIds = this.store.pipe(select(directoryItemSelectors.selectIds));
   }
 
-  public addMany(directoryItems: DirectoryItem[]) {
+  public addMany(directoryItems: DirectoryItem[]): void {
     this.store.dispatch(directoryItemActions.addMany({ entities: directoryItems }));
   }
 
   public createMany(directories: Directory[]): Observable<DirectoryItem[]> {
-    const size: number = directories.length;
+    const size = directories.length;
     const directoryItems$ = this.directoryItemIds.pipe(
-      map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids: Id[]) => this.mapTo(ids, directories)),
+      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
+      map((ids) =>
+        ids.map((id, index) => {
+          const directoryItem: DirectoryItem = {
+            id,
+            directoryId: directories[index].id,
+            directoryItemIds: [],
+            fileItemIds: [],
+            isOpened: false,
+            contextMenuId: 'directoryItemContextMenu',
+          };
+          return directoryItem;
+        }),
+      ),
       take(1),
     );
     return directoryItems$;
@@ -56,32 +68,17 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     );
   }
 
-  public updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]) {
+  public updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]): void {
     this.store.dispatch(
       directoryItemActions.updateOne({
         update: {
           id: directoryItem.id,
           changes: {
-            fileItemIds: fileItems.map((item: FileItem) => item.id),
-            directoryItemIds: directoryItems.map((item: DirectoryItem) => item.id),
+            fileItemIds: fileItems.map((item) => item.id),
+            directoryItemIds: directoryItems.map((item) => item.id),
           },
         },
       }),
     );
-  }
-
-  private mapTo(ids: Id[], directories: Directory[]): DirectoryItem[] {
-    const directoryItems: DirectoryItem[] = ids.map((id: Id, index: number) => {
-      const directoryItem: DirectoryItem = {
-        id,
-        directoryId: directories[index].id,
-        directoryItemIds: [],
-        fileItemIds: [],
-        isOpened: false,
-        contextMenuId: 'directoryItemContextMenu',
-      };
-      return directoryItem;
-    });
-    return directoryItems;
   }
 }

@@ -25,10 +25,8 @@ export class FileItemComponent implements OnInit {
   public ngOnInit(): void {
     this.fileItem$ = this.store.pipe(select(fileItemSelectors.selectEntityById, { id: this.fileItemId }));
     this.file$ = this.fileItem$.pipe(
-      filter((fileItem: FileItem) => !!fileItem),
-      switchMap((fileItem: FileItem) =>
-        this.store.pipe(select(fileSelectors.selectEntityById, { id: fileItem.fileId })),
-      ),
+      filter((fileItem) => !!fileItem),
+      switchMap((fileItem) => this.store.pipe(select(fileSelectors.selectEntityById, { id: fileItem.fileId }))),
     );
   }
 

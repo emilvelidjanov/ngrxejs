@@ -25,13 +25,24 @@ export class DefaultFileService implements FileService {
   }
 
   public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
-    const files: LoadDirectoryResult[] = loadDirectoryResults.filter(
-      (result: LoadDirectoryResult) => !result.isDirectory,
-    );
-    const size: number = files.length;
+    const fileResults = loadDirectoryResults.filter((result) => !result.isDirectory);
+    const size = fileResults.length;
     const files$ = this.fileIds$.pipe(
-      map((ids: Id[]) => this.idGeneratorService.nextNIds(size, ids)),
-      map((nextIds: Id[]) => this.mapTo(nextIds, files)),
+      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
+      map((ids) =>
+        ids.map((id, index) => {
+          const fileResult = fileResults[index];
+          const file: File = {
+            id,
+            content: null,
+            isLoaded: false,
+            extension: fileResult.extension,
+            name: fileResult.name,
+            path: fileResult.path,
+          };
+          return file;
+        }),
+      ),
       take(1),
     );
     return files$;
@@ -57,19 +68,5 @@ export class DefaultFileService implements FileService {
         },
       }),
     );
-  }
-
-  private mapTo(ids: Id[], loadDirectoryResults: LoadDirectoryResult[]): File[] {
-    const files: File[] = ids.map((id: Id, index: number) => {
-      const { isDirectory, ...toFile } = loadDirectoryResults[index];
-      const file: File = {
-        id,
-        content: null,
-        isLoaded: false,
-        ...toFile,
-      };
-      return file;
-    });
-    return files;
   }
 }

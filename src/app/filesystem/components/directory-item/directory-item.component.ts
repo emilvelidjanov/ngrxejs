@@ -28,8 +28,8 @@ export class DirectoryItemComponent implements OnInit {
       select(directoryItemSelectors.selectEntityById, { id: this.directoryItemId }),
     );
     this.directory$ = this.directoryItem$.pipe(
-      filter((directoryItem: DirectoryItem) => !!directoryItem),
-      switchMap((directoryItem: DirectoryItem) =>
+      filter((directoryItem) => !!directoryItem),
+      switchMap((directoryItem) =>
         this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId })),
       ),
     );
@@ -38,8 +38,6 @@ export class DirectoryItemComponent implements OnInit {
   public open(): void {
     this.directoryItem$
       .pipe(take(1))
-      .subscribe((directoryItem: DirectoryItem) =>
-        this.store.dispatch(directoryItemActions.open({ entity: directoryItem })),
-      );
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
   }
 }

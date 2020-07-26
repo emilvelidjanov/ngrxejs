@@ -29,7 +29,7 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     project: Project,
     directoryItems: DirectoryItem[],
     fileItems: FileItem[],
-  ) {
+  ): void {
     this.store.dispatch(
       projectTreeActions.updateOne({
         update: {
@@ -44,7 +44,7 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     );
   }
 
-  public addMany(projectTrees: ProjectTree[]) {
+  public addMany(projectTrees: ProjectTree[]): void {
     this.store.dispatch(projectTreeActions.addMany({ entities: projectTrees }));
   }
 }
