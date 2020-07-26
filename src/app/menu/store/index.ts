@@ -25,6 +25,6 @@ export const reducers: ActionReducerMap<MenuState> = {
 export const metaReducers: MetaReducer<MenuState>[] = !environment.production ? [] : [];
 
 export const selectMenuFeature = createFeatureSelector<MenuState>(menuFeatureKey);
-export const selectMenuItems = createSelector(selectMenuFeature, (state: MenuState) => state.menuItems);
-export const selectMenus = createSelector(selectMenuFeature, (state: MenuState) => state.menuBars);
-export const selectContextMenus = createSelector(selectMenuFeature, (state: MenuState) => state.contextMenus);
+export const selectMenuItems = createSelector(selectMenuFeature, (state) => state.menuItems);
+export const selectMenus = createSelector(selectMenuFeature, (state) => state.menuBars);
+export const selectContextMenus = createSelector(selectMenuFeature, (state) => state.contextMenus);

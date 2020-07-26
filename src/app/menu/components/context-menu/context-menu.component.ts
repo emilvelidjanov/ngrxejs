@@ -27,7 +27,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.contextMenu$ = this.store.pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }));
-    this.contextMenu$.pipe(takeUntil(this.unsubscribe)).subscribe((contextMenu: ContextMenu) => {
+    this.contextMenu$.pipe(takeUntil(this.unsubscribe)).subscribe((contextMenu) => {
       this.left = contextMenu.x + 'px';
       this.top = contextMenu.y + 'px';
     });
@@ -36,7 +36,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
   public offClick(): void {
     this.contextMenu$
       .pipe(take(1))
-      .subscribe((contextMenu: ContextMenu) => this.store.dispatch(contextMenuActions.close({ entity: contextMenu })));
+      .subscribe((contextMenu) => this.store.dispatch(contextMenuActions.close({ entity: contextMenu })));
   }
 
   public ngOnDestroy(): void {

@@ -15,19 +15,6 @@ export class DefaultMenuBarService implements MenuBarService {
     return { ...partial } as MenuBar;
   }
 
-  public populateOptionals(partialMenuBars: Partial<MenuBar>[]): MenuBar[] {
-    const result: MenuBar[] = partialMenuBars.map((menuBar: MenuBar) => {
-      if (menuBar.title === undefined) {
-        menuBar.title = null;
-      }
-      if (menuBar.image === undefined) {
-        menuBar.image = null;
-      }
-      return { ...menuBar };
-    });
-    return result;
-  }
-
   public addMany(menuBars: MenuBar[]): void {
     this.store.dispatch(menuBarActions.addMany({ entities: menuBars }));
   }

@@ -4,7 +4,7 @@ import { take } from 'rxjs/operators';
 
 import { contextMenuActions } from '../store/context-menu/context-menu.actions';
 import { contextMenuSelectors } from '../store/context-menu/context-menu.selectors';
-import { ContextMenu, ContextMenus } from '../store/context-menu/context-menu.state';
+import { ContextMenus } from '../store/context-menu/context-menu.state';
 
 @Directive({
   selector: '[appContextMenuTrigger]',
@@ -21,9 +21,8 @@ export class ContextMenuTriggerDirective implements OnInit {
     if (this.contextMenuId) {
       $event.stopPropagation();
       this.store
-        .pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }))
-        .pipe(take(1))
-        .subscribe((contextMenu: ContextMenu) => {
+        .pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }), take(1))
+        .subscribe((contextMenu) => {
           this.store.dispatch(
             contextMenuActions.open({
               entity: contextMenu,

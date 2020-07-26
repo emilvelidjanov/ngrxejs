@@ -27,7 +27,7 @@ export class MenuItemComponent implements OnInit {
   public click(): void {
     this.menuItem$
       .pipe(take(1))
-      .subscribe((menuItem: MenuItem) => this.store.dispatch(menuItemActions.onClick({ entity: menuItem })));
+      .subscribe((menuItem) => this.store.dispatch(menuItemActions.onClick({ entity: menuItem })));
   }
 
   public offClickNestedMenuItems($event: MouseEvent): void {
