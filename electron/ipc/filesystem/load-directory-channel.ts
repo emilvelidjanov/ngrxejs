@@ -13,20 +13,17 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
   }
 
   handle(event: IpcMainEvent, request: IpcRequest<string>): void {
-    const path: string = request.params;
-    FsUtils.readDirectory(path).subscribe(
-      (files: Dirent[]) => {
-        const response: LoadDirectoryResult[] = files.map((file: Dirent) => this.toResponse(file, path));
-        event.reply(request.responseChannel, response);
-      },
-      (error: any) => console.error(error),
-    );
+    const path = request.params;
+    FsUtils.readDirectory(path).subscribe((files) => {
+      const response = files.map((file) => this.toResponse(file, path));
+      event.reply(request.responseChannel, response);
+    }, console.error);
   }
 
   private toResponse(file: Dirent, path: string): LoadDirectoryResult {
-    const fullPath: string = PathUtils.joinPath(path, file.name);
-    const extension: string = PathUtils.getExtension(fullPath);
-    const name: string = PathUtils.getFilename(file.name);
+    const fullPath = PathUtils.joinPath(path, file.name);
+    const extension = PathUtils.getExtension(fullPath);
+    const name = PathUtils.getFilename(file.name);
     return {
       name: name,
       path: fullPath,

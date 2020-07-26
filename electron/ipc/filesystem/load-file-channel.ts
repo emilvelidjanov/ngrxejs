@@ -10,10 +10,7 @@ export class LoadFileChannel implements IpcChannel<string> {
   }
 
   handle(event: IpcMainEvent, request: IpcRequest<string>): void {
-    const path: string = request.params;
-    FsUtils.readFile(path).subscribe(
-      (content: string) => event.reply(request.responseChannel, content),
-      (error: any) => console.error(error),
-    );
+    const path = request.params;
+    FsUtils.readFile(path).subscribe((content) => event.reply(request.responseChannel, content), console.error);
   }
 }

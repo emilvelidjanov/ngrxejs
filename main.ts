@@ -1,6 +1,6 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent } from 'electron';
+import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain } from 'electron';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
-import { IpcChannel, IpcRequest } from './electron/ipc/ipc';
+import { IpcChannel } from './electron/ipc/ipc';
 import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel';
 import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
 import { PathUtils } from './electron/utils/path.utils';
@@ -26,19 +26,19 @@ class Main {
 
   public init(): void {
     app.allowRendererProcessReuse = true;
-    app.on('ready', () => this.onReady());
-    app.on('window-all-closed', () => this.onWindowAllClosed());
-    app.on('activate', () => this.onActivate());
+    app.on('ready', this.onReady);
+    app.on('window-all-closed', this.onWindowAllClosed);
+    app.on('activate', this.onActivate);
   }
 
   private onReady(): void {
     this.createMainWindow();
-    let channels: IpcChannel<any>[] = this.createIpcChannels();
+    let channels = this.createIpcChannels();
     this.registerIpcChannels(channels);
     if (!this.isProd) {
       installExtension(REDUX_DEVTOOLS, false)
-        .then((name: string) => console.info(`Added Extension: ${name}`))
-        .catch((error: any) => console.error('An error occurred: ', error));
+        .then((name) => console.info(`Added Extension: ${name}`))
+        .catch((error) => console.error('An electron-devtools error occurred: ', error));
     }
   }
 
@@ -48,16 +48,15 @@ class Main {
     this.mainWindow.removeMenu();
     this.mainWindow.webContents.openDevTools();
     const _this = this;
-    this.mainWindow.on('closed', () => _this.windowOnClosed());
-    this.mainWindow.webContents.on('did-fail-load', () => _this.loadIndexFile());
+    this.mainWindow.on('closed', _this.windowOnClosed);
+    this.mainWindow.webContents.on('did-fail-load', _this.loadIndexFile);
   }
 
   private createIpcChannels(): IpcChannel<any>[] {
-    const openDialogChannel: OpenDialogChannel = new OpenDialogChannel(this.mainWindow);
-    const loadDirectoryChannel: LoadDirectoryChannel = new LoadDirectoryChannel();
-    const loadFileChannel: LoadFileChannel = new LoadFileChannel();
-    const channels: IpcChannel<any>[] = [openDialogChannel, loadDirectoryChannel, loadFileChannel];
-    return channels;
+    const openDialogChannel = new OpenDialogChannel(this.mainWindow);
+    const loadDirectoryChannel = new LoadDirectoryChannel();
+    const loadFileChannel = new LoadFileChannel();
+    return [openDialogChannel, loadDirectoryChannel, loadFileChannel];
   }
 
   private windowOnClosed(): void {
@@ -81,10 +80,8 @@ class Main {
   }
 
   public registerIpcChannels(ipcChannels: IpcChannel<any>[]): void {
-    ipcChannels.forEach((channel: IpcChannel<any>) => {
-      ipcMain.on(channel.getName(), (event: IpcMainEvent, request: IpcRequest<any>) => {
-        channel.handle(event, request);
-      });
+    ipcChannels.forEach((channel) => {
+      ipcMain.on(channel.getName(), channel.handle);
     });
   }
 }
