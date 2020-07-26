@@ -19,7 +19,7 @@ export class DefaultIpcService implements IpcService {
       this.initializeIpcRenderer();
     }
     if (!request.responseChannel) {
-      const random: number = Math.floor(Math.random() * 99999);
+      const random = Math.floor(Math.random() * 99999);
       request.responseChannel = `${channel}_response_${new Date().getTime()}_${random}`;
     }
     const ipcRenderer = this.ipcRenderer;

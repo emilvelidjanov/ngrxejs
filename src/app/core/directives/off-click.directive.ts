@@ -15,9 +15,9 @@ export class OffClickDirective {
 
   @HostListener('document:click', ['$event'])
   public onDocumentClick($event: MouseEvent): void {
-    const targetElement: HTMLElement = $event.target as HTMLElement;
-    const refElement: HTMLElement = this.elementRef.nativeElement as HTMLElement;
-    const isHidden: boolean = refElement.hidden || refElement.style.display === 'none';
+    const targetElement = $event.target as HTMLElement;
+    const refElement = this.elementRef.nativeElement as HTMLElement;
+    const isHidden = refElement.hidden || refElement.style.display === 'none';
     if (!isHidden && targetElement && !this.domService.containsOrIsEqual(refElement, targetElement)) {
       this.appOffClick.emit($event);
     }

@@ -80,13 +80,11 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
   }
 
   public getActionType(type: string) {
-    const actionType = `[Domain][${this.entityName}] ${type}`;
-    return actionType;
+    return `[Domain][${this.entityName}] ${type}`;
   }
 
   public getEffectActionType(type: string) {
-    const actionType = `[Effect][${this.entityName}] ${type}`;
-    return actionType;
+    return `[Effect][${this.entityName}] ${type}`;
   }
 
   private initActions(): EntityDomainActions<T> {
@@ -124,16 +122,12 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
       }),
       on(this.actions.removeOne, (state: D, props: PropId) => {
         let typedId: any;
-        if (typeof props.id === 'number') {
-          typedId = props.id as number;
-        } else {
-          typedId = props.id as string;
-        }
+        typeof props.id === 'number' ? (typedId = props.id as number) : (typedId = props.id as string);
         return this.adapter.removeOne(typedId, state);
       }),
       on(this.actions.removeMany, (state: D, props: PropIds) => {
-        const numberIds: number[] = props.ids.filter((id: Id) => typeof id === 'number') as number[];
-        const stringIds: string[] = props.ids.filter((id: Id) => typeof id === 'string') as string[];
+        const numberIds = props.ids.filter((id) => typeof id === 'number') as number[];
+        const stringIds = props.ids.filter((id) => typeof id === 'string') as string[];
         return this.adapter.removeMany(stringIds, this.adapter.removeMany(numberIds, state));
       }),
       on(this.actions.removeByPredicate, (state: D, props: PropPredicate<T>) => {
