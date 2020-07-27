@@ -11,8 +11,9 @@ import { directoryItemSelectors } from '../../store/directory-item/directory-ite
 import { DirectoryItem, DirectoryItems } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
+import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
-import { DirectoryItemService } from './directory.service';
+import { DirectoryItemService } from './directory-item.service';
 
 @Injectable()
 export class DefaultDirectoryItemService implements DirectoryItemService {
@@ -29,7 +30,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.store.dispatch(directoryItemActions.addMany({ entities: directoryItems }));
   }
 
-  public createMany(directories: Directory[]): Observable<DirectoryItem[]> {
+  public createMany(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
     const size = directories.length;
     const directoryItems$ = this.directoryItemIds.pipe(
       map((ids) => this.idGeneratorService.nextNIds(size, ids)),
@@ -40,8 +41,8 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
             directoryId: directories[index].id,
             directoryItemIds: [],
             fileItemIds: [],
+            projectTreeId: projectTree.id,
             isOpened: false,
-            contextMenuId: 'directoryItemContextMenu',
           };
           return directoryItem;
         }),

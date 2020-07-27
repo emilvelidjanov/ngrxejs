@@ -12,7 +12,13 @@ export class DefaultContextMenuService implements ContextMenuService {
   constructor(private store: Store<ContextMenus>) {}
 
   public createFromPartial(partial: EntityPartial<ContextMenu>): ContextMenu {
-    return { ...partial } as ContextMenu;
+    return {
+      isOpened: false,
+      menuItemIds: [],
+      x: 0,
+      y: 0,
+      ...partial,
+    } as ContextMenu;
   }
 
   public addMany(contextMenus: ContextMenu[]): void {

@@ -1,7 +1,7 @@
 import { DependencyConfigurer } from 'src/app/core/angular/dependency-configurer';
 
-import { DirectoryItemService } from '../directory-item-service/directory.service';
-import { directoryItemServiceDep } from '../directory-item-service/directory.service.dependency';
+import { DirectoryItemService } from '../directory-item-service/directory-item.service';
+import { directoryItemServiceDep } from '../directory-item-service/directory-item.service.dependency';
 import { DirectoryService } from '../directory-service/directory.service';
 import { directoryServiceDep } from '../directory-service/directory.service.dependency';
 import { FileItemService } from '../file-item-service/file-item.service';
@@ -12,8 +12,8 @@ import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
 import { projectServiceDep } from '../project-service/project.service.dependency';
-import { ProjectTreeService } from '../project-tree-service/project.service';
-import { projectTreeServiceDep } from '../project-tree-service/project.service.dependency';
+import { ProjectTreeService } from '../project-tree-service/project-tree.service';
+import { projectTreeServiceDep } from '../project-tree-service/project-tree.service.dependency';
 
 import { DefaultFilesystemFacade } from './default-filesystem.facade';
 import { FilesystemFacade } from './filesystem.facade';

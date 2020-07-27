@@ -17,7 +17,13 @@ export class DefaultMenuItemService implements MenuItemService {
   ) {}
 
   public createFromPartial(partial: EntityPartial<MenuItem>): MenuItem {
-    return { ...partial } as MenuItem;
+    return {
+      clickAction: null,
+      isOpened: false,
+      label: null,
+      menuItemIds: [],
+      ...partial,
+    } as MenuItem;
   }
 
   public addMany(menuItems: MenuItem[]): void {

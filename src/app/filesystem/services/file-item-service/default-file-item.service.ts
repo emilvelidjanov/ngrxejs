@@ -10,6 +10,7 @@ import { fileItemActions } from '../../store/file-item/file-item.actions';
 import { fileItemSelectors } from '../../store/file-item/file-item.selectors';
 import { FileItem, FileItems } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
+import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 import { FileItemService } from './file-item.service';
 
@@ -24,7 +25,7 @@ export class DefaultFileItemService implements FileItemService {
     this.fileItemIds = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
-  public createMany(files: File[]): Observable<FileItem[]> {
+  public createMany(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
     const size = files.length;
     const fileItems$ = this.fileItemIds.pipe(
       map((ids) => this.idGeneratorService.nextNIds(size, ids)),
@@ -33,7 +34,7 @@ export class DefaultFileItemService implements FileItemService {
           const fileItem: FileItem = {
             id,
             fileId: files[index].id,
-            contextMenuId: 'fileItemContextMenu',
+            projectTreeId: projectTree.id,
           };
           return fileItem;
         }),

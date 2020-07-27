@@ -1,18 +1,17 @@
 <ng-container *ngIf="directoryItem$ | async as directoryItem">
   <ng-container *ngIf="directory$ | async as directory">
-    <button (click)="open()" [appContextMenuTrigger]="directoryItem.contextMenuId">
-      <span class="directory-label">{{ directory.name }}</span>
-    </button>
-    <ng-container *ngIf="directoryItem.isOpened">
-      <ng-container *ngFor="let directoryItemId of directoryItem.directoryItemIds">
-        <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
-      </ng-container>
-      <ng-container *ngFor="let fileItemId of directoryItem.fileItemIds">
-        <app-file-item [fileItemId]="fileItemId"></app-file-item>
+    <ng-container *ngIf="projectTree$ | async as projectTree">
+      <button (click)="open()" [appContextMenuTrigger]="projectTree.directoryItemContextMenuId">
+        <span class="directory-label">{{ directory.name }}</span>
+      </button>
+      <ng-container *ngIf="directoryItem.isOpened">
+        <ng-container *ngFor="let directoryItemId of directoryItem.directoryItemIds">
+          <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
+        </ng-container>
+        <ng-container *ngFor="let fileItemId of directoryItem.fileItemIds">
+          <app-file-item [fileItemId]="fileItemId"></app-file-item>
+        </ng-container>
       </ng-container>
     </ng-container>
-  </ng-container>
-  <ng-container *ngIf="directoryItem.contextMenuId">
-    <app-context-menu [contextMenuId]="directoryItem.contextMenuId"></app-context-menu>
   </ng-container>
 </ng-container>

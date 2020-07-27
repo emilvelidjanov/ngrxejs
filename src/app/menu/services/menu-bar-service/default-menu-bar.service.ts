@@ -12,7 +12,12 @@ export class DefaultMenuBarService implements MenuBarService {
   constructor(private store: Store<MenuBars>) {}
 
   public createFromPartial(partial: EntityPartial<MenuBar>): MenuBar {
-    return { ...partial } as MenuBar;
+    return {
+      image: null,
+      menuItemIds: [],
+      title: null,
+      ...partial,
+    } as MenuBar;
   }
 
   public addMany(menuBars: MenuBar[]): void {

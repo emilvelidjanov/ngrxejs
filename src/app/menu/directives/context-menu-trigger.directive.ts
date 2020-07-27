@@ -18,8 +18,8 @@ export class ContextMenuTriggerDirective implements OnInit {
 
   @HostListener('contextmenu', ['$event'])
   public onContextMenu($event: MouseEvent): void {
-    if (this.contextMenuId) {
-      $event.stopPropagation();
+    $event.stopPropagation();
+    if (this.contextMenuId && this.contextMenuId.length) {
       this.store
         .pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }), take(1))
         .subscribe((contextMenu) => {

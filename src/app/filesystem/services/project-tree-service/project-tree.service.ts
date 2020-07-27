@@ -8,7 +8,7 @@ import { Project } from '../../store/project/project.state';
 
 export interface ProjectTreeService {
   createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree;
-  selectById(id: Id): Observable<ProjectTree>;
+  select(id: Id): Observable<ProjectTree>;
   addMany(projectTrees: ProjectTree[]): void;
   updateOpenedProject(
     projectTree: ProjectTree,

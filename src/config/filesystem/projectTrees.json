@@ -1,6 +1,10 @@
 [
   {
     "id": "mainProjectTree",
-    "contextMenuId": "projectTreeContextMenu"
+    "contextMenuId": "projectTreeContextMenu",
+    "directoryItemContextMenuId": "directoryItemContextMenu",
+    "fileItemContextMenuIds": {
+      ".html": "htmlFileItemContextMenu"
+    }
   }
 ]

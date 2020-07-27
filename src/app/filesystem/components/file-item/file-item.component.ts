@@ -8,6 +8,8 @@ import { fileItemSelectors } from '../../store/file-item/file-item.selectors';
 import { FileItem } from '../../store/file-item/file-item.state';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { File, Files } from '../../store/file/file.state';
+import { projectTreeSelectors } from '../../store/project-tree/project-tree.selectors';
+import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 @Component({
   selector: 'app-file-item[fileItemId]',
@@ -19,14 +21,21 @@ export class FileItemComponent implements OnInit {
   @Input() public fileItemId: Id;
   public fileItem$: Observable<FileItem>;
   public file$: Observable<File>;
+  public projectTree$: Observable<ProjectTree>;
 
   constructor(private store: Store<Files>) {}
 
   public ngOnInit(): void {
     this.fileItem$ = this.store.pipe(select(fileItemSelectors.selectEntityById, { id: this.fileItemId }));
     this.file$ = this.fileItem$.pipe(
-      filter((fileItem) => !!fileItem),
+      filter((fileItem) => !!fileItem && !!fileItem.fileId),
       switchMap((fileItem) => this.store.pipe(select(fileSelectors.selectEntityById, { id: fileItem.fileId }))),
+    );
+    this.projectTree$ = this.fileItem$.pipe(
+      filter((fileItem) => !!fileItem && !!fileItem.projectTreeId),
+      switchMap((fileItem) =>
+        this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: fileItem.projectTreeId })),
+      ),
     );
   }
 

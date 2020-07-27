@@ -9,8 +9,8 @@ import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
-import { DirectoryItemService } from '../directory-item-service/directory.service';
-import { directoryItemServiceDep } from '../directory-item-service/directory.service.dependency';
+import { DirectoryItemService } from '../directory-item-service/directory-item.service';
+import { directoryItemServiceDep } from '../directory-item-service/directory-item.service.dependency';
 import { DirectoryService } from '../directory-service/directory.service';
 import { directoryServiceDep } from '../directory-service/directory.service.dependency';
 import { FileItemService } from '../file-item-service/file-item.service';
@@ -21,8 +21,8 @@ import { FilesystemService, LoadDirectoryResult } from '../filesystem-service/fi
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
 import { projectServiceDep } from '../project-service/project.service.dependency';
-import { ProjectTreeService } from '../project-tree-service/project.service';
-import { projectTreeServiceDep } from '../project-tree-service/project.service.dependency';
+import { ProjectTreeService } from '../project-tree-service/project-tree.service';
+import { projectTreeServiceDep } from '../project-tree-service/project-tree.service.dependency';
 
 import { FilesystemFacade } from './filesystem.facade';
 
@@ -39,11 +39,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   ) {}
 
   public selectProjectTree(id: Id): Observable<ProjectTree> {
-    return this.projectTreeService.selectById(id);
+    return this.projectTreeService.select(id);
   }
 
   public addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void {
-    const projectTrees = partials.map(this.projectTreeService.createFromPartial);
+    const projectTrees = partials.map((partial) => this.projectTreeService.createFromPartial(partial));
     this.projectTreeService.addMany(projectTrees);
   }
 
@@ -64,7 +64,9 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         this.projectService.createOne(openDialogResult, files, directories),
       ),
     );
-    const items$ = filesAndDirs$.pipe(switchMap(([files, directories]) => this.createItems(files, directories)));
+    const items$ = filesAndDirs$.pipe(
+      switchMap(([files, directories]) => this.createItems(files, directories, projectTree)),
+    );
     forkJoin([filesAndDirs$, items$, project$]).subscribe(
       ([[files, directories], [fileItems, directoryItems], project]) => {
         this.fileService.setAll(files);
@@ -79,6 +81,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public openDirectoryItem(directoryItem: DirectoryItem): void {
     const selectDirectory$ = this.directoryService.select(directoryItem.directoryId).pipe(take(1), share());
+    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
     const loadDirectory$ = selectDirectory$.pipe(
       takeWhile((directory) => !directory.isLoaded),
       switchMap((directory) => this.filesystemService.loadDirectory(directory.path)),
@@ -87,7 +90,9 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       switchMap((results) => this.createFilesAndDirectories(results)),
       share(),
     );
-    const items$ = filesAndDirs$.pipe(switchMap(([files, directories]) => this.createItems(files, directories)));
+    const items$ = forkJoin([filesAndDirs$, selectProjectTree$]).pipe(
+      switchMap(([[files, directories], projectTree]) => this.createItems(files, directories, projectTree)),
+    );
     forkJoin([selectDirectory$, filesAndDirs$, items$]).subscribe(
       ([selectDirectory, [files, directories], [fileItems, directoryItems]]) => {
         this.fileService.addMany(files);
@@ -114,10 +119,14 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return filesAndDirs$;
   }
 
-  private createItems(files: File[], directories: Directory[]): Observable<[FileItem[], DirectoryItem[]]> {
+  private createItems(
+    files: File[],
+    directories: Directory[],
+    projectTree: ProjectTree,
+  ): Observable<[FileItem[], DirectoryItem[]]> {
     const items$ = forkJoin([
-      this.fileItemService.createMany(files),
-      this.directoryItemService.createMany(directories),
+      this.fileItemService.createMany(files, projectTree),
+      this.directoryItemService.createMany(directories, projectTree),
     ]).pipe(take(1));
     return items$;
   }

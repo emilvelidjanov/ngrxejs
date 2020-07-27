@@ -8,8 +8,8 @@ export interface DirectoryItem extends Entity {
   directoryId: Id;
   directoryItemIds: Id[];
   fileItemIds: Id[];
+  projectTreeId: Id; // TODO: rename app state entities to "view"
   isOpened: boolean;
-  contextMenuId: Id;
 }
 
 export const entityName = 'DirectoryItem';

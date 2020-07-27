@@ -15,4 +15,10 @@
   <ng-container *ngIf="projectTree.contextMenuId">
     <app-context-menu [contextMenuId]="projectTree.contextMenuId"></app-context-menu>
   </ng-container>
+  <ng-container *ngIf="projectTree.directoryItemContextMenuId">
+    <app-context-menu [contextMenuId]="projectTree.directoryItemContextMenuId"></app-context-menu>
+  </ng-container>
+  <ng-container *ngFor="let entry of projectTree.fileItemContextMenuIds | keyvalue">
+    <app-context-menu [contextMenuId]="entry.value"></app-context-menu>
+  </ng-container>
 </ng-container>

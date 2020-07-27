@@ -5,8 +5,8 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 
 import { DirectoryItems } from '../../store/directory-item/directory-item.state';
 
-import { DefaultDirectoryItemService } from './default-directory.service';
-import { DirectoryItemService } from './directory.service';
+import { DefaultDirectoryItemService } from './default-directory-item.service';
+import { DirectoryItemService } from './directory-item.service';
 
 export const directoryItemServiceDep: DependencyConfigurer<DirectoryItemService> = new DependencyConfigurer<
   DirectoryItemService

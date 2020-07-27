@@ -8,7 +8,7 @@
     "menuItemIds": ["A", "B"]
   },
   {
-    "id": "fileItemContextMenu",
+    "id": "htmlFileItemContextMenu",
     "menuItemIds": ["A"]
   }
 ]

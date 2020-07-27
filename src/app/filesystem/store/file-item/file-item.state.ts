@@ -6,7 +6,7 @@ export interface FileItems extends EntityDomainState<FileItem> {}
 
 export interface FileItem extends Entity {
   fileId: Id;
-  contextMenuId: Id;
+  projectTreeId: Id;
 }
 
 export const entityName = 'FileItem';

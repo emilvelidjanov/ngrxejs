@@ -10,17 +10,25 @@ import { projectTreeSelectors } from '../../store/project-tree/project-tree.sele
 import { ProjectTree, ProjectTrees } from '../../store/project-tree/project-tree.state';
 import { Project } from '../../store/project/project.state';
 
-import { ProjectTreeService } from './project.service';
+import { ProjectTreeService } from './project-tree.service';
 
 @Injectable()
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
 
   public createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree {
-    return { ...partial } as ProjectTree;
+    return {
+      contextMenuId: null,
+      directoryItemContextMenuId: null,
+      directoryItemIds: [],
+      fileItemContextMenuIds: {},
+      fileItemIds: [],
+      projectId: null,
+      ...partial,
+    } as ProjectTree;
   }
 
-  public selectById(id: Id): Observable<ProjectTree> {
+  public select(id: Id): Observable<ProjectTree> {
     return this.store.pipe(select(projectTreeSelectors.selectEntityById, { id }));
   }
 

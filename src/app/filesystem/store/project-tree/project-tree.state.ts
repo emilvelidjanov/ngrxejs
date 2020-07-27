@@ -9,6 +9,8 @@ export interface ProjectTree extends Entity {
   fileItemIds: Id[];
   directoryItemIds: Id[];
   contextMenuId: string;
+  fileItemContextMenuIds: { [extension: string]: Id };
+  directoryItemContextMenuId: string;
 }
 
 export const entityName = 'ProjectTree';
