@@ -25,7 +25,9 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
   public addMany(directories: Directory[]): void {
-    this.store.dispatch(directoryActions.addMany({ entities: directories }));
+    if (directories && directories.length) {
+      this.store.dispatch(directoryActions.addMany({ entities: directories }));
+    }
   }
 
   public select(id: Id): Observable<Directory> {

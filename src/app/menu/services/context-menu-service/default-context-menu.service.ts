@@ -22,7 +22,9 @@ export class DefaultContextMenuService implements ContextMenuService {
   }
 
   public addMany(contextMenus: ContextMenu[]): void {
-    this.store.dispatch(contextMenuActions.addMany({ entities: contextMenus }));
+    if (contextMenus && contextMenus.length) {
+      this.store.dispatch(contextMenuActions.addMany({ entities: contextMenus }));
+    }
   }
 
   public open(contextMenu: ContextMenu, x: number, y: number): void {

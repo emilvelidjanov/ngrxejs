@@ -4,12 +4,15 @@ import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { MenuBar } from '../../store/menu-bar/menu-bar.state';
 import { MenuItem } from '../../store/menu-item/menu-item.state';
+import { TabBar } from '../../store/tab-bar/tab-bar.state';
 import { ContextMenuService } from '../context-menu-service/context-menu.service';
 import { contextMenuServiceDep } from '../context-menu-service/context-menu.service.dependency';
 import { MenuBarService } from '../menu-bar-service/menu-bar.service';
 import { menuBarServiceDep } from '../menu-bar-service/menu-bar.service.dependency';
 import { MenuItemService } from '../menu-item-service/menu-item.service';
 import { menuItemServiceDep } from '../menu-item-service/menu-item.service.dependency';
+import { TabBarService } from '../tab-bar-service/tab-bar.service';
+import { tabBarServiceDep } from '../tab-bar-service/tab-bar.service.dependency';
 
 import { MenuFacade } from './menu.facade';
 
@@ -19,6 +22,7 @@ export class DefaultMenuFacade implements MenuFacade {
     @Inject(menuItemServiceDep.getToken()) private menuItemService: MenuItemService,
     @Inject(menuBarServiceDep.getToken) private menuBarService: MenuBarService,
     @Inject(contextMenuServiceDep.getToken()) private contextMenuService: ContextMenuService,
+    @Inject(tabBarServiceDep.getToken()) private tabBarService: TabBarService,
   ) {}
 
   public addMenuItemsConfig(partials: EntityPartial<MenuItem>[]): void {
@@ -34,6 +38,11 @@ export class DefaultMenuFacade implements MenuFacade {
   public addContextMenusConfig(partials: EntityPartial<ContextMenu>[]): void {
     const contextMenus = partials.map((partial) => this.contextMenuService.createFromPartial(partial));
     this.contextMenuService.addMany(contextMenus);
+  }
+
+  public addTabBarsConfig(partials: EntityPartial<TabBar>[]): void {
+    const tabBars = partials.map((partial) => this.tabBarService.createFromPartial(partial));
+    this.tabBarService.addMany(tabBars);
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {

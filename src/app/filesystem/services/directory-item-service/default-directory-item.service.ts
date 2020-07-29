@@ -27,7 +27,9 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
   }
 
   public addMany(directoryItems: DirectoryItem[]): void {
-    this.store.dispatch(directoryItemActions.addMany({ entities: directoryItems }));
+    if (directoryItems && directoryItems.length) {
+      this.store.dispatch(directoryItemActions.addMany({ entities: directoryItems }));
+    }
   }
 
   public createMany(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {

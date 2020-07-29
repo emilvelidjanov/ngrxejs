@@ -27,7 +27,9 @@ export class DefaultMenuItemService implements MenuItemService {
   }
 
   public addMany(menuItems: MenuItem[]): void {
-    this.store.dispatch(menuItemActions.addMany({ entities: menuItems }));
+    if (menuItems && menuItems.length) {
+      this.store.dispatch(menuItemActions.addMany({ entities: menuItems }));
+    }
   }
 
   public open(menuItem: MenuItem): void {

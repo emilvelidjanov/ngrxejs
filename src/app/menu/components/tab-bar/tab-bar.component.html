@@ -1,0 +1,6 @@
+<ng-container *ngIf="tabBar$ | async as tabBar">
+  TabBarComponent
+  <ng-container *ngFor="let tabItemId of tabBar.tabItemIds">
+    <app-tab-item [tabItemId]="tabItemId"></app-tab-item>
+  </ng-container>
+</ng-container>

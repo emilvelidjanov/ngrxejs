@@ -53,7 +53,9 @@ export class DefaultFileService implements FileService {
   }
 
   public addMany(files: File[]): void {
-    this.store.dispatch(fileActions.addMany({ entities: files }));
+    if (files && files.length) {
+      this.store.dispatch(fileActions.addMany({ entities: files }));
+    }
   }
 
   public updateLoaded(file: File, content: string): void {

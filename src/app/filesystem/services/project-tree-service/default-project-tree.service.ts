@@ -53,6 +53,8 @@ export class DefaultProjectTreeService implements ProjectTreeService {
   }
 
   public addMany(projectTrees: ProjectTree[]): void {
-    this.store.dispatch(projectTreeActions.addMany({ entities: projectTrees }));
+    if (projectTrees && projectTrees.length) {
+      this.store.dispatch(projectTreeActions.addMany({ entities: projectTrees }));
+    }
   }
 }

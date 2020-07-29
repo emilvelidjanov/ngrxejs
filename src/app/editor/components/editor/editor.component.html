@@ -1,1 +1,7 @@
-<!-- <div class="textarea" contenteditable="true" [innerHTML]="file.content"></div> -->
+<ng-container *ngIf="editor$ | async as editor">
+  <ng-container *ngIf="editor.tabBarId">
+    <app-tab-bar [tabBarId]="editor.tabBarId"></app-tab-bar>
+  </ng-container>
+  <div class="textarea" contenteditable="true">EditorComponent</div>
+  <!-- [innerHTML]="file.content" -->
+</ng-container>

@@ -1,5 +1,6 @@
-import { editorDomainStateConfig } from './editor.state';
 import { selectEditors } from '..';
+
+import { editorDomainStateConfig } from './editor.state';
 
 const defAppSelectors = { ...editorDomainStateConfig.getSelectors(selectEditors) };
 

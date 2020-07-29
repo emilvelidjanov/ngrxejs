@@ -49,6 +49,8 @@ export class DefaultFileItemService implements FileItemService {
   }
 
   public addMany(fileItems: FileItem[]): void {
-    this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
+    if (fileItems && fileItems.length) {
+      this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
+    }
   }
 }

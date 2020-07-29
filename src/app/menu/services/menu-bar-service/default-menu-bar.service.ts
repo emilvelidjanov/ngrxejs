@@ -21,6 +21,8 @@ export class DefaultMenuBarService implements MenuBarService {
   }
 
   public addMany(menuBars: MenuBar[]): void {
-    this.store.dispatch(menuBarActions.addMany({ entities: menuBars }));
+    if (menuBars && menuBars.length) {
+      this.store.dispatch(menuBarActions.addMany({ entities: menuBars }));
+    }
   }
 }

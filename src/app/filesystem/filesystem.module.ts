@@ -18,6 +18,7 @@ import { projectServiceDep } from './services/project-service/project.service.de
 import { projectTreeServiceDep } from './services/project-tree-service/project-tree.service.dependency';
 import { filesystemFeatureKey, metaReducers, reducers } from './store';
 import { DirectoryItemEffects } from './store/directory-item/directory-item.effects';
+import { FileItemEffects } from './store/file-item/file-item.effects';
 import { ProjectTreeEffects } from './store/project-tree/project-tree.effects';
 
 @NgModule({
@@ -26,7 +27,7 @@ import { ProjectTreeEffects } from './store/project-tree/project-tree.effects';
     CommonModule,
     MenuModule,
     StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers }),
-    EffectsModule.forFeature([ProjectTreeEffects, DirectoryItemEffects]),
+    EffectsModule.forFeature([ProjectTreeEffects, DirectoryItemEffects, FileItemEffects]),
   ],
   exports: [ProjectTreeComponent],
 })

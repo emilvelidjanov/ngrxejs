@@ -6,7 +6,7 @@ import { filter, switchMap } from 'rxjs/operators';
 import { projectTreeSelectors } from '../../store/project-tree/project-tree.selectors';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 import { projectSelectors } from '../../store/project/project.selectors';
-import { Project, Projects } from '../../store/project/project.state';
+import { Project } from '../../store/project/project.state';
 
 @Component({
   selector: 'app-project-tree[projectTreeId]',
@@ -19,7 +19,7 @@ export class ProjectTreeComponent implements OnInit {
   public projectTree$: Observable<ProjectTree>;
   public project$: Observable<Project>;
 
-  constructor(private store: Store<Projects>) {}
+  constructor(private store: Store<ProjectTree>) {}
 
   public ngOnInit(): void {
     this.projectTree$ = this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: this.projectTreeId }));

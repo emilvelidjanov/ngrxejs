@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, share, switchMap, take, tap } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
 import { directoryItemSelectors } from '../../store/directory-item/directory-item.selectors';
-import { DirectoryItem } from '../../store/directory-item/directory-item.state';
+import { DirectoryItem, DirectoryItems } from '../../store/directory-item/directory-item.state';
 import { directorySelectors } from '../../store/directory/directory.selectors';
-import { Directories, Directory } from '../../store/directory/directory.state';
+import { Directory } from '../../store/directory/directory.state';
 import { projectTreeSelectors } from '../../store/project-tree/project-tree.selectors';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
@@ -24,7 +24,7 @@ export class DirectoryItemComponent implements OnInit {
   public directory$: Observable<Directory>;
   public projectTree$: Observable<ProjectTree>;
 
-  constructor(private store: Store<Directories>) {}
+  constructor(private store: Store<DirectoryItems>) {}
 
   public ngOnInit(): void {
     this.directoryItem$ = this.store.pipe(
