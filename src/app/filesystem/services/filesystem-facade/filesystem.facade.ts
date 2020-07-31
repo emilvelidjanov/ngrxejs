@@ -6,6 +6,7 @@ import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 export interface FilesystemFacade {
+  selectFile(id: Id): Observable<File>;
   selectProjectTree(id: Id): Observable<ProjectTree>;
   addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void;
   openProject(projectTree: ProjectTree): void;

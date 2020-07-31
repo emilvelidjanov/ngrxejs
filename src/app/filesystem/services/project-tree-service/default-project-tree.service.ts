@@ -17,7 +17,7 @@ export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
 
   public createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree {
-    return {
+    const projectTree: ProjectTree = {
       contextMenuId: null,
       directoryItemContextMenuId: null,
       directoryItemIds: [],
@@ -25,7 +25,8 @@ export class DefaultProjectTreeService implements ProjectTreeService {
       fileItemIds: [],
       projectId: null,
       ...partial,
-    } as ProjectTree;
+    };
+    return projectTree;
   }
 
   public select(id: Id): Observable<ProjectTree> {

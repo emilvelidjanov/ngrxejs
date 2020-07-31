@@ -1,10 +1,12 @@
-import { Entity } from 'src/app/core/ngrx/entity/entity';
+import { Entity, Id } from 'src/app/core/ngrx/entity/entity';
 import { EntityDomainState } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state';
 import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-domain-state/entity-domain-state-configurer';
 
 export interface Editors extends EntityDomainState<Editor> {}
 
 export interface Editor extends Entity {
+  focusedFileId: Id;
+  openedFileIds: Id[];
   isFocused: boolean;
   tabBarId: string;
 }

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { filter, switchMap, take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
+import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
+import { File } from 'src/app/filesystem/store/file/file.state';
 
 import { editorActions } from '../../store/editor/editor.actions';
 import { editorSelectors } from '../../store/editor/editor.selectors';
@@ -17,11 +19,17 @@ import { Editor, Editors } from '../../store/editor/editor.state';
 export class EditorComponent implements OnInit {
   @Input() public editorId: Id;
   public editor$: Observable<Editor>;
+  public focusedFile$: Observable<File>;
 
   constructor(private store: Store<Editors>) {}
 
   public ngOnInit(): void {
     this.editor$ = this.store.pipe(select(editorSelectors.selectEntityById, { id: this.editorId }));
+    this.focusedFile$ = this.editor$.pipe(
+      filter((editor) => !!editor && !!editor.focusedFileId),
+      switchMap((editor) => this.store.pipe(select(fileSelectors.selectEntityById, { id: editor.focusedFileId }))),
+      filter((file) => file.isLoaded),
+    );
   }
 
   @HostListener('click')

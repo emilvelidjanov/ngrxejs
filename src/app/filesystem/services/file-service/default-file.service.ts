@@ -24,6 +24,10 @@ export class DefaultFileService implements FileService {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
+  public select(id: Id): Observable<File> {
+    return this.store.pipe(select(fileSelectors.selectEntityById, { id }));
+  }
+
   public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
     const fileResults = loadDirectoryResults.filter((result) => !result.isDirectory);
     const size = fileResults.length;

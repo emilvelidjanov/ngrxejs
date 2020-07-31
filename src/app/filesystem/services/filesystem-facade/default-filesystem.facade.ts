@@ -38,6 +38,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     @Inject(fileItemServiceDep.getToken()) private fileItemService: FileItemService,
   ) {}
 
+  public selectFile(id: Id): Observable<File> {
+    return this.fileService.select(id);
+  }
+
   public selectProjectTree(id: Id): Observable<ProjectTree> {
     return this.projectTreeService.select(id);
   }
@@ -107,8 +111,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public loadFile(file: File): void {
-    const loadFile$ = this.filesystemService.loadFile(file.path).pipe(take(1));
-    loadFile$.subscribe((content) => this.fileService.updateLoaded(file, content));
+    if (!file.isLoaded) {
+      const loadFile$ = this.filesystemService.loadFile(file.path).pipe(take(1));
+      loadFile$.subscribe((content) => this.fileService.updateLoaded(file, content));
+    }
   }
 
   private createFilesAndDirectories(results: LoadDirectoryResult[]): Observable<[File[], Directory[]]> {

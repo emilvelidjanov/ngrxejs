@@ -8,6 +8,8 @@ import { MenuItemService } from '../menu-item-service/menu-item.service';
 import { menuItemServiceDep } from '../menu-item-service/menu-item.service.dependency';
 import { TabBarService } from '../tab-bar-service/tab-bar.service';
 import { tabBarServiceDep } from '../tab-bar-service/tab-bar.service.dependency';
+import { TabItemService } from '../tab-item-service/tab-item.service';
+import { tabItemServiceDep } from '../tab-item-service/tab-item.service.dependency';
 
 import { DefaultMenuFacade } from './default-menu.facade';
 import { MenuFacade } from './menu.facade';
@@ -19,13 +21,15 @@ export const menuFacadeDep: DependencyConfigurer<MenuFacade> = new DependencyCon
     menuBarServiceDep.getToken(),
     contextMenuServiceDep.getToken(),
     tabBarServiceDep.getToken(),
+    tabItemServiceDep.getToken(),
   ],
   factory: (
     menuItemService: MenuItemService,
     menuBarService: MenuBarService,
     contextMenuService: ContextMenuService,
     tabBarService: TabBarService,
+    tabItemService: TabItemService,
   ) => {
-    return new DefaultMenuFacade(menuItemService, menuBarService, contextMenuService, tabBarService);
+    return new DefaultMenuFacade(menuItemService, menuBarService, contextMenuService, tabBarService, tabItemService);
   },
 });

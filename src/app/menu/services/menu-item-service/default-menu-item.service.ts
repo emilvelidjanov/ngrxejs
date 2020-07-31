@@ -17,13 +17,14 @@ export class DefaultMenuItemService implements MenuItemService {
   ) {}
 
   public createFromPartial(partial: EntityPartial<MenuItem>): MenuItem {
-    return {
+    const menuItem: MenuItem = {
       clickAction: null,
       isOpened: false,
       label: null,
       menuItemIds: [],
       ...partial,
-    } as MenuItem;
+    };
+    return menuItem;
   }
 
   public addMany(menuItems: MenuItem[]): void {
