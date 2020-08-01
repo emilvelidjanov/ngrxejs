@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 import { File } from 'src/app/filesystem/store/file/file.state';
+import { TabItem } from 'src/app/menu/store/tab-item/tab-item.state';
 
 import { editorActions } from '../../store/editor/editor.actions';
 import { editorSelectors } from '../../store/editor/editor.selectors';
@@ -94,5 +95,20 @@ export class DefaultEditorService implements EditorService {
         }),
       );
     }
+  }
+
+  public mapToTabItem(tabItem: TabItem, file: File): TabItem {
+    const newTabItem: TabItem = {
+      ...tabItem,
+      label: file.name + file.extension,
+      isClosable: true,
+      clickAction: {
+        type: editorActions.openFile.type,
+        props: {
+          id: file.id,
+        },
+      },
+    };
+    return newTabItem;
   }
 }

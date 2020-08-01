@@ -1,1 +1,16 @@
 @import 'src/mixins.scss';
+
+:host {
+  display: inline-block;
+}
+
+button {
+  @include label();
+}
+
+.closeIcon {
+  @include padx(0.25);
+  &:before {
+    @include utf8-symbol('2716');
+  }
+}

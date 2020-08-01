@@ -16,6 +16,7 @@ export interface MenuFacade {
   createTabItem(): Observable<TabItem>;
   selectTabBar(id: string): Observable<TabBar>;
   addTabItemsToTabBar(tabItems: TabItem[], tabBar: TabBar): void;
+  onClickTabItem(tabItem: TabItem): void;
   onClickMenuItem(menuItem: MenuItem): void;
   offClickMenuItemNestedMenuItems(): void;
   openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void;

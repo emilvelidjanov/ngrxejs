@@ -1,6 +1,6 @@
 import { Inject } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 import { FilesystemFacade } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade.dependency';
@@ -37,7 +37,10 @@ export class DefaultEditorFacade implements EditorFacade {
   public openFile(file: File, editor: Editor): void {
     if (!this.editorService.isOpenedFile(file, editor)) {
       this.filesystemFacade.loadFile(file);
-      const createTabItem$ = this.menuFacade.createTabItem().pipe(take(1));
+      const createTabItem$ = this.menuFacade.createTabItem().pipe(
+        map((tabItem) => this.editorService.mapToTabItem(tabItem, file)),
+        take(1),
+      );
       const selectTabBar$ = this.menuFacade.selectTabBar(editor.tabBarId).pipe(take(1));
       forkJoin([createTabItem$, selectTabBar$]).subscribe(([tabItem, tabBar]) => {
         this.editorService.addOpenedFiles([file], editor);

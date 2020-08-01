@@ -20,6 +20,7 @@ import { tabItemServiceDep } from './services/tab-item-service/tab-item.service.
 import { menuFeatureKey, metaReducers, reducers } from './store';
 import { ContextMenuEffects } from './store/context-menu/context-menu.effects';
 import { MenuItemEffects } from './store/menu-item/menu-item.effects';
+import { TabItemEffects } from './store/tab-item/tab-item.effects';
 
 @NgModule({
   declarations: [
@@ -31,10 +32,10 @@ import { MenuItemEffects } from './store/menu-item/menu-item.effects';
     TabItemComponent,
   ],
   imports: [
-    CoreModule,
     CommonModule,
+    CoreModule,
     StoreModule.forFeature(menuFeatureKey, reducers, { metaReducers }),
-    EffectsModule.forFeature([MenuItemEffects, ContextMenuEffects]),
+    EffectsModule.forFeature([MenuItemEffects, ContextMenuEffects, TabItemEffects]),
   ],
   providers: [],
   exports: [MenuBarComponent, ContextMenuComponent, ContextMenuTriggerDirective, TabBarComponent],

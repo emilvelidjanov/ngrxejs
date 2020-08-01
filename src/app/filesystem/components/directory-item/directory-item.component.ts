@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { filter, switchMap, take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
@@ -31,13 +31,13 @@ export class DirectoryItemComponent implements OnInit {
       select(directoryItemSelectors.selectEntityById, { id: this.directoryItemId }),
     );
     this.directory$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && !!directoryItem.directoryId),
+      filter((directoryItem) => !!directoryItem && directoryItem.directoryId !== null),
       switchMap((directoryItem) =>
         this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId })),
       ),
     );
     this.projectTree$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && !!directoryItem.projectTreeId),
+      filter((directoryItem) => !!directoryItem && directoryItem.projectTreeId !== null),
       switchMap((directoryItem) =>
         this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId })),
       ),

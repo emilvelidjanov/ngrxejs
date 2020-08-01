@@ -3,6 +3,8 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
+import { CoreModule } from '../core/core.module';
+import { FilesystemModule } from '../filesystem/filesystem.module';
 import { MenuModule } from '../menu/menu.module';
 
 import { EditorComponent } from './components/editor/editor.component';
@@ -15,9 +17,11 @@ import { EditorEffects } from './store/editor/editor.effects';
   declarations: [EditorComponent],
   imports: [
     CommonModule,
+    CoreModule,
+    MenuModule,
+    FilesystemModule,
     StoreModule.forFeature(editorFeatureKey, reducers, { metaReducers }),
     EffectsModule.forFeature([EditorEffects]),
-    MenuModule,
   ],
   providers: [],
   exports: [EditorComponent],

@@ -1,3 +1,8 @@
 <ng-container *ngIf="tabItem$ | async as tabItem">
-  TabItemComponent
+  <button (click)="click()">
+    {{ tabItem.label }}
+    <ng-container *ngIf="tabItem.isClosable">
+      <span class="closeIcon" (click)="close($event)"></span>
+    </ng-container>
+  </button>
 </ng-container>

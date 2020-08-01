@@ -7,4 +7,5 @@ export interface TabItemService {
   createFromPartial(partial: EntityPartial<TabItem>): TabItem;
   createDefault(): Observable<TabItem>;
   addMany(tabItems: TabItem[]): void;
+  dispatchClickAction(tabItem: TabItem): void;
 }

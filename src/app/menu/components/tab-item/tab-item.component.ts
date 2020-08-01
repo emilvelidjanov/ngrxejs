@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 
+import { tabItemActions } from '../../store/tab-item/tab-item.actions';
 import { tabItemSelectors } from '../../store/tab-item/tab-item.selectors';
 import { TabItem, TabItems } from '../../store/tab-item/tab-item.state';
 
@@ -20,5 +22,16 @@ export class TabItemComponent implements OnInit {
 
   public ngOnInit(): void {
     this.tabItem$ = this.store.pipe(select(tabItemSelectors.selectEntityById, { id: this.tabItemId }));
+  }
+
+  public click(): void {
+    this.tabItem$
+      .pipe(take(1))
+      .subscribe((tabItem) => this.store.dispatch(tabItemActions.onClick({ entity: tabItem })));
+  }
+
+  public close($event: MouseEvent): void {
+    $event.stopPropagation();
+    this.tabItem$.pipe(take(1)).subscribe((tabItem) => this.store.dispatch(tabItemActions.close({ entity: tabItem })));
   }
 }

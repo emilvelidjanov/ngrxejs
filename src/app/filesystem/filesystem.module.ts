@@ -3,6 +3,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
+import { CoreModule } from '../core/core.module';
 import { MenuModule } from '../menu/menu.module';
 
 import { DirectoryItemComponent } from './components/directory-item/directory-item.component';
@@ -25,6 +26,7 @@ import { ProjectTreeEffects } from './store/project-tree/project-tree.effects';
   declarations: [ProjectTreeComponent, FileItemComponent, DirectoryItemComponent],
   imports: [
     CommonModule,
+    CoreModule,
     MenuModule,
     StoreModule.forFeature(filesystemFeatureKey, reducers, { metaReducers }),
     EffectsModule.forFeature([ProjectTreeEffects, DirectoryItemEffects, FileItemEffects]),

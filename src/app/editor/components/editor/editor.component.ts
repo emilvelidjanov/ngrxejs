@@ -27,13 +27,13 @@ export class EditorComponent implements OnInit {
   public ngOnInit(): void {
     this.editor$ = this.store.pipe(select(editorSelectors.selectEntityById, { id: this.editorId }));
     this.focusedFile$ = this.editor$.pipe(
-      filter((editor) => !!editor && !!editor.focusedFileId),
+      filter((editor) => !!editor && editor.focusedFileId !== null),
       switchMap((editor) => this.store.pipe(select(fileSelectors.selectEntityById, { id: editor.focusedFileId }))),
-      filter((file) => file.isLoaded),
+      tap((file) => (this.whiteSpace = file.extension.includes('html') ? 'initial' : 'pre-wrap')),
     );
-    this.focusedFile$.subscribe(
-      (focusedFile) => (this.whiteSpace = focusedFile.extension.includes('html') ? 'initial' : 'pre-wrap'),
-    );
+    // this.focusedFile$.subscribe(
+    //   (focusedFile) => (this.whiteSpace = focusedFile.extension.includes('html') ? 'initial' : 'pre-wrap'),
+    // );
   }
 
   @HostListener('click')

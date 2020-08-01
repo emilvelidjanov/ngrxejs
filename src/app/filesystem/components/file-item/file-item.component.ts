@@ -29,11 +29,11 @@ export class FileItemComponent implements OnInit {
   public ngOnInit(): void {
     this.fileItem$ = this.store.pipe(select(fileItemSelectors.selectEntityById, { id: this.fileItemId }));
     this.file$ = this.fileItem$.pipe(
-      filter((fileItem) => !!fileItem && !!fileItem.fileId),
+      filter((fileItem) => !!fileItem && fileItem.fileId !== null),
       switchMap((fileItem) => this.store.pipe(select(fileSelectors.selectEntityById, { id: fileItem.fileId }))),
     );
     this.projectTree$ = this.fileItem$.pipe(
-      filter((fileItem) => !!fileItem && !!fileItem.projectTreeId),
+      filter((fileItem) => !!fileItem && fileItem.projectTreeId !== null),
       switchMap((fileItem) =>
         this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: fileItem.projectTreeId })),
       ),
