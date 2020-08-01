@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, switchMap, take, tap } from 'rxjs/operators';
@@ -20,6 +20,7 @@ export class EditorComponent implements OnInit {
   @Input() public editorId: Id;
   public editor$: Observable<Editor>;
   public focusedFile$: Observable<File>;
+  public whiteSpace: string;
 
   constructor(private store: Store<Editors>) {}
 
@@ -29,6 +30,9 @@ export class EditorComponent implements OnInit {
       filter((editor) => !!editor && !!editor.focusedFileId),
       switchMap((editor) => this.store.pipe(select(fileSelectors.selectEntityById, { id: editor.focusedFileId }))),
       filter((file) => file.isLoaded),
+    );
+    this.focusedFile$.subscribe(
+      (focusedFile) => (this.whiteSpace = focusedFile.extension.includes('html') ? 'initial' : 'pre-wrap'),
     );
   }
 
