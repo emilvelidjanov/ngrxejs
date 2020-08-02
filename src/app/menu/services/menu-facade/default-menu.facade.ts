@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { MenuBar } from '../../store/menu-bar/menu-bar.state';
@@ -59,12 +59,24 @@ export class DefaultMenuFacade implements MenuFacade {
     return this.tabItemService.createDefault();
   }
 
-  public selectTabBar(id: string): Observable<TabBar> {
+  public selectTabBar(id: Id): Observable<TabBar> {
     return this.tabBarService.select(id);
+  }
+
+  public selectTabItem(id: Id): Observable<TabItem> {
+    return this.tabItemService.select(id);
   }
 
   public addTabItemsToTabBar(tabItems: TabItem[], tabBar: TabBar): void {
     this.tabBarService.addTabItems(tabItems, tabBar);
+  }
+
+  public removeTabItemsFromTabBar(tabItems: TabItem[], tabBar: TabBar): void {
+    this.tabBarService.removeTabItems(tabItems, tabBar);
+  }
+
+  public removeTabItems(tabItems: TabItem[]): void {
+    this.tabItemService.removeMany(tabItems);
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
@@ -89,5 +101,9 @@ export class DefaultMenuFacade implements MenuFacade {
 
   public closeContextMenu(contextMenu: ContextMenu): void {
     this.contextMenuService.close(contextMenu);
+  }
+
+  public closeTabItem(tabItem: TabItem): void {
+    this.tabItemService.dispatchCloseAction(tabItem);
   }
 }

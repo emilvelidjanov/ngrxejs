@@ -14,4 +14,6 @@ export interface EditorService {
   addOpenedFiles(files: File[], editor: Editor): void;
   focusFile(file: File, editor: Editor): void;
   mapToTabItem(tabItem: TabItem, file: File): TabItem;
+  getOpenedFileIndex(file: File, editor: Editor): number;
+  removeOpenedFiles(files: File[], editor: Editor): void;
 }

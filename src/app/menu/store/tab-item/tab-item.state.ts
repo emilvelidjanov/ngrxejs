@@ -9,6 +9,7 @@ export interface TabItem extends Entity {
   label: string;
   isClosable: boolean;
   clickAction: ActionDescriptor;
+  closeAction: ActionDescriptor;
 }
 
 export const entityName = 'TabItem';

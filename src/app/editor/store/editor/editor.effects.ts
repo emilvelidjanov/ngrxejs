@@ -36,4 +36,15 @@ export class EditorEffects {
       ),
     { dispatch: false },
   );
+
+  public closeFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.closeFile),
+        switchMap((action) => this.filesystemFacade.selectFile(action.id).pipe(take(1))),
+        withLatestFrom(this.editorFacade.selectFocusedEditor()), // TODO: focused can be wrong here with multiple editors
+        tap(([file, editor]) => this.editorFacade.closeFile(file, editor)),
+      ),
+    { dispatch: false },
+  );
 }

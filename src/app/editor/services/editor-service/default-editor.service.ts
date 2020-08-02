@@ -108,7 +108,53 @@ export class DefaultEditorService implements EditorService {
           id: file.id,
         },
       },
+      closeAction: {
+        type: editorActions.closeFile.type,
+        props: {
+          id: file.id,
+        },
+      },
     };
     return newTabItem;
+  }
+
+  public getOpenedFileIndex(file: File, editor: Editor): number {
+    return editor.openedFileIds.indexOf(file.id);
+  }
+
+  public removeOpenedFiles(files: File[], editor: Editor): void {
+    if (files && files.length) {
+      const toRemove = files.filter((file) => editor.openedFileIds.includes(file.id)).map((file) => file.id);
+      if (toRemove.length) {
+        const newOpenedFileIds = editor.openedFileIds.filter((id) => !toRemove.includes(id));
+        this.store.dispatch(
+          editorActions.updateOne({
+            update: {
+              id: editor.id,
+              changes: {
+                openedFileIds: newOpenedFileIds,
+              },
+            },
+          }),
+        );
+        if (toRemove.includes(editor.focusedFileId)) {
+          let index = editor.openedFileIds.indexOf(editor.focusedFileId);
+          if (index >= newOpenedFileIds.length) {
+            index = newOpenedFileIds.length - 1;
+          }
+          const newFocusedFileId = newOpenedFileIds[index] ? newOpenedFileIds[index] : null;
+          this.store.dispatch(
+            editorActions.updateOne({
+              update: {
+                id: editor.id,
+                changes: {
+                  focusedFileId: newFocusedFileId,
+                },
+              },
+            }),
+          );
+        }
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Inject } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
 import { FilesystemFacade } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade.dependency';
@@ -49,5 +49,21 @@ export class DefaultEditorFacade implements EditorFacade {
       });
     }
     this.editorService.focusFile(file, editor);
+  }
+
+  public closeFile(file: File, editor: Editor): void {
+    if (this.editorService.isOpenedFile(file, editor)) {
+      const index = this.editorService.getOpenedFileIndex(file, editor);
+      const selectTabBar$ = this.menuFacade.selectTabBar(editor.tabBarId).pipe(take(1));
+      const selectTabItem$ = selectTabBar$.pipe(
+        switchMap((tabBar) => this.menuFacade.selectTabItem(tabBar.tabItemIds[index])),
+        take(1),
+      );
+      forkJoin([selectTabBar$, selectTabItem$]).subscribe(([tabBar, tabItem]) => {
+        this.menuFacade.removeTabItemsFromTabBar([tabItem], tabBar);
+        this.menuFacade.removeTabItems([tabItem]);
+        this.editorService.removeOpenedFiles([file], editor);
+      });
+    }
   }
 }

@@ -112,7 +112,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public loadFile(file: File): void {
     if (!file.isLoaded) {
-      const loadFile$ = this.filesystemService.loadFile(file.path).pipe(take(1));
+      const loadFile$ = this.filesystemService.loadFile(file.path);
       loadFile$.subscribe((content) => this.fileService.updateLoaded(file, content));
     }
   }

@@ -7,4 +7,5 @@ export const editorActions = {
   ...editorDomainStateConfig.getActions(),
   onClick: createAction(editorDomainStateConfig.getEffectActionType('On Click'), props<PropEntity<Editor>>()),
   openFile: createAction(editorDomainStateConfig.getEffectActionType('Open File'), props<PropId>()),
+  closeFile: createAction(editorDomainStateConfig.getEffectActionType('Close File'), props<PropId>()),
 };

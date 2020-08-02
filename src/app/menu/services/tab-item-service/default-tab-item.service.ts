@@ -31,6 +31,7 @@ export class DefaultTabItemService implements TabItemService {
       label: null,
       isClosable: false,
       clickAction: null,
+      closeAction: null,
       ...partial,
     };
     return tabItem;
@@ -50,7 +51,21 @@ export class DefaultTabItemService implements TabItemService {
     }
   }
 
+  public removeMany(tabItems: TabItem[]): void {
+    if (tabItems && tabItems.length) {
+      this.store.dispatch(tabItemActions.removeMany({ ids: tabItems.map((tabItem) => tabItem.id) }));
+    }
+  }
+
+  public select(id: Id): Observable<TabItem> {
+    return this.store.pipe(select(tabItemSelectors.selectEntityById, { id }));
+  }
+
   public dispatchClickAction(tabItem: TabItem): void {
     this.actionDescriptorService.dispatch(tabItem.clickAction, this.store);
+  }
+
+  public dispatchCloseAction(tabItem: TabItem): void {
+    this.actionDescriptorService.dispatch(tabItem.closeAction, this.store);
   }
 }

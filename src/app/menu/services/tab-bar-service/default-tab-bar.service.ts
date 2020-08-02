@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import { tabBarActions } from '../../store/tab-bar/tab-bar.actions';
 import { tabBarSelectors } from '../../store/tab-bar/tab-bar.selectors';
@@ -28,7 +28,7 @@ export class DefaultTabBarService implements TabBarService {
     }
   }
 
-  public select(id: string): Observable<TabBar> {
+  public select(id: Id): Observable<TabBar> {
     return this.store.pipe(select(tabBarSelectors.selectEntityById, { id }));
   }
 
@@ -42,6 +42,26 @@ export class DefaultTabBarService implements TabBarService {
               id: tabBar.id,
               changes: {
                 tabItemIds: [...tabBar.tabItemIds, ...toAdd.map((tabItem) => tabItem.id)],
+              },
+            },
+          }),
+        );
+      }
+    }
+  }
+
+  public removeTabItems(tabItems: TabItem[], tabBar: TabBar): void {
+    if (tabBar && tabItems) {
+      const toRemove = tabItems
+        .filter((tabItem) => tabBar.tabItemIds.includes(tabItem.id))
+        .map((tabItem) => tabItem.id);
+      if (toRemove.length) {
+        this.store.dispatch(
+          tabBarActions.updateOne({
+            update: {
+              id: tabBar.id,
+              changes: {
+                tabItemIds: tabBar.tabItemIds.filter((id) => !toRemove.includes(id)),
               },
             },
           }),

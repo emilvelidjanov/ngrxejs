@@ -20,5 +20,12 @@ export class TabItemEffects {
     { dispatch: false },
   );
 
-  public close$ = createEffect(() => this.actions$.pipe(ofType(tabItemActions.close)), { dispatch: false });
+  public close$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(tabItemActions.close),
+        tap((action) => this.menuFacade.closeTabItem(action.entity)),
+      ),
+    { dispatch: false },
+  );
 }
