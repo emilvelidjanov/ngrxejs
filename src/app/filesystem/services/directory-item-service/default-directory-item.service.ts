@@ -84,4 +84,12 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
       }),
     );
   }
+
+  public selectByDirectoryIds(directoryIds: Id[]): Observable<DirectoryItem[]> {
+    return this.store.pipe(
+      select(directoryItemSelectors.selectEntitiesByPredicate, {
+        predicate: (entity) => directoryIds.includes(entity.directoryId),
+      }),
+    );
+  }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
-import { share, switchMap, take, takeWhile } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { share, switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
@@ -56,31 +56,48 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       takeWhile((result) => !result.canceled),
       share(),
     );
+    const selectExistingProject$ = openDialog$.pipe(
+      switchMap((result) => this.projectService.selectByPath(result.filePaths[0])),
+      takeWhile((project) => !!project),
+      take(1),
+      share(),
+    );
     const loadDirectory$ = openDialog$.pipe(
+      takeUntil(selectExistingProject$),
       switchMap((result) => this.filesystemService.loadDirectory(result.filePaths[0])),
     );
-    const filesAndDirs$ = loadDirectory$.pipe(
+    const createFilesAndDirs$ = loadDirectory$.pipe(
       switchMap((results) => this.createFilesAndDirectories(results)),
       share(),
     );
-    const project$ = forkJoin([openDialog$, filesAndDirs$]).pipe(
+    const createProject$ = forkJoin([openDialog$, createFilesAndDirs$]).pipe(
       switchMap(([openDialogResult, [files, directories]]) =>
         this.projectService.createOne(openDialogResult, files, directories),
       ),
     );
-    const items$ = filesAndDirs$.pipe(
+    const createItems$ = createFilesAndDirs$.pipe(
       switchMap(([files, directories]) => this.createItems(files, directories, projectTree)),
     );
-    forkJoin([filesAndDirs$, items$, project$]).subscribe(
-      ([[files, directories], [fileItems, directoryItems], project]) => {
-        this.fileService.setAll(files);
-        this.directoryService.setAll(directories);
-        this.projectService.set(project);
-        this.fileItemService.setAll(fileItems);
-        this.directoryItemService.setAll(directoryItems);
-        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems);
-      },
+    const selectExistingItems$ = selectExistingProject$.pipe(
+      switchMap((project) => this.selectExistingItems(project.fileIds, project.directoryIds)),
     );
+    const dispatchNewProject$ = forkJoin([createFilesAndDirs$, createItems$, createProject$]).pipe(
+      tap(([[files, directories], [fileItems, directoryItems], project]) => {
+        this.fileService.addMany(files);
+        this.directoryService.addMany(directories);
+        this.projectService.addMany([project]);
+        this.fileItemService.addMany(fileItems);
+        this.directoryItemService.addMany(directoryItems);
+        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems);
+      }),
+    );
+    const dispatchExistingProject$ = forkJoin([selectExistingProject$, selectExistingItems$]).pipe(
+      tap(([project, [fileItems, directoryItems]]) =>
+        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems),
+      ),
+    );
+    dispatchNewProject$.subscribe();
+    dispatchExistingProject$.subscribe();
   }
 
   public openDirectoryItem(directoryItem: DirectoryItem): void {
@@ -118,10 +135,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   private createFilesAndDirectories(results: LoadDirectoryResult[]): Observable<[File[], Directory[]]> {
-    const filesAndDirs$ = forkJoin([
-      this.fileService.createMany(results),
-      this.directoryService.createMany(results),
-    ]).pipe(take(1));
+    const filesAndDirs$ = forkJoin([this.fileService.createMany(results), this.directoryService.createMany(results)]);
     return filesAndDirs$;
   }
 
@@ -133,7 +147,15 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const items$ = forkJoin([
       this.fileItemService.createMany(files, projectTree),
       this.directoryItemService.createMany(directories, projectTree),
-    ]).pipe(take(1));
+    ]);
+    return items$;
+  }
+
+  public selectExistingItems(fileIds: Id[], directoryIds: Id[]): Observable<[FileItem[], DirectoryItem[]]> {
+    const items$ = forkJoin([
+      this.fileItemService.selectByFileIds(fileIds).pipe(take(1)),
+      this.directoryItemService.selectByDirectoryIds(directoryIds).pipe(take(1)),
+    ]);
     return items$;
   }
 }

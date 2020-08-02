@@ -53,4 +53,10 @@ export class DefaultFileItemService implements FileItemService {
       this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
     }
   }
+
+  public selectByFileIds(fileIds: Id[]): Observable<FileItem[]> {
+    return this.store.pipe(
+      select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (entity) => fileIds.includes(entity.fileId) }),
+    );
+  }
 }

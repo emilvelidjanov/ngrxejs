@@ -32,7 +32,7 @@ export class DefaultProjectService implements ProjectService {
       map((id) => {
         const project: Project = {
           id,
-          directory: openDialogResult.filePaths[0],
+          path: openDialogResult.filePaths[0],
           name: openDialogResult.filenames[0],
           fileIds: files.map((file) => file.id),
           directoryIds: directories.map((directory) => directory.id),
@@ -46,5 +46,18 @@ export class DefaultProjectService implements ProjectService {
 
   public set(project: Project): void {
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
+  }
+
+  public addMany(projects: Project[]): void {
+    if (projects && projects.length) {
+      this.store.dispatch(projectActions.addMany({ entities: projects }));
+    }
+  }
+
+  public selectByPath(path: string): Observable<Project> {
+    return this.store.pipe(
+      select(projectSelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.path === path }),
+      map((entities) => (entities.length ? entities[0] : null)),
+    );
   }
 }

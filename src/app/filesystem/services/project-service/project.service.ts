@@ -8,4 +8,6 @@ import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 export interface ProjectService {
   createOne(openDialogResult: OpenDialogResult, files: File[], directories: Directory[]): Observable<Project>;
   set(project: Project): void;
+  addMany(projects: Project[]): void;
+  selectByPath(path: string): Observable<Project>;
 }

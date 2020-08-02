@@ -46,15 +46,14 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     const selectEntitiesByIds = createSelector(defSelectors.selectEntities, (entities: Dictionary<T>, props: PropIds) =>
       props.ids.map((id: Id) => entities[id]),
     );
-    const selectIsInStore = createSelector(
-      defSelectors.selectEntities,
-      (entities: Dictionary<T>, props: PropId) => entities[props.id] !== undefined,
+    const selectEntitiesByPredicate = createSelector(defSelectors.selectAll, (entities: T[], props: PropPredicate<T>) =>
+      entities.filter((entity) => props.predicate(entity)),
     );
     const selectors: EntityDomainSelectors<T> = {
       ...defSelectors,
       selectEntityById,
       selectEntitiesByIds,
-      selectIsInStore,
+      selectEntitiesByPredicate,
     };
     return selectors;
   }

@@ -6,7 +6,7 @@ export interface Projects extends EntityDomainState<Project> {}
 
 export interface Project extends Entity {
   name: string;
-  directory: string;
+  path: string;
   fileIds: Id[];
   directoryIds: Id[];
 }
