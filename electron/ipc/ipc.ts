@@ -14,4 +14,5 @@ export enum IpcChannelName {
   OPEN_DIALOG = 'open-dialog',
   LOAD_DIRECTORY = 'load-directory',
   LOAD_FILE = 'load-file',
+  STAT_PATH = 'stat-path',
 }

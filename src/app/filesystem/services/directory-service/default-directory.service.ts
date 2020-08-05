@@ -10,7 +10,7 @@ import { directoryActions } from '../../store/directory/directory.actions';
 import { directorySelectors } from '../../store/directory/directory.selectors';
 import { Directories, Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
-import { LoadDirectoryResult } from '../filesystem-service/filesystem.service';
+import { LoadDirectoryResult, StatResult } from '../filesystem-service/filesystem.service';
 
 import { DirectoryService } from './directory.service';
 
@@ -24,6 +24,13 @@ export class DefaultDirectoryService implements DirectoryService {
   ) {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
+
+  public addOne(directory: Directory): void {
+    if (directory) {
+      this.store.dispatch(directoryActions.addOne({ entity: directory }));
+    }
+  }
+
   public addMany(directories: Directory[]): void {
     if (directories && directories.length) {
       this.store.dispatch(directoryActions.addMany({ entities: directories }));
@@ -32,6 +39,26 @@ export class DefaultDirectoryService implements DirectoryService {
 
   public select(id: Id): Observable<Directory> {
     return this.store.pipe(select(directorySelectors.selectEntityById, { id }));
+  }
+
+  public createOne(stat: StatResult): Observable<Directory> {
+    const directory$ = this.directoryIds$.pipe(
+      map((ids) => this.idGeneratorService.nextId(ids)),
+      map((id) => {
+        // TODO: use default factory method
+        const directory: Directory = {
+          id,
+          directoryIds: [],
+          fileIds: [],
+          isLoaded: false,
+          name: stat.name,
+          path: stat.path,
+        };
+        return directory;
+      }),
+      take(1),
+    );
+    return directory$;
   }
 
   public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]> {
@@ -44,8 +71,8 @@ export class DefaultDirectoryService implements DirectoryService {
           const directoryResult = directoryResults[index];
           const directory: Directory = {
             id,
-            fileIds: null,
-            directoryIds: null,
+            fileIds: [],
+            directoryIds: [],
             isLoaded: false,
             name: directoryResult.name,
             path: directoryResult.path,
@@ -74,6 +101,13 @@ export class DefaultDirectoryService implements DirectoryService {
           },
         },
       }),
+    );
+  }
+
+  public selectByPath(path: string): Observable<Directory> {
+    return this.store.pipe(
+      select(directorySelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.path === path }),
+      map((entities) => (entities.length ? entities[0] : null)),
     );
   }
 }

@@ -7,11 +7,9 @@ import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-serv
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 
 import { Directory } from '../../store/directory/directory.state';
-import { File } from '../../store/file/file.state';
 import { projectActions } from '../../store/project/project.actions';
 import { projectSelectors } from '../../store/project/project.selectors';
 import { Project, Projects } from '../../store/project/project.state';
-import { OpenDialogResult } from '../filesystem-service/filesystem.service';
 
 import { ProjectService } from './project.service';
 
@@ -26,16 +24,13 @@ export class DefaultProjectService implements ProjectService {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
-  public createOne(openDialogResult: OpenDialogResult, files: File[], directories: Directory[]): Observable<Project> {
+  public createOne(rootDirectory: Directory): Observable<Project> {
     const project$ = this.projectIds$.pipe(
       map((ids) => this.idGeneratorService.nextId(ids)),
       map((id) => {
         const project: Project = {
           id,
-          path: openDialogResult.filePaths[0],
-          name: openDialogResult.filenames[0],
-          fileIds: files.map((file) => file.id),
-          directoryIds: directories.map((directory) => directory.id),
+          rootDirectoryId: rootDirectory.id,
         };
         return project;
       }),
@@ -48,15 +43,23 @@ export class DefaultProjectService implements ProjectService {
     this.store.dispatch(projectActions.setAll({ entities: [project] }));
   }
 
+  public addOne(project: Project): void {
+    if (project) {
+      this.store.dispatch(projectActions.addOne({ entity: project }));
+    }
+  }
+
   public addMany(projects: Project[]): void {
     if (projects && projects.length) {
       this.store.dispatch(projectActions.addMany({ entities: projects }));
     }
   }
 
-  public selectByPath(path: string): Observable<Project> {
+  public selectByRootDirectory(directory: Directory): Observable<Project> {
     return this.store.pipe(
-      select(projectSelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.path === path }),
+      select(projectSelectors.selectEntitiesByPredicate, {
+        predicate: (entity) => entity.rootDirectoryId === directory.id,
+      }),
       map((entities) => (entities.length ? entities[0] : null)),
     );
   }

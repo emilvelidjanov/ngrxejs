@@ -10,11 +10,11 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
     this.window = window;
   }
 
-  getName(): string {
+  public getName(): string {
     return IpcChannelName.OPEN_DIALOG;
   }
 
-  handle(event: IpcMainEvent, request: IpcRequest<OpenDialogOptions>): void {
+  public handle(event: IpcMainEvent, request: IpcRequest<OpenDialogOptions>): void {
     dialog
       .showOpenDialog(this.window, request.params)
       .then((value) => {

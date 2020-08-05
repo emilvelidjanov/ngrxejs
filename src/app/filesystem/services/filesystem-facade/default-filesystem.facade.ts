@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { share, switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
@@ -57,47 +57,47 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       share(),
     );
     const selectExistingProject$ = openDialog$.pipe(
-      switchMap((result) => this.projectService.selectByPath(result.filePaths[0])),
+      switchMap((result) => this.directoryService.selectByPath(result.filePaths[0])),
+      takeWhile((directory) => !!directory),
+      switchMap((directory) => this.projectService.selectByRootDirectory(directory)),
       takeWhile((project) => !!project),
       take(1),
       share(),
     );
-    const loadDirectory$ = openDialog$.pipe(
-      takeUntil(selectExistingProject$),
-      switchMap((result) => this.filesystemService.loadDirectory(result.filePaths[0])),
+    const selectExistingRootDirectoryItem$ = selectExistingProject$.pipe(
+      switchMap((project) => this.directoryService.select(project.rootDirectoryId)),
+      switchMap((directory) => this.directoryItemService.selectByDirectory(directory)),
+      take(1),
     );
-    const createFilesAndDirs$ = loadDirectory$.pipe(
-      switchMap((results) => this.createFilesAndDirectories(results)),
+    const createRootDirectory$ = openDialog$.pipe(
+      takeUntil(selectExistingProject$),
+      switchMap((result) => this.filesystemService.statPath(result.filePaths[0])),
+      takeWhile((stat) => stat.isDirectory),
+      switchMap((stat) => this.directoryService.createOne(stat)),
       share(),
     );
-    const createProject$ = forkJoin([openDialog$, createFilesAndDirs$]).pipe(
-      switchMap(([openDialogResult, [files, directories]]) =>
-        this.projectService.createOne(openDialogResult, files, directories),
-      ),
+    const createRootDirectoryItem$ = createRootDirectory$.pipe(
+      switchMap((directory) => this.directoryItemService.createOne(directory, projectTree)),
     );
-    const createItems$ = createFilesAndDirs$.pipe(
-      switchMap(([files, directories]) => this.createItems(files, directories, projectTree)),
+    const createProject$ = createRootDirectory$.pipe(
+      switchMap((directory) => this.projectService.createOne(directory)),
     );
-    const selectExistingItems$ = selectExistingProject$.pipe(
-      switchMap((project) => this.selectExistingItems(project.fileIds, project.directoryIds)),
-    );
-    const dispatchNewProject$ = forkJoin([createFilesAndDirs$, createItems$, createProject$]).pipe(
-      tap(([[files, directories], [fileItems, directoryItems], project]) => {
-        this.fileService.addMany(files);
-        this.directoryService.addMany(directories);
-        this.projectService.addMany([project]);
-        this.fileItemService.addMany(fileItems);
-        this.directoryItemService.addMany(directoryItems);
-        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems);
+    const dispatchNew$ = forkJoin([createRootDirectory$, createRootDirectoryItem$, createProject$]).pipe(
+      tap(([directory, directoryItem, project]) => {
+        this.directoryService.addOne(directory);
+        this.directoryItemService.addOne(directoryItem);
+        this.projectService.addOne(project);
+        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem);
+        this.openDirectoryItem(directoryItem);
       }),
     );
-    const dispatchExistingProject$ = forkJoin([selectExistingProject$, selectExistingItems$]).pipe(
-      tap(([project, [fileItems, directoryItems]]) =>
-        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItems, fileItems),
+    const dispatchExisting$ = forkJoin([selectExistingProject$, selectExistingRootDirectoryItem$]).pipe(
+      tap(([project, directoryItem]) =>
+        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem),
       ),
     );
-    dispatchNewProject$.subscribe();
-    dispatchExistingProject$.subscribe();
+    dispatchNew$.subscribe();
+    dispatchExisting$.subscribe();
   }
 
   public openDirectoryItem(directoryItem: DirectoryItem): void {

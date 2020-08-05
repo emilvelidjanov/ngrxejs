@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
 
-import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from './filesystem.service';
+import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } from './filesystem.service';
 
 @Injectable()
 export class LocalFilesystemService implements FilesystemService {
@@ -32,6 +32,14 @@ export class LocalFilesystemService implements FilesystemService {
       params: path,
     };
     const response$ = this.ipcService.send<string, string>(IpcChannelName.LOAD_FILE, request);
+    return response$;
+  }
+
+  public statPath(path: string): Observable<StatResult> {
+    const request: IpcRequest<string> = {
+      params: path,
+    };
+    const response$ = this.ipcService.send<string, StatResult>(IpcChannelName.STAT_PATH, request);
     return response$;
   }
 }

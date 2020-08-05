@@ -6,8 +6,7 @@ export interface ProjectTrees extends EntityDomainState<ProjectTree> {}
 
 export interface ProjectTree extends Entity {
   projectId: Id;
-  fileItemIds: Id[];
-  directoryItemIds: Id[];
+  rootDirectoryItemId: Id;
   contextMenuId: string;
   fileItemContextMenuIds: { [extension: string]: Id };
   directoryItemContextMenuId: string;

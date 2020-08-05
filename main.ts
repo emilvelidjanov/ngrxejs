@@ -5,6 +5,7 @@ import { OpenDialogChannel } from './electron/ipc/filesystem/open-dialog-channel
 import { LoadDirectoryChannel } from './electron/ipc/filesystem/load-directory-channel';
 import { PathUtils } from './electron/utils/path.utils';
 import { LoadFileChannel } from './electron/ipc/filesystem/load-file-channel';
+import { StatPathChannel } from './electron/ipc/filesystem/stat-path-channel';
 
 class Main {
   private readonly PROD_SWITCH: string = 'prod';
@@ -26,9 +27,9 @@ class Main {
 
   public init(): void {
     app.allowRendererProcessReuse = true;
-    app.on('ready', this.onReady);
-    app.on('window-all-closed', this.onWindowAllClosed);
-    app.on('activate', this.onActivate);
+    app.on('ready', () => this.onReady());
+    app.on('window-all-closed', () => this.onWindowAllClosed());
+    app.on('activate', () => this.onActivate());
   }
 
   private onReady(): void {
@@ -48,15 +49,16 @@ class Main {
     this.mainWindow.removeMenu();
     this.mainWindow.webContents.openDevTools();
     const _this = this;
-    this.mainWindow.on('closed', _this.windowOnClosed);
-    this.mainWindow.webContents.on('did-fail-load', _this.loadIndexFile);
+    this.mainWindow.on('closed', () => this.windowOnClosed());
+    this.mainWindow.webContents.on('did-fail-load', () => this.loadIndexFile());
   }
 
   private createIpcChannels(): IpcChannel<any>[] {
     const openDialogChannel = new OpenDialogChannel(this.mainWindow);
     const loadDirectoryChannel = new LoadDirectoryChannel();
     const loadFileChannel = new LoadFileChannel();
-    return [openDialogChannel, loadDirectoryChannel, loadFileChannel];
+    const statPathChannel = new StatPathChannel();
+    return [openDialogChannel, loadDirectoryChannel, loadFileChannel, statPathChannel];
   }
 
   private windowOnClosed(): void {
@@ -81,7 +83,7 @@ class Main {
 
   public registerIpcChannels(ipcChannels: IpcChannel<any>[]): void {
     ipcChannels.forEach((channel) => {
-      ipcMain.on(channel.getName(), channel.handle);
+      ipcMain.on(channel.getName(), (event, args) => channel.handle(event, args));
     });
   }
 }

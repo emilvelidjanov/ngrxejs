@@ -4,20 +4,28 @@ import { take } from 'rxjs/operators';
 
 export class FsUtils {
   static readDirectory(path: string): Observable<fs.Dirent[]> {
-    let options: ReaddirOptions = {
+    const options: ReaddirOptions = {
       encoding: 'utf-8',
       withFileTypes: true,
     };
-    const readDirectoryCallback = bindNodeCallback<fs.PathLike, any, fs.Dirent[]>(fs.readdir);
+    const readDirectoryCallback = bindNodeCallback<fs.PathLike, object, fs.Dirent[]>(fs.readdir);
     return readDirectoryCallback(path, options).pipe(take(1));
   }
 
   static readFile(path: string): Observable<string> {
-    let options: ReadFileOptions = {
+    const options: ReadFileOptions = {
       encoding: 'utf8',
     };
-    const readFileCallback = bindNodeCallback<fs.PathLike, any, string>(fs.readFile);
+    const readFileCallback = bindNodeCallback<fs.PathLike, object, string>(fs.readFile);
     return readFileCallback(path, options).pipe(take(1));
+  }
+
+  static statPath(path: string) {
+    const options: StatOptions = {
+      bigint: false,
+    };
+    const statPathCallback = bindNodeCallback<fs.PathLike, object, fs.Stats>(fs.stat);
+    return statPathCallback(path, options).pipe(take(1));
   }
 }
 
@@ -29,4 +37,8 @@ export interface ReaddirOptions {
 export interface ReadFileOptions {
   encoding?: string;
   flag?: string;
+}
+
+export interface StatOptions {
+  bigint: boolean;
 }

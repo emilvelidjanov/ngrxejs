@@ -17,13 +17,47 @@ import { DirectoryItemService } from './directory-item.service';
 
 @Injectable()
 export class DefaultDirectoryItemService implements DirectoryItemService {
-  private directoryItemIds: Observable<Id[]>;
+  private directoryItemIds$: Observable<Id[]>;
 
   constructor(
     private store: Store<DirectoryItems>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
-    this.directoryItemIds = this.store.pipe(select(directoryItemSelectors.selectIds));
+    this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public selectByDirectory(directory: Directory): Observable<DirectoryItem> {
+    const directoryItem$ = this.store.pipe(
+      select(directoryItemSelectors.selectEntitiesByPredicate, {
+        predicate: (entity) => entity.directoryId === directory.id,
+      }),
+      map((directoryItems) => directoryItems[0]),
+    );
+    return directoryItem$;
+  }
+
+  public addOne(directoryItem: DirectoryItem): void {
+    this.store.dispatch(directoryItemActions.addOne({ entity: directoryItem }));
+  }
+
+  public createOne(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem> {
+    const directoryItem$ = this.directoryItemIds$.pipe(
+      map((ids) => this.idGeneratorService.nextId(ids)),
+      map((id) => {
+        // TODO: use default factory method --> EntityService?
+        const directoryItem: DirectoryItem = {
+          id,
+          directoryId: directory.id,
+          directoryItemIds: [],
+          fileItemIds: [],
+          isOpened: false,
+          projectTreeId: projectTree.id,
+        };
+        return directoryItem;
+      }),
+      take(1), // TODO: don't assume take(1)
+    );
+    return directoryItem$;
   }
 
   public addMany(directoryItems: DirectoryItem[]): void {
@@ -34,7 +68,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
 
   public createMany(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
     const size = directories.length;
-    const directoryItems$ = this.directoryItemIds.pipe(
+    const directoryItems$ = this.directoryItemIds$.pipe(
       map((ids) => this.idGeneratorService.nextNIds(size, ids)),
       map((ids) =>
         ids.map((id, index) => {

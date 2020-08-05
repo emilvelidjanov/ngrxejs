@@ -26,6 +26,7 @@ export class DefaultTabItemService implements TabItemService {
     this.tabItemIds = this.store.pipe(select(tabItemSelectors.selectIds));
   }
 
+  // TODO: abstract these common methods --> EntityService
   public createFromPartial(partial: EntityPartial<TabItem>): TabItem {
     const tabItem: TabItem = {
       label: null,

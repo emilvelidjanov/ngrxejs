@@ -5,10 +5,7 @@ import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-dom
 export interface Projects extends EntityDomainState<Project> {}
 
 export interface Project extends Entity {
-  name: string;
-  path: string;
-  fileIds: Id[];
-  directoryIds: Id[];
+  rootDirectoryId: Id;
 }
 
 export const entityName = 'Project';

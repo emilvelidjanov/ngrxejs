@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import { DirectoryItem } from '../../store/directory-item/directory-item.state';
-import { FileItem } from '../../store/file-item/file-item.state';
 import { projectTreeActions } from '../../store/project-tree/project-tree.actions';
 import { projectTreeSelectors } from '../../store/project-tree/project-tree.selectors';
 import { ProjectTree, ProjectTrees } from '../../store/project-tree/project-tree.state';
@@ -16,13 +15,27 @@ import { ProjectTreeService } from './project-tree.service';
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
 
+  public updateRootDirectoryItem(directoryItem: DirectoryItem, projectTree: ProjectTree): void {
+    if (projectTree.rootDirectoryItemId !== directoryItem.id) {
+      this.store.dispatch(
+        projectTreeActions.updateOne({
+          update: {
+            id: projectTree.id,
+            changes: {
+              rootDirectoryItemId: directoryItem.id,
+            },
+          },
+        }),
+      );
+    }
+  }
+
   public createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree {
     const projectTree: ProjectTree = {
       contextMenuId: null,
       directoryItemContextMenuId: null,
-      directoryItemIds: [],
+      rootDirectoryItemId: null,
       fileItemContextMenuIds: {},
-      fileItemIds: [],
       projectId: null,
       ...partial,
     };
@@ -33,20 +46,14 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     return this.store.pipe(select(projectTreeSelectors.selectEntityById, { id }));
   }
 
-  public updateOpenedProject(
-    projectTree: ProjectTree,
-    project: Project,
-    directoryItems: DirectoryItem[],
-    fileItems: FileItem[],
-  ): void {
+  public updateOpenedProject(projectTree: ProjectTree, project: Project, rootDirectory: DirectoryItem): void {
     this.store.dispatch(
       projectTreeActions.updateOne({
         update: {
           id: projectTree.id,
           changes: {
             projectId: project.id,
-            directoryItemIds: directoryItems.map((directoryItem) => directoryItem.id),
-            fileItemIds: fileItems.map((fileItem) => fileItem.id),
+            rootDirectoryItemId: rootDirectory.id,
           },
         },
       }),

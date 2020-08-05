@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { FilesystemService, LoadDirectoryResult, OpenDialogResult } from './filesystem.service';
+import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } from './filesystem.service';
 
 @Injectable()
 export class RemoteFilesystemService implements FilesystemService {
@@ -17,5 +17,9 @@ export class RemoteFilesystemService implements FilesystemService {
 
   public loadFile(_path: string): Observable<string> {
     throw new Error('RemoteFilesystemService#loadFile not implemented.');
+  }
+
+  public statPath(path: string): Observable<StatResult> {
+    throw new Error('RemoteFilesystemService#statPath not implemented.');
   }
 }
