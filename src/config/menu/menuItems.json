@@ -15,6 +15,12 @@
     }
   },
   {
+    "id": "new",
+    "label": "New...",
+    "menuItemIds": ["A", "B", "C"],
+    "postSymbol": "25B6"
+  },
+  {
     "id": "editor",
     "label": "Editor",
     "menuItemIds": ["A", "B", "C"]

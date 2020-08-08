@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
+import { PrePostSymbolsComponent } from './components/pre-post-symbols/pre-post-symbols.component';
 import { OffClickDirective } from './directives/off-click.directive';
 import { ElectronService } from './electron/electron-service/electron.service';
 import { ipcServiceDep } from './electron/ipc-service/ipc-service.dependency';
@@ -13,9 +14,9 @@ import { domServiceDep } from './services/DOM-service/dom.service.dependency';
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';
 
 @NgModule({
-  declarations: [OffClickDirective],
+  declarations: [OffClickDirective, PrePostSymbolsComponent],
   imports: [CommonModule],
-  exports: [OffClickDirective],
+  exports: [OffClickDirective, PrePostSymbolsComponent],
 })
 export class CoreModule {
   public static forRoot(): ModuleWithProviders {

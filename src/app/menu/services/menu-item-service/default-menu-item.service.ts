@@ -18,10 +18,12 @@ export class DefaultMenuItemService implements MenuItemService {
 
   public createFromPartial(partial: EntityPartial<MenuItem>): MenuItem {
     const menuItem: MenuItem = {
-      clickAction: null,
-      isOpened: false,
       label: null,
+      clickAction: null,
       menuItemIds: [],
+      isOpened: false,
+      preSymbol: null,
+      postSymbol: null,
       ...partial,
     };
     return menuItem;

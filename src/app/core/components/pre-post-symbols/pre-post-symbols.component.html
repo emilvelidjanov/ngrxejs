@@ -1,0 +1,7 @@
+<ng-container *ngIf="preSymbol">
+  <span class="pre-symbol" [innerHTML]="'&\#x' + preSymbol"></span>
+</ng-container>
+<span class="text">{{ text }}</span>
+<ng-container *ngIf="postSymbol">
+  <span class="post-symbol" [innerHTML]="'&\#x' + postSymbol" [style.margin-left]="marginLeft"></span>
+</ng-container>

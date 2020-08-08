@@ -10,6 +10,8 @@ export interface MenuItem extends Entity {
   clickAction: ActionDescriptor;
   menuItemIds: Id[];
   isOpened: boolean;
+  preSymbol: string;
+  postSymbol: string;
 }
 
 export const entityName = 'MenuItem';
