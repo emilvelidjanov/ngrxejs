@@ -15,21 +15,6 @@ import { ProjectTreeService } from './project-tree.service';
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
 
-  public updateRootDirectoryItem(directoryItem: DirectoryItem, projectTree: ProjectTree): void {
-    if (projectTree.rootDirectoryItemId !== directoryItem.id) {
-      this.store.dispatch(
-        projectTreeActions.updateOne({
-          update: {
-            id: projectTree.id,
-            changes: {
-              rootDirectoryItemId: directoryItem.id,
-            },
-          },
-        }),
-      );
-    }
-  }
-
   public createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree {
     const projectTree: ProjectTree = {
       contextMenuId: null,
@@ -46,14 +31,14 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     return this.store.pipe(select(projectTreeSelectors.selectEntityById, { id }));
   }
 
-  public updateOpenedProject(projectTree: ProjectTree, project: Project, rootDirectory: DirectoryItem): void {
+  public updateOpenedProject(projectTree: ProjectTree, project: Project, rootDirectoryItem: DirectoryItem): void {
     this.store.dispatch(
       projectTreeActions.updateOne({
         update: {
           id: projectTree.id,
           changes: {
             projectId: project.id,
-            rootDirectoryItemId: rootDirectory.id,
+            rootDirectoryItemId: rootDirectoryItem.id,
           },
         },
       }),

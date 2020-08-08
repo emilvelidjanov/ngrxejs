@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/core/ngrx/entity/entity';
 
 import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
@@ -12,8 +11,7 @@ export interface DirectoryItemService {
   addMany(directoryItems: DirectoryItem[]): void;
   createOne(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem>;
   createMany(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]>;
-  setAll(directoryItems: DirectoryItem[]): void;
   toggleOpened(directoryItem: DirectoryItem): void;
   updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]): void;
-  selectByDirectoryIds(directoryIds: Id[]): Observable<DirectoryItem[]>;
+  selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]>;
 }

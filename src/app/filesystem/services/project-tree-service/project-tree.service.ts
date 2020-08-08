@@ -9,6 +9,5 @@ export interface ProjectTreeService {
   createFromPartial(partial: EntityPartial<ProjectTree>): ProjectTree;
   select(id: Id): Observable<ProjectTree>;
   addMany(projectTrees: ProjectTree[]): void;
-  updateOpenedProject(projectTree: ProjectTree, project: Project, rootDirectory: DirectoryItem): void;
-  updateRootDirectoryItem(directoryItem: DirectoryItem, projectTree: ProjectTree): void;
+  updateOpenedProject(projectTree: ProjectTree, project: Project, rootDirectoryItem: DirectoryItem): void;
 }

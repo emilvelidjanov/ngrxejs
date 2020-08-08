@@ -44,17 +44,14 @@ export class DefaultFileItemService implements FileItemService {
     return fileItems$;
   }
 
-  public setAll(fileItems: FileItem[]): void {
-    this.store.dispatch(fileItemActions.setAll({ entities: fileItems }));
-  }
-
   public addMany(fileItems: FileItem[]): void {
     if (fileItems && fileItems.length) {
       this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
     }
   }
 
-  public selectByFileIds(fileIds: Id[]): Observable<FileItem[]> {
+  public selectByFiles(files: File[]): Observable<FileItem[]> {
+    const fileIds = files.map((file) => file.id);
     return this.store.pipe(
       select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (entity) => fileIds.includes(entity.fileId) }),
     );

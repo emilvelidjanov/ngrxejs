@@ -11,6 +11,13 @@ import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } 
 export class LocalFilesystemService implements FilesystemService {
   constructor(@Inject(ipcServiceDep.getToken()) private ipcService: IpcService) {}
 
+  public partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]] {
+    const fileResults: LoadDirectoryResult[] = [];
+    const directoryResults: LoadDirectoryResult[] = [];
+    results.forEach((result) => (result.isDirectory ? directoryResults.push(result) : fileResults.push(result)));
+    return [fileResults, directoryResults];
+  }
+
   public openDialog(options?: OpenDialogOptions): Observable<OpenDialogResult> {
     const request: IpcRequest<OpenDialogOptions> = {
       params: options,

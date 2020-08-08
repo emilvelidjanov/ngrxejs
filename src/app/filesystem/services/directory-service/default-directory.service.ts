@@ -25,6 +25,14 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
 
+  public selectByPaths(paths: string[]): Observable<Directory[]> {
+    return this.store.pipe(
+      select(directorySelectors.selectEntitiesByPredicate, {
+        predicate: (directory) => paths.includes(directory.path),
+      }),
+    );
+  }
+
   public addOne(directory: Directory): void {
     if (directory) {
       this.store.dispatch(directoryActions.addOne({ entity: directory }));
@@ -48,8 +56,8 @@ export class DefaultDirectoryService implements DirectoryService {
         // TODO: use default factory method
         const directory: Directory = {
           id,
-          directoryIds: [],
           fileIds: [],
+          directoryIds: [],
           isLoaded: false,
           name: stat.name,
           path: stat.path,
@@ -83,10 +91,6 @@ export class DefaultDirectoryService implements DirectoryService {
       take(1),
     );
     return directories$;
-  }
-
-  public setAll(directories: Directory[]): void {
-    this.store.dispatch(directoryActions.setAll({ entities: directories }));
   }
 
   public updateLoaded(loadedDirectory: Directory, files: File[], directories: Directory[]): void {

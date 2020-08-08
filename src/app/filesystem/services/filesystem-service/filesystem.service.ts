@@ -5,6 +5,7 @@ export interface FilesystemService {
   loadDirectory(path: string): Observable<LoadDirectoryResult[]>;
   loadFile(path: string): Observable<string>;
   statPath(path: string): Observable<StatResult>;
+  partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]];
 }
 
 export interface OpenDialogResult {

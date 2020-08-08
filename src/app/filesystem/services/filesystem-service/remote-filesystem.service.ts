@@ -7,6 +7,10 @@ import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } 
 export class RemoteFilesystemService implements FilesystemService {
   constructor() {}
 
+  public partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]] {
+    throw new Error('RemoteFilesystemService#partitionLoadDirectoryResults not implemented.');
+  }
+
   public openDialog(_options?: any): Observable<OpenDialogResult> {
     throw new Error('RemoteFilesystemService#openDialog not implemented.');
   }

@@ -48,8 +48,8 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
         const directoryItem: DirectoryItem = {
           id,
           directoryId: directory.id,
-          directoryItemIds: [],
           fileItemIds: [],
+          directoryItemIds: [],
           isOpened: false,
           projectTreeId: projectTree.id,
         };
@@ -88,10 +88,6 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     return directoryItems$;
   }
 
-  public setAll(directoryItems: DirectoryItem[]): void {
-    this.store.dispatch(directoryItemActions.setAll({ entities: directoryItems }));
-  }
-
   public toggleOpened(directoryItem: DirectoryItem): void {
     this.store.dispatch(
       directoryItemActions.updateOne({
@@ -119,7 +115,8 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     );
   }
 
-  public selectByDirectoryIds(directoryIds: Id[]): Observable<DirectoryItem[]> {
+  public selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]> {
+    const directoryIds = directories.map((directory) => directory.id);
     return this.store.pipe(
       select(directoryItemSelectors.selectEntitiesByPredicate, {
         predicate: (entity) => directoryIds.includes(entity.directoryId),

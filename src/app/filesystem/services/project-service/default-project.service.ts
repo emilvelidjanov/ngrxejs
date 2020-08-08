@@ -39,19 +39,9 @@ export class DefaultProjectService implements ProjectService {
     return project$;
   }
 
-  public set(project: Project): void {
-    this.store.dispatch(projectActions.setAll({ entities: [project] }));
-  }
-
   public addOne(project: Project): void {
     if (project) {
       this.store.dispatch(projectActions.addOne({ entity: project }));
-    }
-  }
-
-  public addMany(projects: Project[]): void {
-    if (projects && projects.length) {
-      this.store.dispatch(projectActions.addMany({ entities: projects }));
     }
   }
 

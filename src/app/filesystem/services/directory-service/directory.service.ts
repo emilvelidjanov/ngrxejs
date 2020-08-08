@@ -6,12 +6,12 @@ import { File } from '../../store/file/file.state';
 import { LoadDirectoryResult, StatResult } from '../filesystem-service/filesystem.service';
 
 export interface DirectoryService {
+  selectByPaths(paths: string[]): Observable<Directory[]>;
   addOne(directory: Directory): void;
   addMany(directories: Directory[]): void;
   select(id: Id): Observable<Directory>;
   createOne(stat: StatResult): Observable<Directory>;
   createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]>;
-  setAll(directories: Directory[]): void;
   updateLoaded(loadedDirectory: Directory, files: File[], directories: Directory[]): void;
   selectByPath(path: string): Observable<Directory>;
 }
