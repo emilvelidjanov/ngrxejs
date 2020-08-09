@@ -5,10 +5,12 @@ import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-dom
 
 export interface MenuItems extends EntityDomainState<MenuItem> {}
 
+export type OpenType = 'click' | 'hover';
 export interface MenuItem extends Entity {
   label: string;
   clickAction: ActionDescriptor;
   menuItemIds: Id[];
+  openType: OpenType;
   isOpened: boolean;
   preSymbol: string;
   postSymbol: string;

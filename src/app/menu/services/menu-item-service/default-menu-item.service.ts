@@ -21,6 +21,7 @@ export class DefaultMenuItemService implements MenuItemService {
       label: null,
       clickAction: null,
       menuItemIds: [],
+      openType: 'click',
       isOpened: false,
       preSymbol: null,
       postSymbol: null,
@@ -47,6 +48,25 @@ export class DefaultMenuItemService implements MenuItemService {
           },
         }),
       );
+    }
+  }
+
+  public toggleOpened(menuItem: MenuItem): void {
+    if (!menuItem.isOpened) {
+      this.open(menuItem);
+    } else {
+      if ((menuItem.menuItemIds && menuItem.menuItemIds.length) || menuItem.isOpened) {
+        this.store.dispatch(
+          menuItemActions.updateOne({
+            update: {
+              id: menuItem.id,
+              changes: {
+                isOpened: false,
+              },
+            },
+          }),
+        );
+      }
     }
   }
 

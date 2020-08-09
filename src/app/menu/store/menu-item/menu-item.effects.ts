@@ -24,7 +24,16 @@ export class MenuItemEffects {
     () =>
       this.actions$.pipe(
         ofType(menuItemActions.offClickNestedMenuItems),
-        tap(() => this.menuFacade.offClickMenuItemNestedMenuItems()),
+        tap(() => this.menuFacade.closeAllMenuItems()),
+      ),
+    { dispatch: false },
+  );
+
+  public onOffHover$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(menuItemActions.onOffHover),
+        tap((action) => this.menuFacade.toggleOpenedMenuItem(action.entity)),
       ),
     { dispatch: false },
   );

@@ -1,17 +1,16 @@
 <ng-container *ngIf="menuItem$ | async as menuItem">
-  <button (click)="click()">
-    <app-pre-post-symbols
-      [text]="menuItem.label"
-      [preSymbol]="menuItem.preSymbol"
-      [postSymbol]="menuItem.postSymbol"
-      pushPostSymbol="true"
-    ></app-pre-post-symbols>
-  </button>
-  <ng-container *ngIf="menuItem.isOpened">
-    <div class="nested-menu-items" (appOffClick)="offClickNestedMenuItems($event)">
-      <ng-container *ngFor="let nestedMenuItemId of menuItem.menuItemIds">
-        <app-menu-item [menuItemId]="nestedMenuItemId"></app-menu-item>
-      </ng-container>
-    </div>
-  </ng-container>
+  <span (mouseenter)="onOffHover()" (mouseleave)="onOffHover()">
+    <button (click)="click()">
+      <app-pre-post-symbols [preSymbol]="menuItem.preSymbol" [postSymbol]="menuItem.postSymbol" pushPostSymbol="true">
+        {{ menuItem.label }}
+      </app-pre-post-symbols>
+    </button>
+    <ng-container *ngIf="menuItem.isOpened">
+      <span class="nested-menu-items {{ openDirClass }}" (appOffClick)="offClickNestedMenuItems($event)">
+        <ng-container *ngFor="let nestedMenuItemId of menuItem.menuItemIds">
+          <app-menu-item [menuItemId]="nestedMenuItemId"></app-menu-item>
+        </ng-container>
+      </span>
+    </ng-container>
+  </span>
 </ng-container>

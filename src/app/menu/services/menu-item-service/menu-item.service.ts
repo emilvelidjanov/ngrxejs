@@ -6,6 +6,7 @@ export interface MenuItemService {
   createFromPartial(partial: EntityPartial<MenuItem>): MenuItem;
   addMany(menuItems: MenuItem[]): void;
   open(menuItem: MenuItem): void;
+  toggleOpened(menuItem: MenuItem): void;
   closeAll(): void;
   dispatchClickAction(menuItem: MenuItem): void;
 }

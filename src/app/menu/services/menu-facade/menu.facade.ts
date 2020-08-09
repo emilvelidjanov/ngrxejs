@@ -8,6 +8,7 @@ import { TabBar } from '../../store/tab-bar/tab-bar.state';
 import { TabItem } from '../../store/tab-item/tab-item.state';
 
 export interface MenuFacade {
+  toggleOpenedMenuItem(menuItem: MenuItem): void;
   addMenuItemsConfig(partials: EntityPartial<MenuItem>[]): void;
   addMenuBarsConfig(partials: EntityPartial<MenuBar>[]): void;
   addContextMenusConfig(partials: EntityPartial<ContextMenu>[]): void;
@@ -19,9 +20,9 @@ export interface MenuFacade {
   addTabItemsToTabBar(tabItems: TabItem[], tabBar: TabBar): void;
   removeTabItemsFromTabBar(tabItems: TabItem[], tabBar: TabBar): void;
   removeTabItems(tabItems: TabItem[]): void;
-  onClickTabItem(tabItem: TabItem): void;
+  dispatchClickActionTabItem(tabItem: TabItem): void;
   onClickMenuItem(menuItem: MenuItem): void;
-  offClickMenuItemNestedMenuItems(): void;
+  closeAllMenuItems(): void;
   openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void;
   closeContextMenu(contextMenu: ContextMenu): void;
   closeTabItem(tabItem: TabItem): void;
