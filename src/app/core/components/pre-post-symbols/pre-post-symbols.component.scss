@@ -1,0 +1,15 @@
+@import 'src/mixins.scss';
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.pre-symbol {
+  margin-right: 0.25rem;
+}
+
+.pre-symbol,
+.post-symbol {
+  @include utf8-symbol();
+}

@@ -86,11 +86,15 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.dispatchClickAction(menuItem);
   }
 
-  public onClickTabItem(tabItem: TabItem): void {
+  public toggleOpenedMenuItem(menuItem: MenuItem): void {
+    this.menuItemService.toggleOpened(menuItem);
+  }
+
+  public dispatchClickActionTabItem(tabItem: TabItem): void {
     this.tabItemService.dispatchClickAction(tabItem);
   }
 
-  public offClickMenuItemNestedMenuItems(): void {
+  public closeAllMenuItems(): void {
     this.menuItemService.closeAll();
   }
 

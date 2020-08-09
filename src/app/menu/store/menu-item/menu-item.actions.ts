@@ -7,4 +7,8 @@ export const menuItemActions = {
   ...menuItemDomainStateConfig.getActions(),
   onClick: createAction(menuItemDomainStateConfig.getEffectActionType('On Click'), props<PropEntity<MenuItem>>()),
   offClickNestedMenuItems: createAction(menuItemDomainStateConfig.getEffectActionType('Off Click Nested Menu Items')),
+  onOffHover: createAction(
+    menuItemDomainStateConfig.getEffectActionType('On Off Hover'),
+    props<PropEntity<MenuItem>>(),
+  ),
 };

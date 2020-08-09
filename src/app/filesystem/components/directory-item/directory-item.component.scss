@@ -14,10 +14,3 @@
 button {
   @include label();
 }
-
-.directory-label {
-  &::before {
-    @include utf8-symbol('25B6');
-    margin-right: 0.25rem;
-  }
-}

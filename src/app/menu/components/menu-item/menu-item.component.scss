@@ -16,6 +16,15 @@ button {
 
 .nested-menu-items {
   position: absolute;
-  left: 0px;
+  display: table;
   z-index: 100;
+}
+
+.open-bottom {
+  left: 0px;
+}
+
+.open-right {
+  left: 100%;
+  top: 0px;
 }

@@ -1,14 +1,14 @@
 [
   {
     "id": "projectTreeContextMenu",
-    "menuItemIds": ["openProject", "A", "B", "C"]
+    "menuItemIds": ["openProject", "new"]
   },
   {
     "id": "directoryItemContextMenu",
-    "menuItemIds": ["A", "B"]
+    "menuItemIds": ["a", "b", "new"]
   },
   {
     "id": "htmlFileItemContextMenu",
-    "menuItemIds": ["A"]
+    "menuItemIds": ["new", "a"]
   }
 ]

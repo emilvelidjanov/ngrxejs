@@ -15,7 +15,7 @@ export class TabItemEffects {
     () =>
       this.actions$.pipe(
         ofType(tabItemActions.onClick),
-        tap((action) => this.menuFacade.onClickTabItem(action.entity)),
+        tap((action) => this.menuFacade.dispatchClickActionTabItem(action.entity)),
       ),
     { dispatch: false },
   );

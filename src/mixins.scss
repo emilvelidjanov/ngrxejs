@@ -16,8 +16,10 @@
   user-select: none;
 }
 
-@mixin utf8-symbol($utf8-code) {
-  content: #{'"\\' + $utf8-code + '"'};
+@mixin utf8-symbol($utf8-code:"") {
+  @if $utf8-code != "" {
+    content: #{'"\\' + $utf8-code + '"'};
+  }
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
