@@ -80,10 +80,12 @@ export class DefaultMenuFacade implements MenuFacade {
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
-    this.menuItemService.closeAll();
-    this.contextMenuService.closeAll();
-    this.menuItemService.open(menuItem);
-    this.menuItemService.dispatchClickAction(menuItem);
+    if (!menuItem.isDisabled) {
+      this.menuItemService.closeAll();
+      this.contextMenuService.closeAll();
+      this.menuItemService.open(menuItem);
+      this.menuItemService.dispatchClickAction(menuItem);
+    }
   }
 
   public toggleOpenedMenuItem(menuItem: MenuItem): void {
@@ -98,8 +100,9 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.closeAll();
   }
 
-  public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void {
+  public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextRef: Id): void {
     this.contextMenuService.closeAll();
+    this.contextMenuService.updateContextRef(contextRef, contextMenu);
     this.contextMenuService.open(contextMenu, xPosition, yPosition);
   }
 
@@ -109,5 +112,9 @@ export class DefaultMenuFacade implements MenuFacade {
 
   public closeTabItem(tabItem: TabItem): void {
     this.tabItemService.dispatchCloseAction(tabItem);
+  }
+
+  public updateIsDisabledMenuItem(isDisabled: boolean, menuItem: MenuItem): void {
+    this.menuItemService.updateIsDisabled(isDisabled, menuItem);
   }
 }

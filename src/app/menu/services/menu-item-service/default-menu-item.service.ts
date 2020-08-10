@@ -25,6 +25,7 @@ export class DefaultMenuItemService implements MenuItemService {
       isOpened: false,
       preSymbol: null,
       postSymbol: null,
+      isDisabled: false,
       ...partial,
     };
     return menuItem;
@@ -37,7 +38,7 @@ export class DefaultMenuItemService implements MenuItemService {
   }
 
   public open(menuItem: MenuItem): void {
-    if (menuItem.menuItemIds && menuItem.menuItemIds.length && !menuItem.isOpened) {
+    if (menuItem.menuItemIds && menuItem.menuItemIds.length && !menuItem.isOpened && !menuItem.isDisabled) {
       this.store.dispatch(
         menuItemActions.updateOne({
           update: {
@@ -71,7 +72,9 @@ export class DefaultMenuItemService implements MenuItemService {
   }
 
   public dispatchClickAction(menuItem: MenuItem): void {
-    this.actionDescriptorService.dispatch(menuItem.clickAction, this.store);
+    if (menuItem.clickAction && !menuItem.isDisabled) {
+      this.actionDescriptorService.dispatch(menuItem.clickAction, this.store);
+    }
   }
 
   public closeAll(): void {
@@ -82,5 +85,20 @@ export class DefaultMenuItemService implements MenuItemService {
         },
       }),
     );
+  }
+
+  public updateIsDisabled(isDisabled: boolean, menuItem: MenuItem): void {
+    if (menuItem.isDisabled !== isDisabled) {
+      this.store.dispatch(
+        menuItemActions.updateOne({
+          update: {
+            id: menuItem.id,
+            changes: {
+              isDisabled,
+            },
+          },
+        }),
+      );
+    }
   }
 }

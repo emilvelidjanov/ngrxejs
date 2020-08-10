@@ -1,7 +1,11 @@
 <ng-container *ngIf="fileItem$ | async as fileItem">
   <ng-container *ngIf="file$ | async as file">
     <ng-container *ngIf="projectTree$ | async as projectTree">
-      <button (click)="click()" [appContextMenuTrigger]="projectTree.fileItemContextMenuIds[file.extension]">
+      <button
+        (click)="click()"
+        [appContextMenuTrigger]="projectTree.fileItemContextMenuIds[file.extension]"
+        [appContextMenuTriggerContextRef]="fileItem.id"
+      >
         <span class="file-label">{{ file.name }}{{ file.extension }}</span>
       </button>
     </ng-container>

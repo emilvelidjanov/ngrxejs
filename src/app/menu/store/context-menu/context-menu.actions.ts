@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { PropCoordinates, PropEntity } from 'src/app/core/ngrx/entity/entity-domain-state/props';
+import { PropCoordinates, PropEntity, PropId } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { ContextMenu, contextMenuDomainStateConfig } from './context-menu.state';
 
@@ -8,6 +8,6 @@ export const contextMenuActions = {
   close: createAction(contextMenuDomainStateConfig.getEffectActionType('Close'), props<PropEntity<ContextMenu>>()),
   open: createAction(
     contextMenuDomainStateConfig.getEffectActionType('Open'),
-    props<PropEntity<ContextMenu> & PropCoordinates>(),
+    props<PropEntity<ContextMenu> & PropCoordinates & PropId>(),
   ),
 };

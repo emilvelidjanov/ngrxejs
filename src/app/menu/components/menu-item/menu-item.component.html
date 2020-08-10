@@ -1,6 +1,6 @@
 <ng-container *ngIf="menuItem$ | async as menuItem">
   <span (mouseenter)="onOffHover()" (mouseleave)="onOffHover()">
-    <button (click)="click()">
+    <button (click)="click()" [disabled]="menuItem.isDisabled">
       <app-pre-post-symbols [preSymbol]="menuItem.preSymbol" [postSymbol]="menuItem.postSymbol" pushPostSymbol="true">
         {{ menuItem.label }}
       </app-pre-post-symbols>

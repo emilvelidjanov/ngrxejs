@@ -9,4 +9,5 @@ export interface MenuItemService {
   toggleOpened(menuItem: MenuItem): void;
   closeAll(): void;
   dispatchClickAction(menuItem: MenuItem): void;
+  updateIsDisabled(isDisabled: boolean, menuItem: MenuItem): void;
 }

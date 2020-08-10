@@ -38,7 +38,7 @@ export class MenuItemComponent implements OnInit {
     this.menuItem$
       .pipe(
         take(1),
-        filter((menuItem) => menuItem.openType === 'click'),
+        filter((menuItem) => menuItem.openType === 'click' && !menuItem.isDisabled),
       )
       .subscribe((menuItem) => this.store.dispatch(menuItemActions.onClick({ entity: menuItem })));
   }
@@ -47,7 +47,7 @@ export class MenuItemComponent implements OnInit {
     this.menuItem$
       .pipe(
         take(1),
-        filter((menuItem) => menuItem.openType === 'hover'),
+        filter((menuItem) => menuItem.openType === 'hover' && !menuItem.isDisabled),
       )
       .subscribe((menuItem) => this.store.dispatch(menuItemActions.onOffHover({ entity: menuItem })));
   }

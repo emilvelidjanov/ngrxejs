@@ -17,9 +17,10 @@
   {
     "id": "new",
     "label": "New...",
-    "menuItemIds": ["nested", "a", "b", "c"],
+    "menuItemIds": ["newDirectory"],
     "openType": "hover",
-    "postSymbol": "25B6"
+    "postSymbol": "25B6",
+    "isDisabled": "true"
   },
   {
     "id": "editor",
@@ -32,6 +33,13 @@
     "menuItemIds": ["a", "b", "c"],
     "openType": "hover",
     "postSymbol": "25B6"
+  },
+  {
+    "id": "newDirectory",
+    "label": "Directory",
+    "clickAction": {
+      "type": "[Effect][DirectoryItem] New Directory"
+    }
   },
   {
     "id": "a",

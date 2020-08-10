@@ -9,6 +9,7 @@ export interface ContextMenu extends Entity {
   isOpened: boolean;
   x: number;
   y: number;
+  contextRef: Id;
 }
 
 export const entityName = 'ContextMenu';

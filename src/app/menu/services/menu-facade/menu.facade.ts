@@ -23,7 +23,8 @@ export interface MenuFacade {
   dispatchClickActionTabItem(tabItem: TabItem): void;
   onClickMenuItem(menuItem: MenuItem): void;
   closeAllMenuItems(): void;
-  openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void;
+  openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextRef: Id): void;
   closeContextMenu(contextMenu: ContextMenu): void;
   closeTabItem(tabItem: TabItem): void;
+  updateIsDisabledMenuItem(isDisabled: boolean, menuItem: MenuItem): void;
 }
