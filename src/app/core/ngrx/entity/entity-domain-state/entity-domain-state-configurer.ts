@@ -17,6 +17,7 @@ import {
   PropPredicate,
   PropUpdate,
   PropUpdates,
+  PropUpdatesSame,
 } from './props';
 
 export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomainState<T>> {
@@ -98,6 +99,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
       removeAll: createAction(this.getActionType('Remove All')),
       updateOne: createAction(this.getActionType('Update One'), props<PropUpdate<T>>()),
       updateMany: createAction(this.getActionType('Update Many'), props<PropUpdates<T>>()),
+      updateManySame: createAction(this.getActionType('Update Many Same'), props<PropUpdatesSame<T>>()),
       updateAll: createAction(this.getActionType('Update All'), props<PropPartial<T>>()),
       upsertOne: createAction(this.getActionType('Upsert One'), props<PropEntity<T>>()),
       upsertMany: createAction(this.getActionType('Upsert Many'), props<PropEntities<T>>()),
@@ -145,6 +147,14 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
       on(this.actions.updateMany, (state: D, props: PropUpdates<T>) => {
         const updates = props.updates.map((update) =>
           typeof update.id === 'number' ? ({ ...update } as UpdateNum<T>) : ({ ...update } as UpdateStr<T>),
+        );
+        return this.adapter.updateMany(updates, state);
+      }),
+      on(this.actions.updateManySame, (state: D, props: PropUpdatesSame<T>) => {
+        const updates = props.ids.map((id) =>
+          typeof id === 'number'
+            ? ({ id, changes: props.partial } as UpdateNum<T>)
+            : ({ id, changes: props.partial } as UpdateStr<T>),
         );
         return this.adapter.updateMany(updates, state);
       }),

@@ -19,8 +19,7 @@
     "label": "New...",
     "menuItemIds": ["newDirectory"],
     "openType": "hover",
-    "postSymbol": "25B6",
-    "isDisabled": "true"
+    "postSymbol": "25B6"
   },
   {
     "id": "editor",

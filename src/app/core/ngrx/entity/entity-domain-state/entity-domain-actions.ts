@@ -13,6 +13,7 @@ import {
   PropPredicate,
   PropUpdate,
   PropUpdates,
+  PropUpdatesSame,
 } from './props';
 
 export interface EntityDomainActions<T extends Entity> {
@@ -26,6 +27,7 @@ export interface EntityDomainActions<T extends Entity> {
   removeAll: DefaultActionCreator;
   updateOne: UpdateActionCreator<T>;
   updateMany: UpdatesActionCreator<T>;
+  updateManySame: UpdatesSameActionCreator<T>;
   updateAll: UpdateAll<T>;
   upsertOne: EntityActionCreator<T>;
   upsertMany: EntitiesActionCreator<T>;
@@ -54,6 +56,10 @@ export type UpdateActionCreator<T extends Entity> = ActionCreator<
 export type UpdatesActionCreator<T extends Entity> = ActionCreator<
   string,
   (props: PropUpdates<T>) => PropUpdates<T> & TypedAction<string>
+>;
+export type UpdatesSameActionCreator<T extends Entity> = ActionCreator<
+  string,
+  (props: PropUpdatesSame<T>) => PropUpdatesSame<T> & TypedAction<string>
 >;
 export type UpdateAll<T extends Entity> = ActionCreator<
   string,

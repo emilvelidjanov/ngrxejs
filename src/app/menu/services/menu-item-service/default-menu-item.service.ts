@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { PropUpdate } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 import { ActionDescriptorService } from 'src/app/core/ngrx/services/action-descriptor-service/action-descriptor.service';
 import { actionDescriptorServiceDep } from 'src/app/core/ngrx/services/action-descriptor-service/action-descriptor.service.dependency';
 
@@ -99,6 +100,16 @@ export class DefaultMenuItemService implements MenuItemService {
           },
         }),
       );
+      if (menuItem.menuItemIds && menuItem.menuItemIds.length) {
+        this.store.dispatch(
+          menuItemActions.updateManySame({
+            ids: menuItem.menuItemIds,
+            partial: {
+              isDisabled,
+            },
+          }),
+        );
+      }
     }
   }
 }

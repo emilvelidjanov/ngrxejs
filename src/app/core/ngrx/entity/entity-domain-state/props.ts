@@ -35,6 +35,8 @@ export interface PropUpdates<T extends Entity> {
   updates: Update<T>[];
 }
 
+export interface PropUpdatesSame<T extends Entity> extends PropIds, PropPartial<T> {}
+
 export interface PropPartial<T extends Entity> {
   partial: Partial<T>;
 }
