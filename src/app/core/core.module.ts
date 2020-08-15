@@ -11,6 +11,7 @@ import {
   uuidGeneratorServiceDep,
 } from './ngrx/services/id-generator-service/id-generator.service.dependency';
 import { domServiceDep } from './services/DOM-service/dom.service.dependency';
+import { equalityServiceDep } from './services/equality-service/equality.service.dependency';
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';
 
 @NgModule({
@@ -30,6 +31,7 @@ export class CoreModule {
         sortServiceDep.getProvider(),
         domServiceDep.getProvider(),
         actionDescriptorServiceDep.getProvider(),
+        equalityServiceDep.getProvider(),
       ],
     };
   }

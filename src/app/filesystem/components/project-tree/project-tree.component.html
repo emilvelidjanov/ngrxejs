@@ -2,7 +2,7 @@
   <div
     class="context-menu-trigger"
     [appContextMenuTrigger]="projectTree.contextMenuId"
-    [appContextMenuTriggerContextRef]="projectTree.rootDirectoryItemId"
+    [appContextProps]="contextProps$ | async"
   >
     <ng-container *ngIf="rootDirectory$ | async as rootDirectory">
       <div class="project-name">

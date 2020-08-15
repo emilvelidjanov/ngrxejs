@@ -4,7 +4,7 @@
       <button
         (click)="open()"
         [appContextMenuTrigger]="projectTree.directoryItemContextMenuId"
-        [appContextMenuTriggerContextRef]="directoryItem.id"
+        [appContextProps]="contextProps$ | async"
       >
         <app-pre-post-symbols preSymbol="25B6">
           {{ directory.name }}

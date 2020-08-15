@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
+import { Prop } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { MenuBar } from '../../store/menu-bar/menu-bar.state';
@@ -23,7 +24,7 @@ export interface MenuFacade {
   dispatchClickActionTabItem(tabItem: TabItem): void;
   onClickMenuItem(menuItem: MenuItem): void;
   closeAllMenuItems(): void;
-  openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextRef: Id): void;
+  openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextProps: Prop): void;
   closeContextMenu(contextMenu: ContextMenu): void;
   closeTabItem(tabItem: TabItem): void;
   updateIsDisabledMenuItem(isDisabled: boolean, menuItem: MenuItem): void;

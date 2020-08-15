@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { Prop } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { contextMenuActions } from '../../store/context-menu/context-menu.actions';
 import { ContextMenu, ContextMenus } from '../../store/context-menu/context-menu.state';
@@ -17,7 +18,7 @@ export class DefaultContextMenuService implements ContextMenuService {
       menuItemIds: [],
       x: 0,
       y: 0,
-      contextRef: null,
+      contextProps: null,
       ...partial,
     };
     return contextMenu;
@@ -69,14 +70,14 @@ export class DefaultContextMenuService implements ContextMenuService {
     );
   }
 
-  public updateContextRef(contextRef: Id, contextMenu: ContextMenu): void {
-    if (contextRef !== undefined && contextRef !== contextMenu.contextRef) {
+  public updateContextProps(contextProps: Prop, contextMenu: ContextMenu): void {
+    if (contextProps) {
       this.store.dispatch(
         contextMenuActions.updateOne({
           update: {
             id: contextMenu.id,
             changes: {
-              contextRef,
+              contextProps,
             },
           },
         }),

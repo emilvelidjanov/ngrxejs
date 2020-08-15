@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
+import { PropId } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
 import { directoryItemSelectors } from '../../store/directory-item/directory-item.selectors';
@@ -23,24 +24,30 @@ export class DirectoryItemComponent implements OnInit {
   public directoryItem$: Observable<DirectoryItem>;
   public directory$: Observable<Directory>;
   public projectTree$: Observable<ProjectTree>;
+  public contextProps$: Observable<PropId>;
 
   constructor(private store: Store<DirectoryItems>) {}
 
   public ngOnInit(): void {
     this.directoryItem$ = this.store.pipe(
       select(directoryItemSelectors.selectEntityById, { id: this.directoryItemId }),
+      filter((directoryItem) => !!directoryItem),
     );
     this.directory$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && directoryItem.directoryId !== null),
+      filter((directoryItem) => !!directoryItem.directoryId),
       switchMap((directoryItem) =>
         this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId })),
       ),
     );
     this.projectTree$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && directoryItem.projectTreeId !== null),
+      filter((directoryItem) => !!directoryItem.projectTreeId),
       switchMap((directoryItem) =>
         this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId })),
       ),
+    );
+    this.contextProps$ = this.directoryItem$.pipe(
+      filter((directoryItem) => !!directoryItem.id),
+      map((directoryItem) => ({ id: directoryItem.id })),
     );
   }
 

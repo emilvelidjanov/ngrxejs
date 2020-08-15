@@ -4,7 +4,7 @@
       <button
         (click)="click()"
         [appContextMenuTrigger]="projectTree.fileItemContextMenuIds[file.extension]"
-        [appContextMenuTriggerContextRef]="fileItem.id"
+        [appContextProps]="contextProps$ | async"
       >
         <span class="file-label">{{ file.name }}{{ file.extension }}</span>
       </button>

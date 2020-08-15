@@ -1,5 +1,6 @@
 import { Store } from '@ngrx/store';
 import { DependencyConfigurer } from 'src/app/core/angular/dependency-configurer';
+import { equalityServiceDep } from 'src/app/core/services/equality-service/equality.service.dependency';
 
 import { ContextMenus } from '../../store/context-menu/context-menu.state';
 
@@ -10,7 +11,7 @@ export const contextMenuServiceDep: DependencyConfigurer<ContextMenuService> = n
   ContextMenuService
 >({
   tokenDescription: 'ContextMenuService',
-  dependencies: [Store],
+  dependencies: [Store, equalityServiceDep.getToken()],
   factory: (store: Store<ContextMenus>) => {
     return new DefaultContextMenuService(store);
   },

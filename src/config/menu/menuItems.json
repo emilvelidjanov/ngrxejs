@@ -38,7 +38,8 @@
     "label": "Directory",
     "clickAction": {
       "type": "[Effect][DirectoryItem] New Directory"
-    }
+    },
+    "isContextAware": true
   },
   {
     "id": "a",

@@ -1,4 +1,6 @@
 import { DependencyConfigurer } from 'src/app/core/angular/dependency-configurer';
+import { EqualityService } from 'src/app/core/services/equality-service/equality.service';
+import { equalityServiceDep } from 'src/app/core/services/equality-service/equality.service.dependency';
 
 import { ContextMenuService } from '../context-menu-service/context-menu.service';
 import { contextMenuServiceDep } from '../context-menu-service/context-menu.service.dependency';
