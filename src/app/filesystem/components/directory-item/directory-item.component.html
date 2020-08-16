@@ -11,8 +11,14 @@
         </app-pre-post-symbols>
       </button>
       <ng-container *ngIf="directoryItem.isOpened">
+        <ng-container *ngIf="directoryItem.createNewInputType === 'directory'">
+          <input type="text" />
+        </ng-container>
         <ng-container *ngFor="let directoryItemId of directoryItem.directoryItemIds">
           <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
+        </ng-container>
+        <ng-container *ngIf="directoryItem.createNewInputType === 'file'">
+          <input type="text" />
         </ng-container>
         <ng-container *ngFor="let fileItemId of directoryItem.fileItemIds">
           <app-file-item [fileItemId]="fileItemId"></app-file-item>

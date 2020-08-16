@@ -1,4 +1,5 @@
 import { EntityMap, Predicate, UpdateNum, UpdateStr } from '@ngrx/entity/src/models';
+import { CreateNewInputType } from 'src/app/filesystem/store/directory-item/directory-item.state';
 
 import { Entity, Id } from '../entity';
 
@@ -54,4 +55,8 @@ export interface PropCoordinates extends Prop {
 
 export interface GenericProp extends Prop {
   props: Prop;
+}
+
+export interface CreateNewInputTypeProp extends Prop {
+  createNewInputType: CreateNewInputType;
 }

@@ -4,7 +4,7 @@ import { map, share, switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/ope
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
-import { DirectoryItem } from '../../store/directory-item/directory-item.state';
+import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 import { DirectoryItemService } from '../directory-item-service/directory-item.service';
@@ -15,7 +15,7 @@ import { FileItemService } from '../file-item-service/file-item.service';
 import { fileItemServiceDep } from '../file-item-service/file-item.service.dependency';
 import { FileService } from '../file-service/file.service';
 import { fileServiceDep } from '../file-service/file.service.dependency';
-import { FilesystemService, LoadDirectoryResult } from '../filesystem-service/filesystem.service';
+import { FilesystemService } from '../filesystem-service/filesystem.service';
 import { filesystemServiceDep } from '../filesystem-service/filesystem.service.dependency';
 import { ProjectService } from '../project-service/project.service';
 import { projectServiceDep } from '../project-service/project.service.dependency';
@@ -42,6 +42,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public selectProjectTree(id: Id): Observable<ProjectTree> {
     return this.projectTreeService.select(id);
+  }
+
+  public selectDirectoryItem(id: Id): Observable<DirectoryItem> {
+    return this.directoryItemService.select(id);
   }
 
   public addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void {
@@ -191,5 +195,9 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       const loadFile$ = this.filesystemService.loadFile(file.path);
       loadFile$.subscribe((content) => this.fileService.updateLoaded(file, content));
     }
+  }
+
+  public showCreateNewInputDirectoryItem(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void {
+    this.directoryItemService.showCreateNewInput(directoryItem, createNewInputType);
   }
 }

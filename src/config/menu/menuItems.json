@@ -17,7 +17,7 @@
   {
     "id": "new",
     "label": "New...",
-    "menuItemIds": ["newDirectory"],
+    "menuItemIds": ["newFile", "newDirectory"],
     "openType": "hover",
     "postSymbol": "25B6"
   },
@@ -37,7 +37,21 @@
     "id": "newDirectory",
     "label": "Directory",
     "clickAction": {
-      "type": "[Effect][DirectoryItem] New Directory"
+      "type": "[Effect][DirectoryItem] Show Create New Input",
+      "props": {
+        "createNewInputType": "directory"
+      }
+    },
+    "isContextAware": true
+  },
+  {
+    "id": "newFile",
+    "label": "File",
+    "clickAction": {
+      "type": "[Effect][DirectoryItem] Show Create New Input",
+      "props": {
+        "createNewInputType": "file"
+      }
     },
     "isContextAware": true
   },

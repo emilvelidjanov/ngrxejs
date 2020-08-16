@@ -8,7 +8,7 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
 import { directoryItemSelectors } from '../../store/directory-item/directory-item.selectors';
-import { DirectoryItem, DirectoryItems } from '../../store/directory-item/directory-item.state';
+import { CreateNewInputType, DirectoryItem, DirectoryItems } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
@@ -24,6 +24,10 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public select(id: Id): Observable<DirectoryItem> {
+    return this.store.pipe(select(directoryItemSelectors.selectEntityById, { id }));
   }
 
   public selectByDirectory(directory: Directory): Observable<DirectoryItem> {
@@ -52,6 +56,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
           directoryItemIds: [],
           isOpened: false,
           projectTreeId: projectTree.id,
+          createNewInputType: 'none',
         };
         return directoryItem;
       }),
@@ -79,6 +84,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
             fileItemIds: [],
             projectTreeId: projectTree.id,
             isOpened: false,
+            createNewInputType: 'none',
           };
           return directoryItem;
         }),
@@ -122,5 +128,20 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
         predicate: (entity) => directoryIds.includes(entity.directoryId),
       }),
     );
+  }
+
+  public showCreateNewInput(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void {
+    if (directoryItem && directoryItem.createNewInputType !== createNewInputType) {
+      this.store.dispatch(
+        directoryItemActions.updateOne({
+          update: {
+            id: directoryItem.id,
+            changes: {
+              createNewInputType,
+            },
+          },
+        }),
+      );
+    }
   }
 }
