@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { ProjectTree } from '../../store/project-tree/project-tree.state';
   styleUrls: ['./directory-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectoryItemComponent implements OnInit {
+export class DirectoryItemComponent implements OnInit, OnChanges {
   @Input() public directoryItemId: Id;
   public directoryItem$: Observable<DirectoryItem>;
   public directory$: Observable<Directory>;
@@ -49,6 +49,11 @@ export class DirectoryItemComponent implements OnInit {
       filter((directoryItem) => !!directoryItem.id),
       map((directoryItem) => ({ id: directoryItem.id })),
     );
+  }
+
+  // TODO: not sure why this is necessary
+  public ngOnChanges(): void {
+    this.ngOnInit();
   }
 
   public open(): void {
