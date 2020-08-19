@@ -21,11 +21,7 @@ export class MenuItemComponent implements OnInit {
   public menuItem$: Observable<MenuItem>;
   public openDirClass: string;
 
-  constructor(
-    private elementRef: ElementRef,
-    private store: Store<MenuItems>,
-    @Inject(domServiceDep.getToken()) private domService: DomService,
-  ) {}
+  constructor(private elementRef: ElementRef, private store: Store<MenuItems>, @Inject(domServiceDep.getToken()) private domService: DomService) {}
 
   public ngOnInit(): void {
     this.menuItem$ = this.store.pipe(

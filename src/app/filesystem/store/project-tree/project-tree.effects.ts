@@ -9,10 +9,7 @@ import { projectTreeActions } from './project-tree.actions';
 
 @Injectable()
 export class ProjectTreeEffects {
-  constructor(
-    private actions$: Actions,
-    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
-  ) {}
+  constructor(private actions$: Actions, @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade) {}
 
   public openProject$ = createEffect(
     () =>

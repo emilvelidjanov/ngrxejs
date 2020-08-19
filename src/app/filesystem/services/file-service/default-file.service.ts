@@ -17,17 +17,12 @@ import { FileService } from './file.service';
 export class DefaultFileService implements FileService {
   private fileIds$: Observable<Id[]>;
 
-  constructor(
-    private store: Store<Files>,
-    @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
-  ) {
+  constructor(private store: Store<Files>, @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
   public selectByPaths(paths: string[]): Observable<File[]> {
-    return this.store.pipe(
-      select(fileSelectors.selectEntitiesByPredicate, { predicate: (file) => paths.includes(file.path) }),
-    );
+    return this.store.pipe(select(fileSelectors.selectEntitiesByPredicate, { predicate: (file) => paths.includes(file.path) }));
   }
 
   public select(id: Id): Observable<File> {

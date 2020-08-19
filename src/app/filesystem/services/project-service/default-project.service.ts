@@ -17,10 +17,7 @@ import { ProjectService } from './project.service';
 export class DefaultProjectService implements ProjectService {
   private projectIds$: Observable<Id[]>;
 
-  constructor(
-    private store: Store<Projects>,
-    @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
-  ) {
+  constructor(private store: Store<Projects>, @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 

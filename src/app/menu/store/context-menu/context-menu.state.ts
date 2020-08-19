@@ -20,7 +20,7 @@ const initialState: ContextMenus = {
   entities: {},
 };
 
-export const contextMenuDomainStateConfig: EntityDomainStateConfigurer<
-  ContextMenu,
-  ContextMenus
-> = new EntityDomainStateConfigurer(entityName, initialState);
+export const contextMenuDomainStateConfig: EntityDomainStateConfigurer<ContextMenu, ContextMenus> = new EntityDomainStateConfigurer(
+  entityName,
+  initialState,
+);

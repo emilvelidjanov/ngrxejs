@@ -26,7 +26,4 @@ const initialState: MenuItems = {
   entities: {},
 };
 
-export const menuItemDomainStateConfig: EntityDomainStateConfigurer<
-  MenuItem,
-  MenuItems
-> = new EntityDomainStateConfigurer(entityName, initialState);
+export const menuItemDomainStateConfig: EntityDomainStateConfigurer<MenuItem, MenuItems> = new EntityDomainStateConfigurer(entityName, initialState);

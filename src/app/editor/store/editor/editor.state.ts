@@ -18,7 +18,4 @@ const initialState: Editors = {
   entities: {},
 };
 
-export const editorDomainStateConfig: EntityDomainStateConfigurer<Editor, Editors> = new EntityDomainStateConfigurer(
-  entityName,
-  initialState,
-);
+export const editorDomainStateConfig: EntityDomainStateConfigurer<Editor, Editors> = new EntityDomainStateConfigurer(entityName, initialState);

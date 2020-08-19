@@ -15,7 +15,4 @@ const initialState: TabBars = {
   entities: {},
 };
 
-export const tabBarDomainStateConfig: EntityDomainStateConfigurer<TabBar, TabBars> = new EntityDomainStateConfigurer(
-  entityName,
-  initialState,
-);
+export const tabBarDomainStateConfig: EntityDomainStateConfigurer<TabBar, TabBars> = new EntityDomainStateConfigurer(entityName, initialState);

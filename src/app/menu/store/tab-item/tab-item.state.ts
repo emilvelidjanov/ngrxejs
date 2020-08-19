@@ -19,7 +19,4 @@ const initialState: TabItems = {
   entities: {},
 };
 
-export const tabItemDomainStateConfig: EntityDomainStateConfigurer<TabItem, TabItems> = new EntityDomainStateConfigurer(
-  entityName,
-  initialState,
-);
+export const tabItemDomainStateConfig: EntityDomainStateConfigurer<TabItem, TabItems> = new EntityDomainStateConfigurer(entityName, initialState);

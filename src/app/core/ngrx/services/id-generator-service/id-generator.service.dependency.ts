@@ -4,9 +4,7 @@ import { IdGeneratorService } from './id-generator.service';
 import { NumberIdGeneratorService } from './number-id-generator.service';
 import { UuidGeneratorService } from './uuid-generator.service';
 
-export const numberIdGeneratorServiceDep: DependencyConfigurer<IdGeneratorService> = new DependencyConfigurer<
-  IdGeneratorService
->({
+export const numberIdGeneratorServiceDep: DependencyConfigurer<IdGeneratorService> = new DependencyConfigurer<IdGeneratorService>({
   tokenDescription: 'NumberIdGeneratorService',
   dependencies: [],
   factory: () => {
@@ -14,9 +12,7 @@ export const numberIdGeneratorServiceDep: DependencyConfigurer<IdGeneratorServic
   },
 });
 
-export const uuidGeneratorServiceDep: DependencyConfigurer<IdGeneratorService> = new DependencyConfigurer<
-  IdGeneratorService
->({
+export const uuidGeneratorServiceDep: DependencyConfigurer<IdGeneratorService> = new DependencyConfigurer<IdGeneratorService>({
   tokenDescription: 'UuidGeneratorService',
   dependencies: [],
   factory: () => {

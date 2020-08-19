@@ -10,9 +10,7 @@ import { DirectoryItems } from '../../store/directory-item/directory-item.state'
 import { DefaultDirectoryItemService } from './default-directory-item.service';
 import { DirectoryItemService } from './directory-item.service';
 
-export const directoryItemServiceDep: DependencyConfigurer<DirectoryItemService> = new DependencyConfigurer<
-  DirectoryItemService
->({
+export const directoryItemServiceDep: DependencyConfigurer<DirectoryItemService> = new DependencyConfigurer<DirectoryItemService>({
   tokenDescription: 'DirectoryItemService',
   dependencies: [Store, numberIdGeneratorServiceDep.getToken(), sortServiceDep.getToken()],
   factory: (store: Store<DirectoryItems>, idGeneratorService: IdGeneratorService, sortService: SortService) => {

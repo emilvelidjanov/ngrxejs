@@ -36,15 +36,11 @@ export class DirectoryItemComponent implements OnInit, OnChanges {
     );
     this.directory$ = this.directoryItem$.pipe(
       filter((directoryItem) => !!directoryItem.directoryId),
-      switchMap((directoryItem) =>
-        this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId })),
-      ),
+      switchMap((directoryItem) => this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId }))),
     );
     this.projectTree$ = this.directoryItem$.pipe(
       filter((directoryItem) => !!directoryItem.projectTreeId),
-      switchMap((directoryItem) =>
-        this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId })),
-      ),
+      switchMap((directoryItem) => this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId }))),
     );
     this.contextProps$ = this.directoryItem$.pipe(
       filter((directoryItem) => !!directoryItem.id),
@@ -58,25 +54,19 @@ export class DirectoryItemComponent implements OnInit, OnChanges {
   }
 
   public open(): void {
-    this.directoryItem$
-      .pipe(take(1))
-      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
+    this.directoryItem$.pipe(take(1)).subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
   }
 
   public createDirectory(value: string) {
     this.directoryItem$
       .pipe(take(1))
-      .subscribe((directoryItem) =>
-        this.store.dispatch(directoryItemActions.createNewDirectory({ entity: directoryItem, name: value })),
-      );
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewDirectory({ entity: directoryItem, name: value })));
   }
 
   public createFile($event: InputEvent) {
     const target = $event.target as HTMLInputElement;
     this.directoryItem$
       .pipe(take(1))
-      .subscribe((directoryItem) =>
-        this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: target.value })),
-      );
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: target.value })));
   }
 }

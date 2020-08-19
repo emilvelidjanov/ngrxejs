@@ -19,7 +19,7 @@ const initialState: Directories = {
   entities: {},
 };
 
-export const directoryDomainStateConfig: EntityDomainStateConfigurer<
-  Directory,
-  Directories
-> = new EntityDomainStateConfigurer(entityName, initialState);
+export const directoryDomainStateConfig: EntityDomainStateConfigurer<Directory, Directories> = new EntityDomainStateConfigurer(
+  entityName,
+  initialState,
+);

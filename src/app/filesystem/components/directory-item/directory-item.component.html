@@ -1,11 +1,7 @@
 <ng-container *ngIf="directoryItem$ | async as directoryItem">
   <ng-container *ngIf="directory$ | async as directory">
     <ng-container *ngIf="projectTree$ | async as projectTree">
-      <button
-        (click)="open()"
-        [appContextMenuTrigger]="projectTree.directoryItemContextMenuId"
-        [appContextProps]="contextProps$ | async"
-      >
+      <button (click)="open()" [appContextMenuTrigger]="projectTree.directoryItemContextMenuId" [appContextProps]="contextProps$ | async">
         <app-pre-post-symbols preSymbol="25B6">
           {{ directory.name }}
         </app-pre-post-symbols>

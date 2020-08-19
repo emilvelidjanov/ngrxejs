@@ -13,11 +13,7 @@ import { TabItemService } from './tab-item.service';
 export const tabItemServiceDep: DependencyConfigurer<TabItemService> = new DependencyConfigurer<TabItemService>({
   tokenDescription: 'TabItemService',
   dependencies: [Store, numberIdGeneratorServiceDep.getToken(), actionDescriptorServiceDep.getToken()],
-  factory: (
-    store: Store<TabItems>,
-    idGeneratorService: IdGeneratorService,
-    actionDescriptorService: ActionDescriptorService,
-  ) => {
+  factory: (store: Store<TabItems>, idGeneratorService: IdGeneratorService, actionDescriptorService: ActionDescriptorService) => {
     return new DefaultTabItemService(store, idGeneratorService, actionDescriptorService);
   },
 });

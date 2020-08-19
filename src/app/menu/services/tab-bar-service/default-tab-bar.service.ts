@@ -52,9 +52,7 @@ export class DefaultTabBarService implements TabBarService {
 
   public removeTabItems(tabItems: TabItem[], tabBar: TabBar): void {
     if (tabBar && tabItems) {
-      const toRemove = tabItems
-        .filter((tabItem) => tabBar.tabItemIds.includes(tabItem.id))
-        .map((tabItem) => tabItem.id);
+      const toRemove = tabItems.filter((tabItem) => tabBar.tabItemIds.includes(tabItem.id)).map((tabItem) => tabItem.id);
       if (toRemove.length) {
         this.store.dispatch(
           tabBarActions.updateOne({

@@ -39,9 +39,7 @@ export class FileItemComponent implements OnInit {
     );
     this.projectTree$ = this.fileItem$.pipe(
       filter((fileItem) => !!fileItem.projectTreeId),
-      switchMap((fileItem) =>
-        this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: fileItem.projectTreeId })),
-      ),
+      switchMap((fileItem) => this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: fileItem.projectTreeId }))),
     );
     this.contextProps$ = this.fileItem$.pipe(
       filter((fileItem) => !!fileItem.id),
@@ -50,8 +48,6 @@ export class FileItemComponent implements OnInit {
   }
 
   public click(): void {
-    this.fileItem$
-      .pipe(take(1))
-      .subscribe((fileItem) => this.store.dispatch(fileItemActions.onClick({ entity: fileItem })));
+    this.fileItem$.pipe(take(1)).subscribe((fileItem) => this.store.dispatch(fileItemActions.onClick({ entity: fileItem })));
   }
 }

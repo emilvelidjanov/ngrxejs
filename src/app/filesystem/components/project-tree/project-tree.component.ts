@@ -31,9 +31,7 @@ export class ProjectTreeComponent implements OnInit {
     );
     this.rootDirectoryItem$ = this.projectTree$.pipe(
       filter((projectTree) => !!projectTree.rootDirectoryItemId),
-      switchMap((projectTree) =>
-        this.store.pipe(select(directoryItemSelectors.selectEntityById, { id: projectTree.rootDirectoryItemId })),
-      ),
+      switchMap((projectTree) => this.store.pipe(select(directoryItemSelectors.selectEntityById, { id: projectTree.rootDirectoryItemId }))),
       filter((directoryItem) => !!directoryItem),
     );
     this.contextProps$ = this.rootDirectoryItem$.pipe(

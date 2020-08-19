@@ -25,9 +25,7 @@ export class TabItemComponent implements OnInit {
   }
 
   public click(): void {
-    this.tabItem$
-      .pipe(take(1))
-      .subscribe((tabItem) => this.store.dispatch(tabItemActions.onClick({ entity: tabItem })));
+    this.tabItem$.pipe(take(1)).subscribe((tabItem) => this.store.dispatch(tabItemActions.onClick({ entity: tabItem })));
   }
 
   public close($event: MouseEvent): void {

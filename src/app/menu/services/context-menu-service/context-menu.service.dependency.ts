@@ -7,9 +7,7 @@ import { ContextMenus } from '../../store/context-menu/context-menu.state';
 import { ContextMenuService } from './context-menu.service';
 import { DefaultContextMenuService } from './default-context-menu.service';
 
-export const contextMenuServiceDep: DependencyConfigurer<ContextMenuService> = new DependencyConfigurer<
-  ContextMenuService
->({
+export const contextMenuServiceDep: DependencyConfigurer<ContextMenuService> = new DependencyConfigurer<ContextMenuService>({
   tokenDescription: 'ContextMenuService',
   dependencies: [Store, equalityServiceDep.getToken()],
   factory: (store: Store<ContextMenus>) => {

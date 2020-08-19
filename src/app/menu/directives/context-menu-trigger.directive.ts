@@ -22,18 +22,16 @@ export class ContextMenuTriggerDirective implements OnInit {
   public onContextMenu($event: MouseEvent): void {
     $event.stopPropagation();
     if (this.contextMenuId && this.contextMenuId.length) {
-      this.store
-        .pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }), take(1))
-        .subscribe((contextMenu) => {
-          this.store.dispatch(
-            contextMenuActions.open({
-              entity: contextMenu,
-              x: $event.x,
-              y: $event.y,
-              props: this.appContextProps,
-            }),
-          );
-        });
+      this.store.pipe(select(contextMenuSelectors.selectEntityById, { id: this.contextMenuId }), take(1)).subscribe((contextMenu) => {
+        this.store.dispatch(
+          contextMenuActions.open({
+            entity: contextMenu,
+            x: $event.x,
+            y: $event.y,
+            props: this.appContextProps,
+          }),
+        );
+      });
     }
   }
 }

@@ -11,10 +11,7 @@ import { CreateNewInputType, DirectoryItem } from './directory-item.state';
 
 @Injectable()
 export class DirectoryItemEffects {
-  constructor(
-    private actions$: Actions,
-    @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
-  ) {}
+  constructor(private actions$: Actions, @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade) {}
 
   public open$ = createEffect(
     () =>
@@ -29,12 +26,8 @@ export class DirectoryItemEffects {
     () =>
       this.actions$.pipe(
         ofType(directoryItemActions.showCreateNewInput),
-        switchMap((action) =>
-          forkJoin([this.filesystemFacade.selectDirectoryItem(action.id).pipe(take(1)), of(action.createNewInputType)]),
-        ),
-        tap(([directoryItem, createNewInputType]) =>
-          this.filesystemFacade.showCreateNewInputDirectoryItem(directoryItem, createNewInputType),
-        ),
+        switchMap((action) => forkJoin([this.filesystemFacade.selectDirectoryItem(action.id).pipe(take(1)), of(action.createNewInputType)])),
+        tap(([directoryItem, createNewInputType]) => this.filesystemFacade.showCreateNewInputDirectoryItem(directoryItem, createNewInputType)),
       ),
     { dispatch: false },
   );

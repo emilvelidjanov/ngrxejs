@@ -16,7 +16,4 @@ const initialState: FileItems = {
   entities: {},
 };
 
-export const fileItemDomainStateConfig: EntityDomainStateConfigurer<
-  FileItem,
-  FileItems
-> = new EntityDomainStateConfigurer(entityName, initialState);
+export const fileItemDomainStateConfig: EntityDomainStateConfigurer<FileItem, FileItems> = new EntityDomainStateConfigurer(entityName, initialState);

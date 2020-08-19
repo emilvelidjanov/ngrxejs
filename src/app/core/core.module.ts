@@ -7,10 +7,7 @@ import { OffClickDirective } from './directives/off-click.directive';
 import { ElectronService } from './electron/electron-service/electron.service';
 import { ipcServiceDep } from './electron/ipc-service/ipc-service.dependency';
 import { actionDescriptorServiceDep } from './ngrx/services/action-descriptor-service/action-descriptor.service.dependency';
-import {
-  numberIdGeneratorServiceDep,
-  uuidGeneratorServiceDep,
-} from './ngrx/services/id-generator-service/id-generator.service.dependency';
+import { numberIdGeneratorServiceDep, uuidGeneratorServiceDep } from './ngrx/services/id-generator-service/id-generator.service.dependency';
 import { domServiceDep } from './services/DOM-service/dom.service.dependency';
 import { equalityServiceDep } from './services/equality-service/equality.service.dependency';
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';

@@ -18,10 +18,7 @@ import { FileItemService } from './file-item.service';
 export class DefaultFileItemService implements FileItemService {
   private fileItemIds: Observable<Id[]>;
 
-  constructor(
-    private store: Store<FileItems>,
-    @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
-  ) {
+  constructor(private store: Store<FileItems>, @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {
     this.fileItemIds = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
@@ -52,8 +49,6 @@ export class DefaultFileItemService implements FileItemService {
 
   public selectByFiles(files: File[]): Observable<FileItem[]> {
     const fileIds = files.map((file) => file.id);
-    return this.store.pipe(
-      select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (entity) => fileIds.includes(entity.fileId) }),
-    );
+    return this.store.pipe(select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (entity) => fileIds.includes(entity.fileId) }));
   }
 }

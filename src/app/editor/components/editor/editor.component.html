@@ -3,11 +3,6 @@
     <app-tab-bar [tabBarId]="editor.tabBarId"></app-tab-bar>
   </ng-container>
   <ng-container *ngIf="focusedFile$ | async as focusedFile">
-    <div
-      class="textarea"
-      contenteditable="true"
-      [innerHTML]="focusedFile.content"
-      [style.white-space]="whiteSpace"
-    ></div>
+    <div class="textarea" contenteditable="true" [innerHTML]="focusedFile.content" [style.white-space]="whiteSpace"></div>
   </ng-container>
 </ng-container>

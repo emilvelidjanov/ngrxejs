@@ -7,16 +7,12 @@ import { FilesystemService } from './filesystem.service';
 import { LocalFilesystemService } from './local-filesystem.service';
 import { RemoteFilesystemService } from './remote-filesystem.service';
 
-export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new DependencyConfigurer<
-  FilesystemService
->({
+export const filesystemServiceDep: DependencyConfigurer<FilesystemService> = new DependencyConfigurer<FilesystemService>({
   tokenDescription: 'FilesystemService',
   dependencies: [ElectronService, ipcServiceDep.getToken()],
   factory: (electronService: ElectronService, ipcService: IpcService) => {
     const isElectron = electronService.isElectron();
-    const filesystemService: FilesystemService = isElectron
-      ? new LocalFilesystemService(ipcService)
-      : new RemoteFilesystemService();
+    const filesystemService: FilesystemService = isElectron ? new LocalFilesystemService(ipcService) : new RemoteFilesystemService();
     return filesystemService;
   },
 });
