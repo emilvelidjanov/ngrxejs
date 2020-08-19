@@ -10,4 +10,12 @@ export const directoryItemActions = {
     directoryDomainStateConfig.getEffectActionType('Show Create New Input'),
     props<PropId & CreateNewInputTypeProp>(),
   ),
+  createNewDirectory: createAction(
+    directoryDomainStateConfig.getEffectActionType('Create New Directory'),
+    props<PropEntity<DirectoryItem> & { name: string }>(),
+  ),
+  createNewFile: createAction(
+    directoryDomainStateConfig.getEffectActionType('Create New File'),
+    props<PropEntity<DirectoryItem> & { name: string }>(),
+  ),
 };

@@ -1,25 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } from './filesystem.service';
+import { FilesystemService, OpenDialogResult, StatResult } from './filesystem.service';
 
 @Injectable()
 export class RemoteFilesystemService implements FilesystemService {
   constructor() {}
 
-  public partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]] {
+  public createDirectory(path: string, name: string): Observable<StatResult> {
+    throw new Error('RemoteFilesystemService#createDirectory not implemented.');
+  }
+
+  public partitionLoadDirectoryResults(results: StatResult[]): [StatResult[], StatResult[]] {
     throw new Error('RemoteFilesystemService#partitionLoadDirectoryResults not implemented.');
   }
 
-  public openDialog(_options?: any): Observable<OpenDialogResult> {
+  public openDialog(options?: any): Observable<OpenDialogResult> {
     throw new Error('RemoteFilesystemService#openDialog not implemented.');
   }
 
-  public loadDirectory(_path: string): Observable<LoadDirectoryResult[]> {
+  public loadDirectory(path: string): Observable<StatResult[]> {
     throw new Error('RemoteFilesystemService#loadDirectory not implemented.');
   }
 
-  public loadFile(_path: string): Observable<string> {
+  public loadFile(path: string): Observable<string> {
     throw new Error('RemoteFilesystemService#loadFile not implemented.');
   }
 

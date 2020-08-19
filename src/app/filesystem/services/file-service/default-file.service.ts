@@ -9,7 +9,7 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 import { fileActions } from '../../store/file/file.actions';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { File, Files } from '../../store/file/file.state';
-import { LoadDirectoryResult } from '../filesystem-service/filesystem.service';
+import { StatResult } from '../filesystem-service/filesystem.service';
 
 import { FileService } from './file.service';
 
@@ -34,7 +34,7 @@ export class DefaultFileService implements FileService {
     return this.store.pipe(select(fileSelectors.selectEntityById, { id }));
   }
 
-  public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<File[]> {
+  public createMany(loadDirectoryResults: StatResult[]): Observable<File[]> {
     const fileResults = loadDirectoryResults.filter((result) => !result.isDirectory);
     const size = fileResults.length;
     const files$ = this.fileIds$.pipe(

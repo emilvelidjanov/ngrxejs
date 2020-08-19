@@ -2,28 +2,25 @@ import { Observable } from 'rxjs';
 
 export interface FilesystemService {
   openDialog(options?: any): Observable<OpenDialogResult>;
-  loadDirectory(path: string): Observable<LoadDirectoryResult[]>;
+  loadDirectory(path: string): Observable<StatResult[]>;
   loadFile(path: string): Observable<string>;
   statPath(path: string): Observable<StatResult>;
-  partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]];
+  partitionLoadDirectoryResults(results: StatResult[]): [StatResult[], StatResult[]];
+  createDirectory(path: string, name: string): Observable<StatResult>;
 }
 
 export interface OpenDialogResult {
   canceled: boolean;
   filePaths: string[];
-  filenames: string[];
+  fileNames: string[];
 }
 
-export interface LoadDirectoryResult {
-  name: string;
+export interface PathAndName {
   path: string;
-  extension: string;
-  isDirectory: boolean;
+  name: string;
 }
 
-export interface StatResult {
-  name: string;
-  path: string;
+export interface StatResult extends PathAndName {
   extension: string;
   isDirectory: boolean;
 }

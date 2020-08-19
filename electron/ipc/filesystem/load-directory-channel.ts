@@ -2,7 +2,7 @@ import { IpcChannel, IpcRequest, IpcChannelName } from '../ipc';
 import { IpcMainEvent } from 'electron';
 import { FsUtils } from '../../utils/fs.utils';
 import { PathUtils } from '../../utils/path.utils';
-import { LoadDirectoryResult } from './../../../src/app/filesystem/services/filesystem-service/filesystem.service';
+import { StatResult } from './../../../src/app/filesystem/services/filesystem-service/filesystem.service';
 
 export class LoadDirectoryChannel implements IpcChannel<string> {
   constructor() {}
@@ -18,7 +18,7 @@ export class LoadDirectoryChannel implements IpcChannel<string> {
         const fullPath = PathUtils.joinPath(path, dirent.name);
         const extension = PathUtils.getExtension(dirent.name);
         const name = PathUtils.getFilename(dirent.name);
-        const result: LoadDirectoryResult = {
+        const result: StatResult = {
           name: name,
           path: fullPath,
           extension: extension.length ? extension : null,

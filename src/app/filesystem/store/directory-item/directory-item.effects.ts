@@ -38,4 +38,13 @@ export class DirectoryItemEffects {
       ),
     { dispatch: false },
   );
+
+  public createNewDirectory$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(directoryItemActions.createNewDirectory),
+        tap((action) => this.filesystemFacade.createNewDirectory(action.entity, action.name)),
+      ),
+    { dispatch: false },
+  );
 }

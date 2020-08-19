@@ -48,6 +48,7 @@ export interface PropEntityMap<T extends Entity> extends Prop {
   entityMap: EntityMap<T>;
 }
 
+// TODO: remove and use plainly in actions instead
 export interface PropCoordinates extends Prop {
   x: number;
   y: number;

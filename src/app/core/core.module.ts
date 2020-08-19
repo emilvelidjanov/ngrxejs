@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
+import { FocusInputComponent } from './components/focus-input/focus-input.component';
 import { PrePostSymbolsComponent } from './components/pre-post-symbols/pre-post-symbols.component';
 import { OffClickDirective } from './directives/off-click.directive';
 import { ElectronService } from './electron/electron-service/electron.service';
@@ -15,9 +16,9 @@ import { equalityServiceDep } from './services/equality-service/equality.service
 import { sortServiceDep } from './services/sort-service/sort.service.dependency';
 
 @NgModule({
-  declarations: [OffClickDirective, PrePostSymbolsComponent],
+  declarations: [OffClickDirective, PrePostSymbolsComponent, FocusInputComponent],
   imports: [CommonModule],
-  exports: [OffClickDirective, PrePostSymbolsComponent],
+  exports: [OffClickDirective, PrePostSymbolsComponent, FocusInputComponent],
 })
 export class CoreModule {
   public static forRoot(): ModuleWithProviders {

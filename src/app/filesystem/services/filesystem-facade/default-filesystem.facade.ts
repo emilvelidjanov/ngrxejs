@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { map, share, switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { map, share, switchMap, take, takeUntil, takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
@@ -75,7 +75,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       takeUntil(selectExistingProject$),
       switchMap((result) => this.filesystemService.statPath(result.filePaths[0])),
       takeWhile((stat) => stat.isDirectory),
-      switchMap((stat) => this.directoryService.createOne(stat)),
+      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
       share(),
     );
     const createRootDirectoryItem$ = createRootDirectory$.pipe(
@@ -198,6 +198,57 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public showCreateNewInputDirectoryItem(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void {
+    this.directoryItemService.updateIsOpened(directoryItem, true);
     this.directoryItemService.showCreateNewInput(directoryItem, createNewInputType);
+  }
+
+  public createNewDirectory(directoryItem: DirectoryItem, name: string): void {
+    const directory$ = this.directoryService.select(directoryItem.directoryId).pipe(take(1));
+    const createDirectoryFilesystem$ = directory$.pipe(
+      switchMap((directory) => this.filesystemService.createDirectory(directory.path, name)),
+    );
+    const createDirectory$ = createDirectoryFilesystem$.pipe(
+      takeWhile((result) => !!result),
+      switchMap((stats) => this.directoryService.createOne({ name: stats.name, path: stats.path })),
+      share(),
+    );
+    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
+    const createDirectoryItem$ = forkJoin([createDirectory$, selectProjectTree$]).pipe(
+      switchMap(([directory, projectTree]) => this.directoryItemService.createOne(directory, projectTree)),
+      share(),
+    );
+    const currentDirectoryItems$ = this.directoryItemService.selectByIds(directoryItem.directoryItemIds).pipe(take(1));
+    const currentDirectories$ = directory$.pipe(
+      switchMap((directory) => this.directoryService.selectByIds(directory.directoryIds).pipe(take(1))),
+    );
+    const combinedDirectoryItems$ = forkJoin([createDirectoryItem$, currentDirectoryItems$]).pipe(
+      map(([newDirectoryItem, currentDirectoryItems]) => [...currentDirectoryItems, newDirectoryItem]),
+    );
+    const sortedCombinedDirectories$ = forkJoin([createDirectory$, currentDirectories$]).pipe(
+      map(([newDirectory, currentDirectories]) => [...currentDirectories, newDirectory]),
+      map((directories) => this.directoryService.sort(directories)),
+      share(),
+    );
+    const sortedCombinedDirectoryItems$ = forkJoin([combinedDirectoryItems$, sortedCombinedDirectories$]).pipe(
+      map(([directoryItems, directories]) =>
+        this.directoryItemService.applySortByDirectories(directoryItems, directories),
+      ),
+    );
+    const dispatch$ = forkJoin([
+      createDirectory$,
+      createDirectoryItem$,
+      directory$,
+      sortedCombinedDirectories$,
+      sortedCombinedDirectoryItems$,
+    ]).pipe(
+      tap(([newDirectory, newDirectoryItem, directory, sortedDirectories, sortedDirectoryItems]) => {
+        this.directoryService.addOne(newDirectory);
+        this.directoryItemService.addOne(newDirectoryItem);
+        this.directoryService.setDirectories(sortedDirectories, directory);
+        this.directoryItemService.setDirectoryItems(sortedDirectoryItems, directoryItem);
+        this.directoryItemService.showCreateNewInput(directoryItem, 'none');
+      }),
+    );
+    dispatch$.subscribe();
   }
 }

@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
+import { SortService } from 'src/app/core/services/sort-service/sort.service';
+import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
 import { directoryItemSelectors } from '../../store/directory-item/directory-item.selectors';
@@ -22,8 +24,13 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
   constructor(
     private store: Store<DirectoryItems>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
+    @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public selectByIds(ids: Id[]): Observable<DirectoryItem[]> {
+    return this.store.pipe(select(directoryItemSelectors.selectEntitiesByIds, { ids }));
   }
 
   public select(id: Id): Observable<DirectoryItem> {
@@ -138,6 +145,46 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
             id: directoryItem.id,
             changes: {
               createNewInputType,
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public applySortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[] {
+    if (directoryItems.length === directories.length) {
+      const ids = directories.map((directory) => directory.id);
+      return this.sortService.sort(directoryItems, {
+        primarySort: (a, b) => ids.indexOf(a.directoryId) - ids.indexOf(b.directoryId),
+      });
+    }
+    return directoryItems;
+  }
+
+  public setDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void {
+    if (directoryItems && directoryItem) {
+      this.store.dispatch(
+        directoryItemActions.updateOne({
+          update: {
+            id: directoryItem.id,
+            changes: {
+              directoryItemIds: directoryItems.map((directoryItem) => directoryItem.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void {
+    if (directoryItem.isOpened !== isOpened) {
+      this.store.dispatch(
+        directoryItemActions.updateOne({
+          update: {
+            id: directoryItem.id,
+            changes: {
+              isOpened,
             },
           },
         }),

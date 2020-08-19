@@ -21,6 +21,7 @@ import { ProjectTree } from '../../store/project-tree/project-tree.state';
 })
 export class DirectoryItemComponent implements OnInit, OnChanges {
   @Input() public directoryItemId: Id;
+
   public directoryItem$: Observable<DirectoryItem>;
   public directory$: Observable<Directory>;
   public projectTree$: Observable<ProjectTree>;
@@ -60,5 +61,22 @@ export class DirectoryItemComponent implements OnInit, OnChanges {
     this.directoryItem$
       .pipe(take(1))
       .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
+  }
+
+  public createDirectory(value: string) {
+    this.directoryItem$
+      .pipe(take(1))
+      .subscribe((directoryItem) =>
+        this.store.dispatch(directoryItemActions.createNewDirectory({ entity: directoryItem, name: value })),
+      );
+  }
+
+  public createFile($event: InputEvent) {
+    const target = $event.target as HTMLInputElement;
+    this.directoryItem$
+      .pipe(take(1))
+      .subscribe((directoryItem) =>
+        this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: target.value })),
+      );
   }
 }

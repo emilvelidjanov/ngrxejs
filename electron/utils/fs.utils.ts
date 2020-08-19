@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { bindNodeCallback, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { PathUtils } from './path.utils';
 
 export class FsUtils {
   static readDirectory(path: string): Observable<fs.Dirent[]> {
@@ -27,6 +28,14 @@ export class FsUtils {
     const statPathCallback = bindNodeCallback<fs.PathLike, object, fs.Stats>(fs.stat);
     return statPathCallback(path, options).pipe(take(1));
   }
+
+  static makeDir(path: string, name: string) {
+    const options: MakeDirOptions = {
+      recursive: false,
+    };
+    const makeDirCallback = bindNodeCallback<fs.PathLike, object, any>(fs.mkdir);
+    return makeDirCallback(PathUtils.joinPath(path, name), options).pipe(take(1));
+  }
 }
 
 export interface ReaddirOptions {
@@ -41,4 +50,9 @@ export interface ReadFileOptions {
 
 export interface StatOptions {
   bigint: boolean;
+}
+
+export interface MakeDirOptions {
+  recursive?: boolean;
+  mode?: string;
 }

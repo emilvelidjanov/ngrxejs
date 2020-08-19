@@ -8,6 +8,7 @@ import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 export interface DirectoryItemService {
   select(id: Id): Observable<DirectoryItem>;
+  selectByIds(ids: Id[]): Observable<DirectoryItem[]>;
   selectByDirectory(directory: Directory): Observable<DirectoryItem>;
   addOne(directoryItem: DirectoryItem): void;
   addMany(directoryItems: DirectoryItem[]): void;
@@ -17,4 +18,7 @@ export interface DirectoryItemService {
   updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]): void;
   selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]>;
   showCreateNewInput(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void;
+  applySortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[];
+  setDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void;
+  updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void;
 }

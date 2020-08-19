@@ -5,18 +5,11 @@ import { Observable } from 'rxjs';
 import { IpcService } from 'src/app/core/electron/ipc-service/ipc-service';
 import { ipcServiceDep } from 'src/app/core/electron/ipc-service/ipc-service.dependency';
 
-import { FilesystemService, LoadDirectoryResult, OpenDialogResult, StatResult } from './filesystem.service';
+import { FilesystemService, OpenDialogResult, PathAndName, StatResult } from './filesystem.service';
 
 @Injectable()
 export class LocalFilesystemService implements FilesystemService {
   constructor(@Inject(ipcServiceDep.getToken()) private ipcService: IpcService) {}
-
-  public partitionLoadDirectoryResults(results: LoadDirectoryResult[]): [LoadDirectoryResult[], LoadDirectoryResult[]] {
-    const fileResults: LoadDirectoryResult[] = [];
-    const directoryResults: LoadDirectoryResult[] = [];
-    results.forEach((result) => (result.isDirectory ? directoryResults.push(result) : fileResults.push(result)));
-    return [fileResults, directoryResults];
-  }
 
   public openDialog(options?: OpenDialogOptions): Observable<OpenDialogResult> {
     const request: IpcRequest<OpenDialogOptions> = {
@@ -26,11 +19,11 @@ export class LocalFilesystemService implements FilesystemService {
     return response$;
   }
 
-  public loadDirectory(path: string): Observable<LoadDirectoryResult[]> {
+  public loadDirectory(path: string): Observable<StatResult[]> {
     const request: IpcRequest<string> = {
       params: path,
     };
-    const response$ = this.ipcService.send<string, LoadDirectoryResult[]>(IpcChannelName.LOAD_DIRECTORY, request);
+    const response$ = this.ipcService.send<string, StatResult[]>(IpcChannelName.LOAD_DIRECTORY, request);
     return response$;
   }
 
@@ -48,5 +41,22 @@ export class LocalFilesystemService implements FilesystemService {
     };
     const response$ = this.ipcService.send<string, StatResult>(IpcChannelName.STAT_PATH, request);
     return response$;
+  }
+
+  public partitionLoadDirectoryResults(results: StatResult[]): [StatResult[], StatResult[]] {
+    const fileResults: StatResult[] = [];
+    const directoryResults: StatResult[] = [];
+    results.forEach((result) => (result.isDirectory ? directoryResults.push(result) : fileResults.push(result)));
+    return [fileResults, directoryResults];
+  }
+
+  public createDirectory(path: string, name: string): Observable<StatResult> {
+    const request: IpcRequest<PathAndName> = {
+      params: {
+        path,
+        name,
+      },
+    };
+    return this.ipcService.send<PathAndName, StatResult>(IpcChannelName.CREATE_DIRECTORY, request);
   }
 }
