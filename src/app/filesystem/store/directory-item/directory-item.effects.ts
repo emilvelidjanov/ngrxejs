@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { forkJoin, of } from 'rxjs';
-import { concatMap, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 import { FilesystemFacade } from '../../services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from '../../services/filesystem-facade/filesystem.facade.dependency';
 
 import { directoryItemActions } from './directory-item.actions';
-import { CreateNewInputType, DirectoryItem } from './directory-item.state';
 
 @Injectable()
 export class DirectoryItemEffects {
@@ -37,6 +36,15 @@ export class DirectoryItemEffects {
       this.actions$.pipe(
         ofType(directoryItemActions.createNewDirectory),
         tap((action) => this.filesystemFacade.createNewDirectory(action.entity, action.name)),
+      ),
+    { dispatch: false },
+  );
+
+  public createNewFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(directoryItemActions.createNewFile),
+        tap((action) => this.filesystemFacade.createNewFile(action.entity, action.name)),
       ),
     { dispatch: false },
   );

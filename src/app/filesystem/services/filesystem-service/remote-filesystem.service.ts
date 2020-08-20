@@ -7,6 +7,10 @@ import { FilesystemService, OpenDialogResult, StatResult } from './filesystem.se
 export class RemoteFilesystemService implements FilesystemService {
   constructor() {}
 
+  public createFile(path: string, name: string): Observable<StatResult> {
+    throw new Error('RemoteFilesystemService#createFile not implemented.');
+  }
+
   public createDirectory(path: string, name: string): Observable<StatResult> {
     throw new Error('RemoteFilesystemService#createDirectory not implemented.');
   }

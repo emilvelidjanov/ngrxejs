@@ -57,16 +57,15 @@ export class DirectoryItemComponent implements OnInit, OnChanges {
     this.directoryItem$.pipe(take(1)).subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
   }
 
-  public createDirectory(value: string) {
+  public createNewDirectory(value: string) {
     this.directoryItem$
       .pipe(take(1))
       .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewDirectory({ entity: directoryItem, name: value })));
   }
 
-  public createFile($event: InputEvent) {
-    const target = $event.target as HTMLInputElement;
+  public createNewFile(value: string) {
     this.directoryItem$
       .pipe(take(1))
-      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: target.value })));
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: value })));
   }
 }

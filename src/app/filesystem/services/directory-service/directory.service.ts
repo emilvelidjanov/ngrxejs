@@ -17,5 +17,6 @@ export interface DirectoryService {
   updateLoaded(loadedDirectory: Directory, files: File[], directories: Directory[]): void;
   selectByPath(path: string): Observable<Directory>;
   sort(directories: Directory[]): Directory[];
-  setDirectories(sortedDirectories: Directory[], directory: Directory): void;
+  updateDirectories(directories: Directory[], directory: Directory): void;
+  updateFiles(files: File[], directory: Directory): void;
 }

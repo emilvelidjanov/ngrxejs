@@ -162,7 +162,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     return directoryItems;
   }
 
-  public setDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void {
+  public updateDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void {
     if (directoryItems && directoryItem) {
       this.store.dispatch(
         directoryItemActions.updateOne({
@@ -170,6 +170,21 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
             id: directoryItem.id,
             changes: {
               directoryItemIds: directoryItems.map((directoryItem) => directoryItem.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public updateFileItems(fileItems: FileItem[], directoryItem: DirectoryItem): void {
+    if (fileItems && directoryItem) {
+      this.store.dispatch(
+        directoryItemActions.updateOne({
+          update: {
+            id: directoryItem.id,
+            changes: {
+              fileItemIds: fileItems.map((directoryItem) => directoryItem.id),
             },
           },
         }),

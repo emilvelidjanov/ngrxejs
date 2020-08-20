@@ -4,23 +4,26 @@ import { PathAndName, StatResult } from '../../../src/app/filesystem/services/fi
 import { FsUtils } from '../../../electron/utils/fs.utils';
 import { PathUtils } from '../../../electron/utils/path.utils';
 
-export class CreateDirectoryChannel implements IpcChannel<PathAndName> {
+export class CreateFileChannel implements IpcChannel<PathAndName> {
   constructor() {}
 
   public getName(): string {
-    return IpcChannelName.CREATE_DIRECTORY;
+    return IpcChannelName.CREATE_FILE;
   }
 
   public handle(event: IpcMainEvent, request: IpcRequest<PathAndName>): void {
     const path = request.params.path;
     const name = request.params.name;
-    FsUtils.makeDir(path, name).subscribe(
+    FsUtils.makeFile(path, name).subscribe(
       () => {
+        const responsePath = PathUtils.joinPath(path, name);
+        const responseName = PathUtils.getFilename(responsePath);
+        const extension = PathUtils.getExtension(name);
         const response: StatResult = {
-          name: name,
-          path: PathUtils.joinPath(path, name),
-          extension: null,
-          isDirectory: true,
+          name: responseName,
+          path: responsePath,
+          extension: extension,
+          isDirectory: false,
         };
         event.reply(request.responseChannel, response);
       },

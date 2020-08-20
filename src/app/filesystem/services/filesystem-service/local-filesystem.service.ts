@@ -59,4 +59,14 @@ export class LocalFilesystemService implements FilesystemService {
     };
     return this.ipcService.send<PathAndName, StatResult>(IpcChannelName.CREATE_DIRECTORY, request);
   }
+
+  public createFile(path: string, name: string): Observable<StatResult> {
+    const request: IpcRequest<PathAndName> = {
+      params: {
+        path,
+        name,
+      },
+    };
+    return this.ipcService.send<PathAndName, StatResult>(IpcChannelName.CREATE_FILE, request);
+  }
 }

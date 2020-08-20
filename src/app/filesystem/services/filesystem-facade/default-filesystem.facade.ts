@@ -75,7 +75,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       takeUntil(selectExistingProject$),
       switchMap((result) => this.filesystemService.statPath(result.filePaths[0])),
       takeWhile((stat) => stat.isDirectory),
-      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
+      switchMap((stat) => this.directoryService.createOne({ ...stat })),
       share(),
     );
     const createRootDirectoryItem$ = createRootDirectory$.pipe(switchMap((directory) => this.directoryItemService.createOne(directory, projectTree)));
@@ -185,7 +185,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const createDirectoryFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createDirectory(directory.path, name)));
     const createDirectory$ = createDirectoryFilesystem$.pipe(
       takeWhile((result) => !!result),
-      switchMap((stats) => this.directoryService.createOne({ name: stats.name, path: stats.path })),
+      switchMap((stat) => this.directoryService.createOne({ ...stat })),
       share(),
     );
     const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
@@ -210,11 +210,49 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       tap(([newDirectory, newDirectoryItem, directory, sortedDirectories, sortedDirectoryItems]) => {
         this.directoryService.addOne(newDirectory);
         this.directoryItemService.addOne(newDirectoryItem);
-        this.directoryService.setDirectories(sortedDirectories, directory);
-        this.directoryItemService.setDirectoryItems(sortedDirectoryItems, directoryItem);
+        this.directoryService.updateDirectories(sortedDirectories, directory);
+        this.directoryItemService.updateDirectoryItems(sortedDirectoryItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
       }),
     );
     dispatch$.subscribe();
+  }
+
+  public createNewFile(directoryItem: DirectoryItem, name: string): void {
+    const directory$ = this.directoryService.select(directoryItem.directoryId).pipe(take(1));
+    const createFileFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createFile(directory.path, name)));
+    const createFile$ = createFileFilesystem$.pipe(
+      takeWhile((result) => !!result),
+      switchMap((stat) => this.fileService.createOne({ ...stat })),
+      share(),
+    );
+    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
+    const createFileItem$ = forkJoin([createFile$, selectProjectTree$]).pipe(
+      switchMap(([file, projectTree]) => this.fileItemService.createOne(file, projectTree)),
+      share(),
+    );
+    const currentFileItems$ = this.fileItemService.selectByIds(directoryItem.fileItemIds).pipe(take(1));
+    const currentFiles$ = directory$.pipe(switchMap((directory) => this.fileService.selectByIds(directory.fileIds).pipe(take(1))));
+    const combinedFileItems$ = forkJoin([createFileItem$, currentFileItems$]).pipe(
+      map(([newFileItem, currentFileItems]) => [...currentFileItems, newFileItem]),
+    );
+    const sortedCombinedFiles$ = forkJoin([createFile$, currentFiles$]).pipe(
+      map(([newFile, currentFiles]) => [...currentFiles, newFile]),
+      map((files) => this.fileService.sort(files)),
+      share(),
+    );
+    const sortedCombinedFileItems$ = forkJoin([combinedFileItems$, sortedCombinedFiles$]).pipe(
+      map(([fileItems, files]) => this.fileItemService.applySortByFiles(fileItems, files)),
+    );
+    const dispatch$ = forkJoin([createFile$, createFileItem$, directory$, sortedCombinedFiles$, sortedCombinedFileItems$]).pipe(
+      tap(([newFile, newFileItem, directory, sortedFiles, sortedFileItems]) => {
+        this.fileService.addOne(newFile);
+        this.fileItemService.addOne(newFileItem);
+        this.directoryService.updateFiles(sortedFiles, directory);
+        this.directoryItemService.updateFileItems(sortedFileItems, directoryItem);
+        this.directoryItemService.showCreateNewInput(directoryItem, 'none');
+      }),
+    );
+    dispatch$.subscribe(console.log);
   }
 }

@@ -16,4 +16,5 @@ export enum IpcChannelName {
   LOAD_FILE = 'load-file',
   STAT_PATH = 'stat-path',
   CREATE_DIRECTORY = 'create-directory',
+  CREATE_FILE = 'create-file',
 }

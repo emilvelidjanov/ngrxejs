@@ -19,6 +19,7 @@ export interface DirectoryItemService {
   selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]>;
   showCreateNewInput(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void;
   applySortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[];
-  setDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void;
+  updateDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void;
+  updateFileItems(fileItems: FileItem[], directoryItem: DirectoryItem): void;
   updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void;
 }

@@ -133,14 +133,29 @@ export class DefaultDirectoryService implements DirectoryService {
     });
   }
 
-  public setDirectories(directories: Directory[], directory: Directory): void {
+  public updateDirectories(directories: Directory[], directory: Directory): void {
     if (directories && directory) {
       this.store.dispatch(
         directoryActions.updateOne({
           update: {
             id: directory.id,
             changes: {
-              directoryIds: directories.map((directoryItem) => directoryItem.id),
+              directoryIds: directories.map((directory) => directory.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public updateFiles(files: File[], directory: Directory): void {
+    if (files && directory) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: directory.id,
+            changes: {
+              directoryIds: files.map((file) => file.id),
             },
           },
         }),

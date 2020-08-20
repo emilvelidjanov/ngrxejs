@@ -11,7 +11,7 @@
           <app-focus-input
             type="text"
             [isFocused]="directoryItem.createNewInputType === 'directory'"
-            (onEnter)="createDirectory($event)"
+            (enter)="createNewDirectory($event)"
           ></app-focus-input>
           <!-- TODO: validation -->
         </ng-container>
@@ -19,7 +19,7 @@
           <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
         </ng-container>
         <ng-container *ngIf="directoryItem.createNewInputType === 'file'">
-          <input type="text" (keyup.enter)="createFile($event)" />
+          <app-focus-input type="text" [isFocused]="directoryItem.createNewInputType === 'file'" (enter)="createNewFile($event)"></app-focus-input>
         </ng-container>
         <ng-container *ngFor="let fileItemId of directoryItem.fileItemIds">
           <app-file-item [fileItemId]="fileItemId"></app-file-item>
