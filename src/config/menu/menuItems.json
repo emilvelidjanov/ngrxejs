@@ -17,7 +17,7 @@
   {
     "id": "new",
     "label": "New...",
-    "menuItemIds": ["nested", "a", "b", "c"],
+    "menuItemIds": ["newFile", "newDirectory"],
     "openType": "hover",
     "postSymbol": "25B6"
   },
@@ -32,6 +32,28 @@
     "menuItemIds": ["a", "b", "c"],
     "openType": "hover",
     "postSymbol": "25B6"
+  },
+  {
+    "id": "newDirectory",
+    "label": "Directory",
+    "clickAction": {
+      "type": "[Effect][DirectoryItem] Show Create New Input",
+      "props": {
+        "createNewInputType": "directory"
+      }
+    },
+    "isContextAware": true
+  },
+  {
+    "id": "newFile",
+    "label": "File",
+    "clickAction": {
+      "type": "[Effect][DirectoryItem] Show Create New Input",
+      "props": {
+        "createNewInputType": "file"
+      }
+    },
+    "isContextAware": true
   },
   {
     "id": "a",

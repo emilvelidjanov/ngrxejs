@@ -5,9 +5,14 @@
   width: fit-content;
 
   app-directory-item,
-  app-file-item {
+  app-file-item,
+  app-focus-input {
     position: relative;
     left: 21px;
+  }
+
+  app-focus-input {
+    display: block;
   }
 }
 

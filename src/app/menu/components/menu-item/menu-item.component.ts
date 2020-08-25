@@ -21,11 +21,7 @@ export class MenuItemComponent implements OnInit {
   public menuItem$: Observable<MenuItem>;
   public openDirClass: string;
 
-  constructor(
-    private elementRef: ElementRef,
-    private store: Store<MenuItems>,
-    @Inject(domServiceDep.getToken()) private domService: DomService,
-  ) {}
+  constructor(private elementRef: ElementRef, private store: Store<MenuItems>, @Inject(domServiceDep.getToken()) private domService: DomService) {}
 
   public ngOnInit(): void {
     this.menuItem$ = this.store.pipe(
@@ -38,7 +34,7 @@ export class MenuItemComponent implements OnInit {
     this.menuItem$
       .pipe(
         take(1),
-        filter((menuItem) => menuItem.openType === 'click'),
+        filter((menuItem) => menuItem.openType === 'click' && !menuItem.isDisabled),
       )
       .subscribe((menuItem) => this.store.dispatch(menuItemActions.onClick({ entity: menuItem })));
   }
@@ -47,7 +43,7 @@ export class MenuItemComponent implements OnInit {
     this.menuItem$
       .pipe(
         take(1),
-        filter((menuItem) => menuItem.openType === 'hover'),
+        filter((menuItem) => menuItem.openType === 'hover' && !menuItem.isDisabled),
       )
       .subscribe((menuItem) => this.store.dispatch(menuItemActions.onOffHover({ entity: menuItem })));
   }

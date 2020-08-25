@@ -17,7 +17,4 @@ const initialState: MenuBars = {
   entities: {},
 };
 
-export const menuBarDomainStateConfig: EntityDomainStateConfigurer<MenuBar, MenuBars> = new EntityDomainStateConfigurer(
-  entityName,
-  initialState,
-);
+export const menuBarDomainStateConfig: EntityDomainStateConfigurer<MenuBar, MenuBars> = new EntityDomainStateConfigurer(entityName, initialState);

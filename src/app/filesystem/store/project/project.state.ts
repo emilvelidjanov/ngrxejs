@@ -15,7 +15,4 @@ const initialState: Projects = {
   entities: {},
 };
 
-export const projectDomainStateConfig: EntityDomainStateConfigurer<Project, Projects> = new EntityDomainStateConfigurer(
-  entityName,
-  initialState,
-);
+export const projectDomainStateConfig: EntityDomainStateConfigurer<Project, Projects> = new EntityDomainStateConfigurer(entityName, initialState);

@@ -4,7 +4,7 @@ import { DomService } from './dom.service';
 
 @Injectable()
 export class DefaultDomService implements DomService {
-  public containsOrIsEqual(parent: HTMLElement, child: HTMLElement) {
+  public containsOrIsEqual(parent: HTMLElement, child: HTMLElement): boolean {
     if (child.isEqualNode(parent)) {
       return true;
     }

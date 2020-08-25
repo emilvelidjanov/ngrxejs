@@ -1,14 +1,25 @@
 <ng-container *ngIf="directoryItem$ | async as directoryItem">
   <ng-container *ngIf="directory$ | async as directory">
     <ng-container *ngIf="projectTree$ | async as projectTree">
-      <button (click)="open()" [appContextMenuTrigger]="projectTree.directoryItemContextMenuId">
+      <button (click)="open()" [appContextMenuTrigger]="projectTree.directoryItemContextMenuId" [appContextProps]="contextProps$ | async">
         <app-pre-post-symbols preSymbol="25B6">
           {{ directory.name }}
         </app-pre-post-symbols>
       </button>
       <ng-container *ngIf="directoryItem.isOpened">
+        <ng-container *ngIf="directoryItem.createNewInputType === 'directory'">
+          <app-focus-input
+            type="text"
+            [isFocused]="directoryItem.createNewInputType === 'directory'"
+            (enter)="createNewDirectory($event)"
+          ></app-focus-input>
+          <!-- TODO: validation -->
+        </ng-container>
         <ng-container *ngFor="let directoryItemId of directoryItem.directoryItemIds">
           <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
+        </ng-container>
+        <ng-container *ngIf="directoryItem.createNewInputType === 'file'">
+          <app-focus-input type="text" [isFocused]="directoryItem.createNewInputType === 'file'" (enter)="createNewFile($event)"></app-focus-input>
         </ng-container>
         <ng-container *ngFor="let fileItemId of directoryItem.fileItemIds">
           <app-file-item [fileItemId]="fileItemId"></app-file-item>

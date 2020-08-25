@@ -5,10 +5,10 @@
   },
   {
     "id": "directoryItemContextMenu",
-    "menuItemIds": ["a", "b", "new"]
+    "menuItemIds": ["new", "a", "b"]
   },
   {
     "id": "htmlFileItemContextMenu",
-    "menuItemIds": ["new", "a"]
+    "menuItemIds": ["a"]
   }
 ]

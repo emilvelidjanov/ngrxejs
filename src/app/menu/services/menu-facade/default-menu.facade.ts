@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
+import { Prop } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { MenuBar } from '../../store/menu-bar/menu-bar.state';
@@ -80,10 +82,12 @@ export class DefaultMenuFacade implements MenuFacade {
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
-    this.menuItemService.closeAll();
-    this.contextMenuService.closeAll();
-    this.menuItemService.open(menuItem);
-    this.menuItemService.dispatchClickAction(menuItem);
+    if (!menuItem.isDisabled) {
+      this.menuItemService.closeAll();
+      this.contextMenuService.closeAll();
+      this.menuItemService.open(menuItem);
+      this.menuItemService.dispatchClickAction(menuItem);
+    }
   }
 
   public toggleOpenedMenuItem(menuItem: MenuItem): void {
@@ -98,8 +102,14 @@ export class DefaultMenuFacade implements MenuFacade {
     this.menuItemService.closeAll();
   }
 
-  public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number): void {
+  public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextProps: Prop): void {
     this.contextMenuService.closeAll();
+    this.contextMenuService.updateContextProps(contextProps, contextMenu);
+    const menuItems$ = this.menuItemService.selectByIds(contextMenu.menuItemIds).pipe(take(1));
+    const nestedMenuItems$ = menuItems$.pipe(switchMap((menuItems) => this.menuItemService.selectAllNested(menuItems).pipe(take(1))));
+    const allMenuItems$ = forkJoin([menuItems$, nestedMenuItems$]).pipe(map(([menuItems, nestedMenuItems]) => [...menuItems, ...nestedMenuItems]));
+    const updateContext$ = allMenuItems$.pipe(tap((menuItems) => this.menuItemService.upsertOnClickActionProps(contextProps, menuItems)));
+    updateContext$.subscribe();
     this.contextMenuService.open(contextMenu, xPosition, yPosition);
   }
 
@@ -109,5 +119,9 @@ export class DefaultMenuFacade implements MenuFacade {
 
   public closeTabItem(tabItem: TabItem): void {
     this.tabItemService.dispatchCloseAction(tabItem);
+  }
+
+  public updateIsDisabledMenuItem(isDisabled: boolean, menuItem: MenuItem): void {
+    this.menuItemService.updateIsDisabled(isDisabled, menuItem);
   }
 }

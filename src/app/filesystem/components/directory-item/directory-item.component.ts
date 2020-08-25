@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
+import { PropId } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 
 import { directoryItemActions } from '../../store/directory-item/directory-item.actions';
 import { directoryItemSelectors } from '../../store/directory-item/directory-item.selectors';
@@ -18,35 +19,53 @@ import { ProjectTree } from '../../store/project-tree/project-tree.state';
   styleUrls: ['./directory-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectoryItemComponent implements OnInit {
+export class DirectoryItemComponent implements OnInit, OnChanges {
   @Input() public directoryItemId: Id;
+
   public directoryItem$: Observable<DirectoryItem>;
   public directory$: Observable<Directory>;
   public projectTree$: Observable<ProjectTree>;
+  public contextProps$: Observable<PropId>;
 
   constructor(private store: Store<DirectoryItems>) {}
 
   public ngOnInit(): void {
     this.directoryItem$ = this.store.pipe(
       select(directoryItemSelectors.selectEntityById, { id: this.directoryItemId }),
+      filter((directoryItem) => !!directoryItem),
     );
     this.directory$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && directoryItem.directoryId !== null),
-      switchMap((directoryItem) =>
-        this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId })),
-      ),
+      filter((directoryItem) => !!directoryItem.directoryId),
+      switchMap((directoryItem) => this.store.pipe(select(directorySelectors.selectEntityById, { id: directoryItem.directoryId }))),
     );
     this.projectTree$ = this.directoryItem$.pipe(
-      filter((directoryItem) => !!directoryItem && directoryItem.projectTreeId !== null),
-      switchMap((directoryItem) =>
-        this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId })),
-      ),
+      filter((directoryItem) => !!directoryItem.projectTreeId),
+      switchMap((directoryItem) => this.store.pipe(select(projectTreeSelectors.selectEntityById, { id: directoryItem.projectTreeId }))),
+    );
+    this.contextProps$ = this.directoryItem$.pipe(
+      filter((directoryItem) => !!directoryItem.id),
+      map((directoryItem) => ({ id: directoryItem.id })),
     );
   }
 
+  // TODO: not sure why this is necessary
+  public ngOnChanges(): void {
+    this.ngOnInit();
+  }
+
   public open(): void {
+    this.directoryItem$.pipe(take(1)).subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
+  }
+
+  public createNewDirectory(value: string) {
     this.directoryItem$
       .pipe(take(1))
-      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.open({ entity: directoryItem })));
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewDirectory({ entity: directoryItem, name: value })));
+  }
+
+  public createNewFile(value: string) {
+    this.directoryItem$
+      .pipe(take(1))
+      .subscribe((directoryItem) => this.store.dispatch(directoryItemActions.createNewFile({ entity: directoryItem, name: value })));
   }
 }

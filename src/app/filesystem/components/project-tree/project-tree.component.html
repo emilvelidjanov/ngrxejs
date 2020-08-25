@@ -1,17 +1,7 @@
 <ng-container *ngIf="projectTree$ | async as projectTree">
-  <div class="context-menu-trigger" [appContextMenuTrigger]="projectTree.contextMenuId">
-    <ng-container *ngIf="rootDirectory$ | async as rootDirectory">
-      <div class="project-name">
-        {{ rootDirectory.name }}
-      </div>
-    </ng-container>
-    <ng-container *ngIf="rootDirectoryItem$ | async as rootDirectoryItem">
-      <ng-container *ngFor="let directoryItemId of rootDirectoryItem.directoryItemIds">
-        <app-directory-item [directoryItemId]="directoryItemId"></app-directory-item>
-      </ng-container>
-      <ng-container *ngFor="let fileItemId of rootDirectoryItem.fileItemIds">
-        <app-file-item [fileItemId]="fileItemId"></app-file-item>
-      </ng-container>
+  <div class="context-menu-trigger" [appContextMenuTrigger]="projectTree.contextMenuId" [appContextProps]="contextProps$ | async">
+    <ng-container *ngIf="projectTree.rootDirectoryItemId">
+      <app-directory-item [directoryItemId]="projectTree.rootDirectoryItemId"></app-directory-item>
     </ng-container>
   </div>
   <ng-container *ngIf="projectTree.contextMenuId">

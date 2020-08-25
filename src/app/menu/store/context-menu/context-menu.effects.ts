@@ -24,7 +24,7 @@ export class ContextMenuEffects {
     () =>
       this.actions$.pipe(
         ofType(contextMenuActions.open),
-        tap((action) => this.menuFacade.openContextMenu(action.entity, action.x, action.y)),
+        tap((action) => this.menuFacade.openContextMenu(action.entity, action.x, action.y, action.props)),
       ),
     { dispatch: false },
   );

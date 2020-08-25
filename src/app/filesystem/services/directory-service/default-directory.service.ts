@@ -2,15 +2,17 @@ import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity/entity';
+import { Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
+import { SortService } from 'src/app/core/services/sort-service/sort.service';
+import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
 import { directoryActions } from '../../store/directory/directory.actions';
 import { directorySelectors } from '../../store/directory/directory.selectors';
 import { Directories, Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
-import { LoadDirectoryResult, StatResult } from '../filesystem-service/filesystem.service';
+import { StatResult } from '../filesystem-service/filesystem.service';
 
 import { DirectoryService } from './directory.service';
 
@@ -21,8 +23,17 @@ export class DefaultDirectoryService implements DirectoryService {
   constructor(
     private store: Store<Directories>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
+    @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
+  }
+
+  public selectById(id: Id): Observable<Directory> {
+    return this.store.pipe(select(directorySelectors.selectEntityById, { id }));
+  }
+
+  public selectByIds(ids: Id[]): Observable<Directory[]> {
+    return this.store.pipe(select(directorySelectors.selectEntitiesByIds, { ids }));
   }
 
   public selectByPaths(paths: string[]): Observable<Directory[]> {
@@ -49,7 +60,7 @@ export class DefaultDirectoryService implements DirectoryService {
     return this.store.pipe(select(directorySelectors.selectEntityById, { id }));
   }
 
-  public createOne(stat: StatResult): Observable<Directory> {
+  public createOne(partial: IdLessPartial<Directory>): Observable<Directory> {
     const directory$ = this.directoryIds$.pipe(
       map((ids) => this.idGeneratorService.nextId(ids)),
       map((id) => {
@@ -59,8 +70,9 @@ export class DefaultDirectoryService implements DirectoryService {
           fileIds: [],
           directoryIds: [],
           isLoaded: false,
-          name: stat.name,
-          path: stat.path,
+          name: null,
+          path: null,
+          ...partial,
         };
         return directory;
       }),
@@ -69,7 +81,7 @@ export class DefaultDirectoryService implements DirectoryService {
     return directory$;
   }
 
-  public createMany(loadDirectoryResults: LoadDirectoryResult[]): Observable<Directory[]> {
+  public createMany(loadDirectoryResults: StatResult[]): Observable<Directory[]> {
     const directoryResults = loadDirectoryResults.filter((result) => result.isDirectory);
     const size = directoryResults.length;
     const directories$ = this.directoryIds$.pipe(
@@ -113,5 +125,41 @@ export class DefaultDirectoryService implements DirectoryService {
       select(directorySelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.path === path }),
       map((entities) => (entities.length ? entities[0] : null)),
     );
+  }
+
+  public sort(directories: Directory[]): Directory[] {
+    return this.sortService.sort<Directory>(directories, {
+      primarySort: (a, b) => a.name.localeCompare(b.name),
+    });
+  }
+
+  public updateDirectories(directories: Directory[], directory: Directory): void {
+    if (directories && directory) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: directory.id,
+            changes: {
+              directoryIds: directories.map((directory) => directory.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public updateFiles(files: File[], directory: Directory): void {
+    if (files && directory) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: directory.id,
+            changes: {
+              directoryIds: files.map((file) => file.id),
+            },
+          },
+        }),
+      );
+    }
   }
 }

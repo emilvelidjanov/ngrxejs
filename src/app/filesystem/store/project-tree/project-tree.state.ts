@@ -19,7 +19,7 @@ const initialState: ProjectTrees = {
   entities: {},
 };
 
-export const projectDomainStateConfig: EntityDomainStateConfigurer<
-  ProjectTree,
-  ProjectTrees
-> = new EntityDomainStateConfigurer(entityName, initialState);
+export const projectDomainStateConfig: EntityDomainStateConfigurer<ProjectTree, ProjectTrees> = new EntityDomainStateConfigurer(
+  entityName,
+  initialState,
+);

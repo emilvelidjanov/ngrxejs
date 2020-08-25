@@ -33,8 +33,6 @@ export class ContextMenuComponent implements OnInit {
   }
 
   public offClick(): void {
-    this.contextMenu$
-      .pipe(take(1))
-      .subscribe((contextMenu) => this.store.dispatch(contextMenuActions.close({ entity: contextMenu })));
+    this.contextMenu$.pipe(take(1)).subscribe((contextMenu) => this.store.dispatch(contextMenuActions.close({ entity: contextMenu })));
   }
 }

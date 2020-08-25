@@ -23,14 +23,7 @@ import { MenuItemEffects } from './store/menu-item/menu-item.effects';
 import { TabItemEffects } from './store/tab-item/tab-item.effects';
 
 @NgModule({
-  declarations: [
-    MenuBarComponent,
-    MenuItemComponent,
-    ContextMenuComponent,
-    ContextMenuTriggerDirective,
-    TabBarComponent,
-    TabItemComponent,
-  ],
+  declarations: [MenuBarComponent, MenuItemComponent, ContextMenuComponent, ContextMenuTriggerDirective, TabBarComponent, TabItemComponent],
   imports: [
     CommonModule,
     CoreModule,
