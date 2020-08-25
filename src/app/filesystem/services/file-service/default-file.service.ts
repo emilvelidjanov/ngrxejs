@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
+import { map } from 'rxjs/operators';
+import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -27,6 +27,18 @@ export class DefaultFileService implements FileService {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
+  public createDefault(partial: EntityPartial<File>): File {
+    const file: File = {
+      path: null,
+      name: null,
+      extension: null,
+      content: null,
+      isLoaded: false,
+      ...partial,
+    };
+    return file;
+  }
+
   public addOne(file: File): void {
     if (file) {
       this.store.dispatch(fileActions.addOne({ entity: file }));
@@ -48,46 +60,30 @@ export class DefaultFileService implements FileService {
   public createOne(partial: IdLessPartial<File>): Observable<File> {
     const file$ = this.fileIds$.pipe(
       map((ids) => this.idGeneratorService.nextId(ids)),
-      map((id) => {
-        // TODO: use default factory method
-        const file: File = {
-          id,
-          path: null,
-          name: null,
-          extension: null,
-          content: null,
-          isLoaded: false,
-          ...partial,
-        };
-        return file;
-      }),
-      take(1),
+      map((id) => this.createDefault({ id, ...partial })),
     );
     return file$;
   }
 
-  public createMany(loadDirectoryResults: StatResult[]): Observable<File[]> {
-    const fileResults = loadDirectoryResults.filter((result) => !result.isDirectory);
-    const size = fileResults.length;
+  public createMany(partials: IdLessPartial<File>[]): Observable<File[]> {
     const files$ = this.fileIds$.pipe(
-      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids) =>
-        ids.map((id, index) => {
-          const fileResult = fileResults[index];
-          const file: File = {
-            id,
-            path: fileResult.path,
-            name: fileResult.name,
-            extension: fileResult.extension,
-            content: null,
-            isLoaded: false,
-          };
-          return file;
-        }),
-      ),
-      take(1),
+      map((ids) => this.idGeneratorService.nextNIds(partials.length, ids)),
+      map((ids) => ids.map((id, index) => this.createDefault({ id, ...partials[index] }))),
     );
     return files$;
+  }
+
+  public createManyByStatResults(statResults: StatResult[]): Observable<File[]> {
+    return this.createMany(
+      statResults.map((result) => {
+        const partial: IdLessPartial<File> = {
+          path: result.path,
+          name: result.name,
+          extension: result.extension,
+        };
+        return partial;
+      }),
+    );
   }
 
   public addMany(files: File[]): void {
