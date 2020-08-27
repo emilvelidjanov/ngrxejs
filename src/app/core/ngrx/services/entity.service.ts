@@ -8,6 +8,6 @@ export interface EntityService<T extends Entity> {
   createMany(partials: IdLessPartial<T>[]): Observable<T[]>;
   addOne(entity: T): void;
   addMany(entities: T[]): void;
-  select(id: Id): Observable<T>;
-  selectByIds(ids: Id[]): Observable<T[]>;
+  selectOne(id: Id): Observable<T>;
+  selectMany(ids: Id[]): Observable<T[]>;
 }

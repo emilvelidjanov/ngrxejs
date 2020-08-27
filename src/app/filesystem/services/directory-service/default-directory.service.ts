@@ -48,7 +48,7 @@ export class DefaultDirectoryService implements DirectoryService {
     return directories$;
   }
 
-  public selectByIds(ids: Id[]): Observable<Directory[]> {
+  public selectMany(ids: Id[]): Observable<Directory[]> {
     return this.store.pipe(select(directorySelectors.selectEntitiesByIds, { ids }));
   }
 
@@ -60,19 +60,19 @@ export class DefaultDirectoryService implements DirectoryService {
     );
   }
 
-  public addOne(directory: Directory): void {
-    if (directory) {
-      this.store.dispatch(directoryActions.addOne({ entity: directory }));
+  public addOne(entity: Directory): void {
+    if (entity) {
+      this.store.dispatch(directoryActions.addOne({ entity }));
     }
   }
 
-  public addMany(directories: Directory[]): void {
-    if (directories && directories.length) {
-      this.store.dispatch(directoryActions.addMany({ entities: directories }));
+  public addMany(entities: Directory[]): void {
+    if (entities && entities.length) {
+      this.store.dispatch(directoryActions.addMany({ entities }));
     }
   }
 
-  public select(id: Id): Observable<Directory> {
+  public selectOne(id: Id): Observable<Directory> {
     return this.store.pipe(select(directorySelectors.selectEntityById, { id }));
   }
 

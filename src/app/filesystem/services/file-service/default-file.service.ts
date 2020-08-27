@@ -39,13 +39,13 @@ export class DefaultFileService implements FileService {
     return file;
   }
 
-  public addOne(file: File): void {
-    if (file) {
-      this.store.dispatch(fileActions.addOne({ entity: file }));
+  public addOne(entity: File): void {
+    if (entity) {
+      this.store.dispatch(fileActions.addOne({ entity }));
     }
   }
 
-  public selectByIds(ids: Id[]): Observable<File[]> {
+  public selectMany(ids: Id[]): Observable<File[]> {
     return this.store.pipe(select(fileSelectors.selectEntitiesByIds, { ids }));
   }
 
@@ -53,7 +53,7 @@ export class DefaultFileService implements FileService {
     return this.store.pipe(select(fileSelectors.selectEntitiesByPredicate, { predicate: (file) => paths.includes(file.path) }));
   }
 
-  public select(id: Id): Observable<File> {
+  public selectOne(id: Id): Observable<File> {
     return this.store.pipe(select(fileSelectors.selectEntityById, { id }));
   }
 
@@ -86,9 +86,9 @@ export class DefaultFileService implements FileService {
     );
   }
 
-  public addMany(files: File[]): void {
-    if (files && files.length) {
-      this.store.dispatch(fileActions.addMany({ entities: files }));
+  public addMany(entities: File[]): void {
+    if (entities && entities.length) {
+      this.store.dispatch(fileActions.addMany({ entities }));
     }
   }
 
