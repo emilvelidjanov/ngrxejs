@@ -21,6 +21,13 @@ export class DefaultProjectService implements ProjectService {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
+  public createOneFromEntities(directory: Directory): Observable<Project> {
+    const partial: IdLessPartial<Project> = {
+      rootDirectoryId: directory.id,
+    };
+    return this.createOne(partial);
+  }
+
   public createDefault(partial: EntityPartial<Project>): Project {
     const project: Project = {
       rootDirectoryId: null,

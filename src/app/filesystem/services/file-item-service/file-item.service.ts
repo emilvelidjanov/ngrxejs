@@ -6,7 +6,8 @@ import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 export interface FileItemService extends EntityService<FileItem> {
+  createOneFromEntities(file: File, projectTree: ProjectTree): Observable<FileItem>;
   selectByFiles(files: File[]): Observable<FileItem[]>;
   applySortByFiles(fileItems: FileItem[], files: File[]): FileItem[];
-  createManyByEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]>;
+  createManyFromEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]>;
 }

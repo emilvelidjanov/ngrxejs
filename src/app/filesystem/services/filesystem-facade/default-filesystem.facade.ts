@@ -45,7 +45,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public selectDirectoryItem(id: Id): Observable<DirectoryItem> {
-    return this.directoryItemService.select(id);
+    return this.directoryItemService.selectOne(id);
   }
 
   public addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void {
@@ -75,12 +75,15 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       takeUntil(selectExistingProject$),
       switchMap((result) => this.filesystemService.statPath(result.filePaths[0])),
       takeWhile((stat) => stat.isDirectory),
-      switchMap((stat) => this.directoryService.createOne({ ...stat })),
+      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
       share(),
     );
-    const createRootDirectoryItem$ = createRootDirectory$.pipe(switchMap((directory) => this.directoryItemService.createOne(directory, projectTree)));
+    const createRootDirectoryItem$ = createRootDirectory$.pipe(
+      switchMap((directory) => this.directoryItemService.createOneFromEntities(directory, projectTree)),
+      take(1),
+    );
     const createProject$ = createRootDirectory$.pipe(
-      switchMap((directory) => this.projectService.createOne({ rootDirectoryId: directory.id })),
+      switchMap((directory) => this.projectService.createOneFromEntities(directory)),
       take(1),
     );
     const dispatchNew$ = forkJoin([createRootDirectory$, createRootDirectoryItem$, createProject$]).pipe(
@@ -146,8 +149,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const createItems$ = forkJoin([createFilesAndDirs$, selectProjectTree$]).pipe(
       switchMap(([[files, directories], projectTree]) =>
         forkJoin([
-          this.fileItemService.createManyByEntities(files, projectTree).pipe(take(1)),
-          this.directoryItemService.createMany(directories, projectTree),
+          this.fileItemService.createManyFromEntities(files, projectTree).pipe(take(1)),
+          this.directoryItemService.createManyFromEntities(directories, projectTree).pipe(take(1)),
         ]),
       ),
     );
@@ -194,15 +197,16 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const createDirectoryFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createDirectory(directory.path, name)));
     const createDirectory$ = createDirectoryFilesystem$.pipe(
       takeWhile((result) => !!result),
-      switchMap((stat) => this.directoryService.createOne({ ...stat })),
+      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
       share(),
     );
     const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
     const createDirectoryItem$ = forkJoin([createDirectory$, selectProjectTree$]).pipe(
-      switchMap(([directory, projectTree]) => this.directoryItemService.createOne(directory, projectTree)),
+      switchMap(([directory, projectTree]) => this.directoryItemService.createOneFromEntities(directory, projectTree)),
+      take(1),
       share(),
     );
-    const currentDirectoryItems$ = this.directoryItemService.selectByIds(directoryItem.directoryItemIds).pipe(take(1));
+    const currentDirectoryItems$ = this.directoryItemService.selectMany(directoryItem.directoryItemIds).pipe(take(1));
     const currentDirectories$ = directory$.pipe(switchMap((directory) => this.directoryService.selectMany(directory.directoryIds).pipe(take(1))));
     const combinedDirectoryItems$ = forkJoin([createDirectoryItem$, currentDirectoryItems$]).pipe(
       map(([newDirectoryItem, currentDirectoryItems]) => [...currentDirectoryItems, newDirectoryItem]),
@@ -232,13 +236,13 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     const createFileFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createFile(directory.path, name)));
     const createFile$ = createFileFilesystem$.pipe(
       takeWhile((result) => !!result),
-      switchMap((stat) => this.fileService.createOne({ ...stat })),
+      switchMap((stat) => this.fileService.createOne({ name: stat.name, path: stat.path, extension: stat.extension })),
       take(1),
       share(),
     );
     const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
     const createFileItem$ = forkJoin([createFile$, selectProjectTree$]).pipe(
-      switchMap(([file, projectTree]) => this.fileItemService.createOne({ fileId: file.id, projectTreeId: projectTree.id })),
+      switchMap(([file, projectTree]) => this.fileItemService.createOneFromEntities(file, projectTree)),
       take(1),
       share(),
     );

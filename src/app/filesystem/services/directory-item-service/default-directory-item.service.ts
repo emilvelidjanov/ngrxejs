@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity/entity';
+import { map } from 'rxjs/operators';
+import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -29,12 +29,72 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
   }
 
-  public selectByIds(ids: Id[]): Observable<DirectoryItem[]> {
-    return this.store.pipe(select(directoryItemSelectors.selectEntitiesByIds, { ids }));
+  public createOneFromEntities(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem> {
+    const partial: IdLessPartial<DirectoryItem> = {
+      directoryId: directory.id,
+      projectTreeId: projectTree.id,
+    };
+    return this.createOne(partial);
   }
 
-  public select(id: Id): Observable<DirectoryItem> {
+  public createManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
+    const partials = directories.map((directory) => {
+      const partial: IdLessPartial<DirectoryItem> = {
+        directoryId: directory.id,
+        projectTreeId: projectTree.id,
+      };
+      return partial;
+    });
+    return this.createMany(partials);
+  }
+
+  public createDefault(partial: EntityPartial<DirectoryItem>): DirectoryItem {
+    const directoryItem: DirectoryItem = {
+      directoryId: null,
+      directoryItemIds: [],
+      fileItemIds: [],
+      projectTreeId: null,
+      isOpened: false,
+      createNewInputType: 'none',
+      ...partial,
+    };
+    return directoryItem;
+  }
+
+  public createOne(partial: IdLessPartial<DirectoryItem>): Observable<DirectoryItem> {
+    const directoryItem$ = this.directoryItemIds$.pipe(
+      map((ids) => this.idGeneratorService.nextId(ids)),
+      map((id) => this.createDefault({ id, ...partial })),
+    );
+    return directoryItem$;
+  }
+
+  public createMany(partials: IdLessPartial<DirectoryItem>[]): Observable<DirectoryItem[]> {
+    const directoryItems$ = this.directoryItemIds$.pipe(
+      map((ids) => this.idGeneratorService.nextNIds(partials.length, ids)),
+      map((ids) => ids.map((id, index) => this.createDefault({ id, ...partials[index] }))),
+    );
+    return directoryItems$;
+  }
+
+  public addOne(entity: DirectoryItem): void {
+    if (entity) {
+      this.store.dispatch(directoryItemActions.addOne({ entity }));
+    }
+  }
+
+  public addMany(entities: DirectoryItem[]): void {
+    if (entities && entities.length) {
+      this.store.dispatch(directoryItemActions.addMany({ entities }));
+    }
+  }
+
+  public selectOne(id: Id): Observable<DirectoryItem> {
     return this.store.pipe(select(directoryItemSelectors.selectEntityById, { id }));
+  }
+
+  public selectMany(ids: Id[]): Observable<DirectoryItem[]> {
+    return this.store.pipe(select(directoryItemSelectors.selectEntitiesByIds, { ids }));
   }
 
   public selectByDirectory(directory: Directory): Observable<DirectoryItem> {
@@ -45,60 +105,6 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
       map((directoryItems) => directoryItems[0]),
     );
     return directoryItem$;
-  }
-
-  public addOne(directoryItem: DirectoryItem): void {
-    this.store.dispatch(directoryItemActions.addOne({ entity: directoryItem }));
-  }
-
-  public createOne(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem> {
-    const directoryItem$ = this.directoryItemIds$.pipe(
-      map((ids) => this.idGeneratorService.nextId(ids)),
-      map((id) => {
-        // TODO: use default factory method --> EntityService?
-        const directoryItem: DirectoryItem = {
-          id,
-          directoryId: directory.id,
-          fileItemIds: [],
-          directoryItemIds: [],
-          isOpened: false,
-          projectTreeId: projectTree.id,
-          createNewInputType: 'none',
-        };
-        return directoryItem;
-      }),
-      take(1), // TODO: don't assume take(1)
-    );
-    return directoryItem$;
-  }
-
-  public addMany(directoryItems: DirectoryItem[]): void {
-    if (directoryItems && directoryItems.length) {
-      this.store.dispatch(directoryItemActions.addMany({ entities: directoryItems }));
-    }
-  }
-
-  public createMany(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
-    const size = directories.length;
-    const directoryItems$ = this.directoryItemIds$.pipe(
-      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids) =>
-        ids.map((id, index) => {
-          const directoryItem: DirectoryItem = {
-            id,
-            directoryId: directories[index].id,
-            directoryItemIds: [],
-            fileItemIds: [],
-            projectTreeId: projectTree.id,
-            isOpened: false,
-            createNewInputType: 'none',
-          };
-          return directoryItem;
-        }),
-      ),
-      take(1),
-    );
-    return directoryItems$;
   }
 
   public toggleOpened(directoryItem: DirectoryItem): void {

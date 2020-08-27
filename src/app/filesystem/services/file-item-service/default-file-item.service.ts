@@ -28,7 +28,15 @@ export class DefaultFileItemService implements FileItemService {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
-  public createManyByEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
+  public createOneFromEntities(file: File, projectTree: ProjectTree): Observable<FileItem> {
+    const partial: IdLessPartial<FileItem> = {
+      fileId: file.id,
+      projectTreeId: projectTree.id,
+    };
+    return this.createOne(partial);
+  }
+
+  public createManyFromEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
     const partials = files.map((file) => {
       const partial: IdLessPartial<FileItem> = {
         fileId: file.id,
