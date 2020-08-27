@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { Id } from 'src/app/core/ngrx/entity/entity';
+import { map } from 'rxjs/operators';
+import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -28,56 +28,60 @@ export class DefaultFileItemService implements FileItemService {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
-  public addOne(fileItem: FileItem): void {
-    if (fileItem) {
-      this.store.dispatch(fileItemActions.addOne({ entity: fileItem }));
-    }
+  public createManyByEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
+    const partials = files.map((file) => {
+      const partial: IdLessPartial<FileItem> = {
+        fileId: file.id,
+        projectTreeId: projectTree.id,
+      };
+      return partial;
+    });
+    return this.createMany(partials);
   }
 
-  public selectByIds(ids: Id[]): Observable<FileItem[]> {
-    return this.store.pipe(select(fileItemSelectors.selectEntitiesByIds, { ids }));
+  public createDefault(partial: EntityPartial<FileItem>): FileItem {
+    const fileItem: FileItem = {
+      fileId: null,
+      projectTreeId: null,
+      ...partial,
+    };
+    return fileItem;
   }
 
-  public createOne(file: File, projectTree: ProjectTree): Observable<FileItem> {
+  public createOne(partial: IdLessPartial<FileItem>): Observable<FileItem> {
     const fileItem$ = this.fileItemIds$.pipe(
       map((ids) => this.idGeneratorService.nextId(ids)),
-      map((id) => {
-        // TODO: use default factory method --> EntityService?
-        const fileItem: FileItem = {
-          id,
-          fileId: file.id,
-          projectTreeId: projectTree.id,
-        };
-        return fileItem;
-      }),
-      take(1), // TODO: don't assume take(1)
+      map((id) => this.createDefault({ id, ...partial })),
     );
     return fileItem$;
   }
 
-  public createMany(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
-    const size = files.length;
+  public createMany(partials: IdLessPartial<FileItem>[]): Observable<FileItem[]> {
     const fileItems$ = this.fileItemIds$.pipe(
-      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids) =>
-        ids.map((id, index) => {
-          const fileItem: FileItem = {
-            id,
-            fileId: files[index].id,
-            projectTreeId: projectTree.id,
-          };
-          return fileItem;
-        }),
-      ),
-      take(1),
+      map((ids) => this.idGeneratorService.nextNIds(partials.length, ids)),
+      map((ids) => ids.map((id, index) => this.createDefault({ id, ...partials[index] }))),
     );
     return fileItems$;
   }
 
-  public addMany(fileItems: FileItem[]): void {
-    if (fileItems && fileItems.length) {
-      this.store.dispatch(fileItemActions.addMany({ entities: fileItems }));
+  public addOne(entity: FileItem): void {
+    if (entity) {
+      this.store.dispatch(fileItemActions.addOne({ entity }));
     }
+  }
+
+  public addMany(entities: FileItem[]): void {
+    if (entities && entities.length) {
+      this.store.dispatch(fileItemActions.addMany({ entities }));
+    }
+  }
+
+  public selectOne(id: Id): Observable<FileItem> {
+    return this.store.pipe(select(fileItemSelectors.selectEntityById, { id }));
+  }
+
+  public selectMany(ids: Id[]): Observable<FileItem[]> {
+    return this.store.pipe(select(fileItemSelectors.selectEntitiesByIds, { ids }));
   }
 
   public selectByFiles(files: File[]): Observable<FileItem[]> {

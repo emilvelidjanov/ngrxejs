@@ -145,7 +145,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const createItems$ = forkJoin([createFilesAndDirs$, selectProjectTree$]).pipe(
       switchMap(([[files, directories], projectTree]) =>
-        forkJoin([this.fileItemService.createMany(files, projectTree), this.directoryItemService.createMany(directories, projectTree)]),
+        forkJoin([
+          this.fileItemService.createManyByEntities(files, projectTree).pipe(take(1)),
+          this.directoryItemService.createMany(directories, projectTree),
+        ]),
       ),
     );
     const dispatch$ = forkJoin([selectDirectory$, selectFilesAndDirs$, createFilesAndDirs$, selectItems$, createItems$]).pipe(
@@ -235,10 +238,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
     const createFileItem$ = forkJoin([createFile$, selectProjectTree$]).pipe(
-      switchMap(([file, projectTree]) => this.fileItemService.createOne(file, projectTree)),
+      switchMap(([file, projectTree]) => this.fileItemService.createOne({ fileId: file.id, projectTreeId: projectTree.id })),
+      take(1),
       share(),
     );
-    const currentFileItems$ = this.fileItemService.selectByIds(directoryItem.fileItemIds).pipe(take(1));
+    const currentFileItems$ = this.fileItemService.selectMany(directoryItem.fileItemIds).pipe(take(1));
     const currentFiles$ = directory$.pipe(switchMap((directory) => this.fileService.selectMany(directory.fileIds).pipe(take(1))));
     const combinedFileItems$ = forkJoin([createFileItem$, currentFileItems$]).pipe(
       map(([newFileItem, currentFileItems]) => [...currentFileItems, newFileItem]),
@@ -260,6 +264,6 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
       }),
     );
-    dispatch$.subscribe(console.log);
+    dispatch$.subscribe();
   }
 }
