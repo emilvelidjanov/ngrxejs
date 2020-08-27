@@ -73,7 +73,7 @@ export class DefaultFileService implements FileService {
     return files$;
   }
 
-  public createManyByStatResults(statResults: StatResult[]): Observable<File[]> {
+  public createManyFromStatResults(statResults: StatResult[]): Observable<File[]> {
     return this.createMany(
       statResults.map((result) => {
         const partial: IdLessPartial<File> = {

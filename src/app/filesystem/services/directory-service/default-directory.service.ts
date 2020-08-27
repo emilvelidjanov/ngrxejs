@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -28,8 +28,24 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
 
-  public selectById(id: Id): Observable<Directory> {
-    return this.store.pipe(select(directorySelectors.selectEntityById, { id }));
+  public createDefault(partial: EntityPartial<Directory>): Directory {
+    const directory: Directory = {
+      path: null,
+      name: null,
+      fileIds: [],
+      directoryIds: [],
+      isLoaded: false,
+      ...partial,
+    };
+    return directory;
+  }
+
+  public createMany(partials: IdLessPartial<Directory>[]): Observable<Directory[]> {
+    const directories$ = this.directoryIds$.pipe(
+      map((ids) => this.idGeneratorService.nextNIds(partials.length, ids)),
+      map((ids) => ids.map((id, index) => this.createDefault({ id, ...partials[index] }))),
+    );
+    return directories$;
   }
 
   public selectByIds(ids: Id[]): Observable<Directory[]> {
@@ -63,46 +79,23 @@ export class DefaultDirectoryService implements DirectoryService {
   public createOne(partial: IdLessPartial<Directory>): Observable<Directory> {
     const directory$ = this.directoryIds$.pipe(
       map((ids) => this.idGeneratorService.nextId(ids)),
-      map((id) => {
-        // TODO: use default factory method
-        const directory: Directory = {
-          id,
-          fileIds: [],
-          directoryIds: [],
-          isLoaded: false,
-          name: null,
-          path: null,
-          ...partial,
-        };
-        return directory;
-      }),
+      map((id) => this.createDefault({ id, ...partial })),
       take(1),
     );
     return directory$;
   }
 
-  public createMany(loadDirectoryResults: StatResult[]): Observable<Directory[]> {
-    const directoryResults = loadDirectoryResults.filter((result) => result.isDirectory);
-    const size = directoryResults.length;
-    const directories$ = this.directoryIds$.pipe(
-      map((ids) => this.idGeneratorService.nextNIds(size, ids)),
-      map((ids) =>
-        ids.map((id, index) => {
-          const directoryResult = directoryResults[index];
-          const directory: Directory = {
-            id,
-            fileIds: [],
-            directoryIds: [],
-            isLoaded: false,
-            name: directoryResult.name,
-            path: directoryResult.path,
-          };
-          return directory;
-        }),
-      ),
-      take(1),
+  public createManyFromStatResults(statResults: StatResult[]): Observable<Directory[]> {
+    const directoryResults = statResults.filter((result) => result.isDirectory);
+    return this.createMany(
+      directoryResults.map((result) => {
+        const partial: IdLessPartial<Directory> = {
+          path: result.path,
+          name: result.name,
+        };
+        return partial;
+      }),
     );
-    return directories$;
   }
 
   public updateLoaded(loadedDirectory: Directory, files: File[], directories: Directory[]): void {

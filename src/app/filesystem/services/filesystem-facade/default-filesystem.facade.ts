@@ -133,7 +133,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const createFilesAndDirs$ = remainingResults$.pipe(
       switchMap(([fileResults, directoryResults]) =>
-        forkJoin([this.fileService.createManyByStatResults(fileResults).pipe(take(1)), this.directoryService.createMany(directoryResults)]),
+        forkJoin([
+          this.fileService.createManyFromStatResults(fileResults).pipe(take(1)),
+          this.directoryService.createManyFromStatResults(directoryResults).pipe(take(1)),
+        ]),
       ),
       share(),
     );
