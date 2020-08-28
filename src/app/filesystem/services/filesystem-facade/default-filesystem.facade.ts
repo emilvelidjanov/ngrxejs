@@ -41,7 +41,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public selectProjectTree(id: Id): Observable<ProjectTree> {
-    return this.projectTreeService.select(id);
+    return this.projectTreeService.selectOne(id);
   }
 
   public selectDirectoryItem(id: Id): Observable<DirectoryItem> {
@@ -49,7 +49,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void {
-    const projectTrees = partials.map((partial) => this.projectTreeService.createFromPartial(partial));
+    const projectTrees = partials.map((partial) => this.projectTreeService.createDefault(partial));
     this.projectTreeService.addMany(projectTrees);
   }
 
@@ -104,7 +104,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public openDirectoryItem(directoryItem: DirectoryItem): void {
     const selectDirectory$ = this.directoryService.selectOne(directoryItem.directoryId).pipe(take(1), share());
-    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
+    const selectProjectTree$ = this.projectTreeService.selectOne(directoryItem.projectTreeId).pipe(take(1));
     const results$ = selectDirectory$.pipe(
       takeWhile((directory) => !directory.isLoaded),
       switchMap((directory) => this.filesystemService.loadDirectory(directory.path)),
@@ -200,7 +200,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
       share(),
     );
-    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
+    const selectProjectTree$ = this.projectTreeService.selectOne(directoryItem.projectTreeId).pipe(take(1));
     const createDirectoryItem$ = forkJoin([createDirectory$, selectProjectTree$]).pipe(
       switchMap(([directory, projectTree]) => this.directoryItemService.createOneFromEntities(directory, projectTree)),
       take(1),
@@ -240,7 +240,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       take(1),
       share(),
     );
-    const selectProjectTree$ = this.projectTreeService.select(directoryItem.projectTreeId).pipe(take(1));
+    const selectProjectTree$ = this.projectTreeService.selectOne(directoryItem.projectTreeId).pipe(take(1));
     const createFileItem$ = forkJoin([createFile$, selectProjectTree$]).pipe(
       switchMap(([file, projectTree]) => this.fileItemService.createOneFromEntities(file, projectTree)),
       take(1),
