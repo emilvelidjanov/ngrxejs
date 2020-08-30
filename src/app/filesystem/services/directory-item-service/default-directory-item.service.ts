@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -14,6 +14,9 @@ import { CreateNewInputType, DirectoryItem, DirectoryItems } from '../../store/d
 import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
+import { Project } from '../../store/project/project.state';
+import { DirectoryService } from '../directory-service/directory.service';
+import { directoryServiceDep } from '../directory-service/directory.service.dependency';
 
 import { DirectoryItemService } from './directory-item.service';
 
@@ -25,8 +28,15 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     private store: Store<DirectoryItems>,
     @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
+    @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
   ) {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public selectRootOfProject(project: Project): Observable<DirectoryItem> {
+    const selectDirectory$ = this.directoryService.selectRootOfProject(project);
+    const selectDirectoryItem$ = selectDirectory$.pipe(switchMap((directory) => (directory ? this.selectByDirectory(directory) : of(null))));
+    return selectDirectoryItem$;
   }
 
   public createOneFromEntities(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem> {

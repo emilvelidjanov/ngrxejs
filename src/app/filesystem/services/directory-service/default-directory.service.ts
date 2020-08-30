@@ -12,6 +12,7 @@ import { directoryActions } from '../../store/directory/directory.actions';
 import { directorySelectors } from '../../store/directory/directory.selectors';
 import { Directories, Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
+import { Project } from '../../store/project/project.state';
 import { StatResult } from '../filesystem-service/filesystem.service';
 
 import { DirectoryService } from './directory.service';
@@ -26,6 +27,14 @@ export class DefaultDirectoryService implements DirectoryService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
+  }
+
+  public selectRootOfProject(project: Project): Observable<Directory> {
+    return this.selectOne(project.rootDirectoryId);
+  }
+
+  public createOneFromStatResult(statResult: StatResult): Observable<Directory> {
+    return this.createOne({ name: statResult.name, path: statResult.path });
   }
 
   public createDefault(partial: EntityPartial<Directory>): Directory {

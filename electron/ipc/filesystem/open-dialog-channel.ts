@@ -20,8 +20,9 @@ export class OpenDialogChannel implements IpcChannel<OpenDialogOptions> {
       .then((value) => {
         const names = value.filePaths.map(PathUtils.getFilename);
         const response: OpenDialogResult = {
-          ...value,
-          fileNames: names,
+          paths: value.filePaths,
+          names: names,
+          canceled: value.canceled,
         };
         event.reply(request.responseChannel, response);
       })

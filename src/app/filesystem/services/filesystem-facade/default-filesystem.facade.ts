@@ -59,23 +59,20 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       share(),
     );
     const selectExistingProject$ = openDialog$.pipe(
-      switchMap((result) => this.directoryService.selectByPath(result.filePaths[0])),
-      takeWhile((directory) => !!directory),
-      switchMap((directory) => this.projectService.selectByRootDirectory(directory)),
+      switchMap((result) => this.projectService.selectByRootDirectoryPath(result.paths[0])),
       takeWhile((project) => !!project),
       take(1),
       share(),
     );
     const selectExistingRootDirectoryItem$ = selectExistingProject$.pipe(
-      switchMap((project) => this.directoryService.selectOne(project.rootDirectoryId)),
-      switchMap((directory) => this.directoryItemService.selectByDirectory(directory)),
+      switchMap((project) => this.directoryItemService.selectRootOfProject(project)),
       take(1),
     );
     const createRootDirectory$ = openDialog$.pipe(
       takeUntil(selectExistingProject$),
-      switchMap((result) => this.filesystemService.statPath(result.filePaths[0])),
+      switchMap((result) => this.filesystemService.statPath(result.paths[0])),
       takeWhile((stat) => stat.isDirectory),
-      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
+      switchMap((stat) => this.directoryService.createOneFromStatResult(stat)),
       share(),
     );
     const createRootDirectoryItem$ = createRootDirectory$.pipe(

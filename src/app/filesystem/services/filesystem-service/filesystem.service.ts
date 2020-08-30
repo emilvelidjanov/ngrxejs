@@ -12,8 +12,8 @@ export interface FilesystemService {
 
 export interface OpenDialogResult {
   canceled: boolean;
-  filePaths: string[];
-  fileNames: string[];
+  paths: string[];
+  names: string[];
 }
 
 export interface PathAndName {

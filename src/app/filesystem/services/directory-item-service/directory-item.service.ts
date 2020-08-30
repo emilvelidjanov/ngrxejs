@@ -5,6 +5,7 @@ import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/di
 import { Directory } from '../../store/directory/directory.state';
 import { FileItem } from '../../store/file-item/file-item.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
+import { Project } from '../../store/project/project.state';
 
 export interface DirectoryItemService extends EntityService<DirectoryItem> {
   createOneFromEntities(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem>;
@@ -18,4 +19,5 @@ export interface DirectoryItemService extends EntityService<DirectoryItem> {
   updateDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void;
   updateFileItems(fileItems: FileItem[], directoryItem: DirectoryItem): void;
   updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void;
+  selectRootOfProject(project: Project): Observable<DirectoryItem>;
 }

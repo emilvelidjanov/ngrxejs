@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -10,6 +10,8 @@ import { Directory } from '../../store/directory/directory.state';
 import { projectActions } from '../../store/project/project.actions';
 import { projectSelectors } from '../../store/project/project.selectors';
 import { Project, Projects } from '../../store/project/project.state';
+import { DirectoryService } from '../directory-service/directory.service';
+import { directoryServiceDep } from '../directory-service/directory.service.dependency';
 
 import { ProjectService } from './project.service';
 
@@ -17,8 +19,18 @@ import { ProjectService } from './project.service';
 export class DefaultProjectService implements ProjectService {
   private projectIds$: Observable<Id[]>;
 
-  constructor(private store: Store<Projects>, @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {
+  constructor(
+    private store: Store<Projects>,
+    @Inject(numberIdGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
+    @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
+  ) {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
+  }
+
+  public selectByRootDirectoryPath(path: string): Observable<Project> {
+    const selectDirectory$ = this.directoryService.selectByPath(path);
+    const selectProject$ = selectDirectory$.pipe(switchMap((directory) => (directory ? this.selectByRootDirectory(directory) : of(null))));
+    return selectProject$;
   }
 
   public createOneFromEntities(directory: Directory): Observable<Project> {
