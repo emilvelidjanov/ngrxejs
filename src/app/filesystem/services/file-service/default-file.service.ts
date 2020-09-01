@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { map, share, switchMap, take, tap } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -25,6 +25,20 @@ export class DefaultFileService implements FileService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
+  }
+
+  public selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<File[]> {
+    const fileResults = statResults.filter((result) => !result.isDirectory);
+    const paths = fileResults.map((result) => result.path);
+    const selectExisting$ = this.selectByPaths(paths).pipe(take(1), share());
+    const existingPaths$ = selectExisting$.pipe(map((files) => files.map((file) => file.path)));
+    const remainingResults$ = existingPaths$.pipe(map((existingPaths) => fileResults.filter((result) => !existingPaths.includes(result.path))));
+    const createFiles$ = remainingResults$.pipe(
+      switchMap((results) => this.createManyFromStatResults(results)),
+      take(1),
+    );
+    const combine$ = forkJoin([selectExisting$, createFiles$]).pipe(map(([existing, created]) => [...existing, ...created]));
+    return combine$;
   }
 
   public createDefault(partial: EntityPartial<File>): File {

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, share, switchMap, take } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -31,6 +31,20 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
   ) {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public selectOrCreateManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
+    const selectItems$ = this.selectByDirectories(directories).pipe(take(1), share());
+    const remaining$ = selectItems$.pipe(
+      map((items) => items.map((item) => item.directoryId)),
+      map((ids) => directories.filter((directory) => !ids.includes(directory.id))),
+    );
+    const createItems$ = remaining$.pipe(
+      switchMap((directories) => this.createManyFromEntities(directories, projectTree)),
+      take(1),
+    );
+    const combine$ = forkJoin([selectItems$, createItems$]).pipe(map(([existing, created]) => [...existing, ...created]));
+    return combine$;
   }
 
   public selectRootOfProject(project: Project): Observable<DirectoryItem> {
@@ -168,7 +182,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     }
   }
 
-  public applySortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[] {
+  public sortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[] {
     if (directoryItems.length === directories.length) {
       const ids = directories.map((directory) => directory.id);
       return this.sortService.sort(directoryItems, {

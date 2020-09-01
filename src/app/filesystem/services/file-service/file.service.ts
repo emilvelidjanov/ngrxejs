@@ -9,4 +9,5 @@ export interface FileService extends EntityService<File> {
   createManyFromStatResults(statResults: StatResult[]): Observable<File[]>;
   updateLoaded(file: File, content: string): void;
   sort(files: File[]): File[];
+  selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<File[]>;
 }

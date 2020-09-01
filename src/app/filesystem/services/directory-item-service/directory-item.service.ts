@@ -15,9 +15,10 @@ export interface DirectoryItemService extends EntityService<DirectoryItem> {
   updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]): void;
   selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]>;
   showCreateNewInput(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void;
-  applySortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[];
+  sortByDirectories(directoryItems: DirectoryItem[], directories: Directory[]): DirectoryItem[];
   updateDirectoryItems(directoryItems: DirectoryItem[], directoryItem: DirectoryItem): void;
   updateFileItems(fileItems: FileItem[], directoryItem: DirectoryItem): void;
   updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void;
   selectRootOfProject(project: Project): Observable<DirectoryItem>;
+  selectOrCreateManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]>;
 }

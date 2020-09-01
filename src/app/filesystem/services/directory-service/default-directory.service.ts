@@ -1,13 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { map, share, switchMap, take } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
 import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
+import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { directoryActions } from '../../store/directory/directory.actions';
 import { directorySelectors } from '../../store/directory/directory.selectors';
 import { Directories, Directory } from '../../store/directory/directory.state';
@@ -27,6 +28,24 @@ export class DefaultDirectoryService implements DirectoryService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
+  }
+
+  public selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<Directory[]> {
+    const dirResults = statResults.filter((result) => result.isDirectory);
+    const paths = dirResults.map((result) => result.path);
+    const selectExisting$ = this.selectByPaths(paths).pipe(take(1), share());
+    const existingPaths$ = selectExisting$.pipe(map((dirs) => dirs.map((dir) => dir.path)));
+    const remainingResults$ = existingPaths$.pipe(map((existingPaths) => dirResults.filter((result) => !existingPaths.includes(result.path))));
+    const createDirs$ = remainingResults$.pipe(
+      switchMap((results) => this.createManyFromStatResults(results)),
+      take(1),
+    );
+    const combine$ = forkJoin([selectExisting$, createDirs$]).pipe(map(([existing, created]) => [...existing, ...created]));
+    return combine$;
+  }
+
+  public selectOneByDirectoryItem(directoryItem: DirectoryItem): Observable<Directory> {
+    return this.selectOne(directoryItem.directoryId);
   }
 
   public selectRootOfProject(project: Project): Observable<Directory> {

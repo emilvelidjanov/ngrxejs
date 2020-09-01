@@ -107,10 +107,16 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
   private initReducerFunctions(): On<D>[] {
     return [
       on(this.actions.addOne, (state: D, props: PropEntity<T>) => {
-        return this.adapter.addOne(props.entity, state);
+        const isNew = !state.entities[props.entity.id];
+        if (isNew) {
+          return this.adapter.addOne(props.entity, state);
+        } else {
+          return { ...state };
+        }
       }),
       on(this.actions.addMany, (state: D, props: PropEntities<T>) => {
-        return this.adapter.addMany(props.entities, state);
+        const newEntities = props.entities.filter((entity) => !state.entities[entity.id]);
+        return this.adapter.addMany(newEntities, state);
       }),
       on(this.actions.setAll, (state: D, props: PropEntities<T>) => {
         return this.adapter.setAll(props.entities, state);

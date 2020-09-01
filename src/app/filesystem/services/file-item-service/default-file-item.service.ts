@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { map, share, switchMap, take } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -26,6 +26,20 @@ export class DefaultFileItemService implements FileItemService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
+  }
+
+  public selectOrCreateManyFromEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {
+    const selectItems$ = this.selectByFiles(files).pipe(take(1), share());
+    const remaining$ = selectItems$.pipe(
+      map((items) => items.map((item) => item.fileId)),
+      map((ids) => files.filter((file) => !ids.includes(file.id))),
+    );
+    const createItems$ = remaining$.pipe(
+      switchMap((files) => this.createManyFromEntities(files, projectTree)),
+      take(1),
+    );
+    const combine$ = forkJoin([selectItems$, createItems$]).pipe(map(([existing, created]) => [...existing, ...created]));
+    return combine$;
   }
 
   public createOneFromEntities(file: File, projectTree: ProjectTree): Observable<FileItem> {
@@ -97,7 +111,7 @@ export class DefaultFileItemService implements FileItemService {
     return this.store.pipe(select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (entity) => fileIds.includes(entity.fileId) }));
   }
 
-  public applySortByFiles(fileItems: FileItem[], files: File[]): FileItem[] {
+  public sortByFiles(fileItems: FileItem[], files: File[]): FileItem[] {
     if (fileItems.length === files.length) {
       const ids = files.map((file) => file.id);
       return this.sortService.sort(fileItems, {

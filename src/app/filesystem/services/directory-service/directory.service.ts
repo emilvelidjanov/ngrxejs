@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { EntityService } from 'src/app/core/ngrx/services/entity.service';
 
+import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { Directory } from '../../store/directory/directory.state';
 import { File } from '../../store/file/file.state';
 import { Project } from '../../store/project/project.state';
@@ -17,4 +17,6 @@ export interface DirectoryService extends EntityService<Directory> {
   updateDirectories(directories: Directory[], directory: Directory): void;
   updateFiles(files: File[], directory: Directory): void;
   selectRootOfProject(project: Project): Observable<Directory>;
+  selectOneByDirectoryItem(directoryItem: DirectoryItem): Observable<Directory>;
+  selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<Directory[]>;
 }
