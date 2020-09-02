@@ -8,6 +8,7 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
 import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
+import { Directory } from '../../store/directory/directory.state';
 import { fileActions } from '../../store/file/file.actions';
 import { fileSelectors } from '../../store/file/file.selectors';
 import { File, Files } from '../../store/file/file.state';
@@ -25,6 +26,10 @@ export class DefaultFileService implements FileService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
+  }
+
+  public selectManyByParentDirectory(directory: Directory): Observable<File[]> {
+    return this.selectMany(directory.fileIds);
   }
 
   public selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<File[]> {

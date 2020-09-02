@@ -21,4 +21,5 @@ export interface DirectoryItemService extends EntityService<DirectoryItem> {
   updateIsOpened(directoryItem: DirectoryItem, isOpened: boolean): void;
   selectRootOfProject(project: Project): Observable<DirectoryItem>;
   selectOrCreateManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]>;
+  selectManyByParentDirectoryItem(directoryItem: DirectoryItem): Observable<DirectoryItem[]>;
 }

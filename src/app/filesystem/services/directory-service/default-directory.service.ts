@@ -30,6 +30,10 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
 
+  public selectManyByParentDirectory(directory: Directory): Observable<Directory[]> {
+    return this.selectMany(directory.directoryIds);
+  }
+
   public selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<Directory[]> {
     const dirResults = statResults.filter((result) => result.isDirectory);
     const paths = dirResults.map((result) => result.path);
@@ -176,7 +180,7 @@ export class DefaultDirectoryService implements DirectoryService {
           update: {
             id: directory.id,
             changes: {
-              directoryIds: files.map((file) => file.id),
+              fileIds: files.map((file) => file.id),
             },
           },
         }),

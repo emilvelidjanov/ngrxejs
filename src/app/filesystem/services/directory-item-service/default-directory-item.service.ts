@@ -33,6 +33,10 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
   }
 
+  public selectManyByParentDirectoryItem(directoryItem: DirectoryItem): Observable<DirectoryItem[]> {
+    return this.selectMany(directoryItem.directoryItemIds);
+  }
+
   public selectOrCreateManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]> {
     const selectItems$ = this.selectByDirectories(directories).pipe(take(1), share());
     const remaining$ = selectItems$.pipe(

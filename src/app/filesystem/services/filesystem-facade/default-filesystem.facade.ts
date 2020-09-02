@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { map, share, switchMap, take, takeUntil, takeWhile, tap, withLatestFrom } from 'rxjs/operators';
+import { map, share, switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
 import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/directory-item.state';
-import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 import { DirectoryItemService } from '../directory-item-service/directory-item.service';
@@ -125,11 +124,14 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       tap(([selectDirectory, [files, dirs], [fileItems, dirItems]]) => {
         this.fileService.addMany(files);
         this.directoryService.addMany(dirs);
-        this.directoryService.updateLoaded(selectDirectory, files, dirs);
+        // TODO: move sort into update method
+        const sortedFiles = this.fileService.sort(files);
+        const sortedDirs = this.directoryService.sort(dirs);
+        this.directoryService.updateLoaded(selectDirectory, sortedFiles, sortedDirs);
         this.fileItemService.addMany(fileItems);
         this.directoryItemService.addMany(dirItems);
-        const sortedFileItems = this.fileItemService.sortByFiles(fileItems, this.fileService.sort(files));
-        const sortedDirItems = this.directoryItemService.sortByDirectories(dirItems, this.directoryService.sort(dirs));
+        const sortedFileItems = this.fileItemService.sortByFiles(fileItems, sortedFiles);
+        const sortedDirItems = this.directoryItemService.sortByDirectories(dirItems, sortedDirs);
         this.directoryItemService.updateLoaded(directoryItem, sortedFileItems, sortedDirItems);
       }),
     );
@@ -150,38 +152,31 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public createNewDirectory(directoryItem: DirectoryItem, name: string): void {
-    const directory$ = this.directoryService.selectOne(directoryItem.directoryId).pipe(take(1));
-    const createDirectoryFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createDirectory(directory.path, name)));
-    const createDirectory$ = createDirectoryFilesystem$.pipe(
+    const directory$ = this.directoryService.selectOneByDirectoryItem(directoryItem).pipe(take(1), share());
+    const createDirectoryFilesystem$ = directory$.pipe(
+      switchMap((directory) => this.filesystemService.createDirectory(directory.path, name)),
       takeWhile((result) => !!result),
-      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
-      share(),
     );
-    const selectProjectTree$ = this.projectTreeService.selectOne(directoryItem.projectTreeId).pipe(take(1));
-    const createDirectoryItem$ = forkJoin([createDirectory$, selectProjectTree$]).pipe(
-      switchMap(([directory, projectTree]) => this.directoryItemService.createOneFromEntities(directory, projectTree)),
+    const createDirectory$ = createDirectoryFilesystem$.pipe(
+      switchMap((stat) => this.directoryService.createOne({ name: stat.name, path: stat.path })),
       take(1),
       share(),
     );
-    const currentDirectoryItems$ = this.directoryItemService.selectMany(directoryItem.directoryItemIds).pipe(take(1));
-    const currentDirectories$ = directory$.pipe(switchMap((directory) => this.directoryService.selectMany(directory.directoryIds).pipe(take(1))));
-    const combinedDirectoryItems$ = forkJoin([createDirectoryItem$, currentDirectoryItems$]).pipe(
-      map(([newDirectoryItem, currentDirectoryItems]) => [...currentDirectoryItems, newDirectoryItem]),
+    const selectProjectTree$ = this.projectTreeService.selectOneByDirectoryItem(directoryItem).pipe(take(1));
+    const createDirectoryItem$ = forkJoin([createDirectory$, selectProjectTree$]).pipe(
+      switchMap(([directory, projectTree]) => this.directoryItemService.createOneFromEntities(directory, projectTree)),
+      take(1),
     );
-    const sortedCombinedDirectories$ = forkJoin([createDirectory$, currentDirectories$]).pipe(
-      map(([newDirectory, currentDirectories]) => [...currentDirectories, newDirectory]),
-      map((directories) => this.directoryService.sort(directories)),
-      share(),
-    );
-    const sortedCombinedDirectoryItems$ = forkJoin([combinedDirectoryItems$, sortedCombinedDirectories$]).pipe(
-      map(([directoryItems, directories]) => this.directoryItemService.sortByDirectories(directoryItems, directories)),
-    );
-    const dispatch$ = forkJoin([createDirectory$, createDirectoryItem$, directory$, sortedCombinedDirectories$, sortedCombinedDirectoryItems$]).pipe(
-      tap(([newDirectory, newDirectoryItem, directory, sortedDirectories, sortedDirectoryItems]) => {
+    const currentDirectories$ = directory$.pipe(switchMap((directory) => this.directoryService.selectManyByParentDirectory(directory).pipe(take(1))));
+    const currentDirectoryItems$ = this.directoryItemService.selectManyByParentDirectoryItem(directoryItem).pipe(take(1));
+    const dispatch$ = forkJoin([createDirectory$, createDirectoryItem$, directory$, currentDirectories$, currentDirectoryItems$]).pipe(
+      tap(([newDirectory, newDirectoryItem, directory, directories, directoryItems]) => {
         this.directoryService.addOne(newDirectory);
         this.directoryItemService.addOne(newDirectoryItem);
-        this.directoryService.updateDirectories(sortedDirectories, directory);
-        this.directoryItemService.updateDirectoryItems(sortedDirectoryItems, directoryItem);
+        const combinedSorted = this.directoryService.sort([...directories, newDirectory]);
+        this.directoryService.updateDirectories(combinedSorted, directory);
+        const sortedDirItems = this.directoryItemService.sortByDirectories([...directoryItems, newDirectoryItem], combinedSorted);
+        this.directoryItemService.updateDirectoryItems(sortedDirItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
       }),
     );
@@ -189,38 +184,30 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public createNewFile(directoryItem: DirectoryItem, name: string): void {
-    const directory$ = this.directoryService.selectOne(directoryItem.directoryId).pipe(take(1));
-    const createFileFilesystem$ = directory$.pipe(switchMap((directory) => this.filesystemService.createFile(directory.path, name)));
-    const createFile$ = createFileFilesystem$.pipe(
+    const directory$ = this.directoryService.selectOneByDirectoryItem(directoryItem).pipe(take(1), share());
+    const createFileFilesystem$ = directory$.pipe(
+      switchMap((directory) => this.filesystemService.createFile(directory.path, name)),
       takeWhile((result) => !!result),
+    );
+    const createFile$ = createFileFilesystem$.pipe(
       switchMap((stat) => this.fileService.createOne({ name: stat.name, path: stat.path, extension: stat.extension })),
       take(1),
       share(),
     );
-    const selectProjectTree$ = this.projectTreeService.selectOne(directoryItem.projectTreeId).pipe(take(1));
+    const selectProjectTree$ = this.projectTreeService.selectOneByDirectoryItem(directoryItem).pipe(take(1));
     const createFileItem$ = forkJoin([createFile$, selectProjectTree$]).pipe(
       switchMap(([file, projectTree]) => this.fileItemService.createOneFromEntities(file, projectTree)),
       take(1),
-      share(),
     );
-    const currentFileItems$ = this.fileItemService.selectMany(directoryItem.fileItemIds).pipe(take(1));
-    const currentFiles$ = directory$.pipe(switchMap((directory) => this.fileService.selectMany(directory.fileIds).pipe(take(1))));
-    const combinedFileItems$ = forkJoin([createFileItem$, currentFileItems$]).pipe(
-      map(([newFileItem, currentFileItems]) => [...currentFileItems, newFileItem]),
-    );
-    const sortedCombinedFiles$ = forkJoin([createFile$, currentFiles$]).pipe(
-      map(([newFile, currentFiles]) => [...currentFiles, newFile]),
-      map((files) => this.fileService.sort(files)),
-      share(),
-    );
-    const sortedCombinedFileItems$ = forkJoin([combinedFileItems$, sortedCombinedFiles$]).pipe(
-      map(([fileItems, files]) => this.fileItemService.sortByFiles(fileItems, files)),
-    );
-    const dispatch$ = forkJoin([createFile$, createFileItem$, directory$, sortedCombinedFiles$, sortedCombinedFileItems$]).pipe(
-      tap(([newFile, newFileItem, directory, sortedFiles, sortedFileItems]) => {
+    const currentFiles$ = directory$.pipe(switchMap((directory) => this.fileService.selectManyByParentDirectory(directory).pipe(take(1))));
+    const currentFileItems$ = this.fileItemService.selectManyByParentDirectoryItem(directoryItem).pipe(take(1));
+    const dispatch$ = forkJoin([createFile$, createFileItem$, directory$, currentFiles$, currentFileItems$]).pipe(
+      tap(([newFile, newFileItem, directory, files, fileItems]) => {
         this.fileService.addOne(newFile);
         this.fileItemService.addOne(newFileItem);
-        this.directoryService.updateFiles(sortedFiles, directory);
+        const combinedSorted = this.fileService.sort([...files, newFile]);
+        this.directoryService.updateFiles(combinedSorted, directory);
+        const sortedFileItems = this.fileItemService.sortByFiles([...fileItems, newFileItem], combinedSorted);
         this.directoryItemService.updateFileItems(sortedFileItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
       }),

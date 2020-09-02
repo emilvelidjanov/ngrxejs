@@ -8,6 +8,7 @@ import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-gener
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
 import { sortServiceDep } from 'src/app/core/services/sort-service/sort.service.dependency';
 
+import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { fileItemActions } from '../../store/file-item/file-item.actions';
 import { fileItemSelectors } from '../../store/file-item/file-item.selectors';
 import { FileItem, FileItems } from '../../store/file-item/file-item.state';
@@ -26,6 +27,10 @@ export class DefaultFileItemService implements FileItemService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
+  }
+
+  public selectManyByParentDirectoryItem(directoryItem: DirectoryItem): Observable<FileItem[]> {
+    return this.selectMany(directoryItem.fileItemIds);
   }
 
   public selectOrCreateManyFromEntities(files: File[], projectTree: ProjectTree): Observable<FileItem[]> {

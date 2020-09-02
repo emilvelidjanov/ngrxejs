@@ -15,6 +15,10 @@ import { ProjectTreeService } from './project-tree.service';
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>) {}
 
+  public selectOneByDirectoryItem(directoryItem: DirectoryItem): Observable<ProjectTree> {
+    return this.selectOne(directoryItem.projectTreeId);
+  }
+
   public createDefault(partial: EntityPartial<ProjectTree>): ProjectTree {
     const projectTree: ProjectTree = {
       projectId: null,

@@ -19,4 +19,5 @@ export interface DirectoryService extends EntityService<Directory> {
   selectRootOfProject(project: Project): Observable<Directory>;
   selectOneByDirectoryItem(directoryItem: DirectoryItem): Observable<Directory>;
   selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<Directory[]>;
+  selectManyByParentDirectory(directory: Directory): Observable<Directory[]>;
 }
