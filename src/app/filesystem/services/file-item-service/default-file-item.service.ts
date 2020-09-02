@@ -68,6 +68,7 @@ export class DefaultFileItemService implements FileItemService {
 
   public createDefault(partial: EntityPartial<FileItem>): FileItem {
     const fileItem: FileItem = {
+      id: null,
       fileId: null,
       projectTreeId: null,
       ...partial,

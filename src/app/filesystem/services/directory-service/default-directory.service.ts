@@ -62,6 +62,7 @@ export class DefaultDirectoryService implements DirectoryService {
 
   public createDefault(partial: EntityPartial<Directory>): Directory {
     const directory: Directory = {
+      id: null,
       path: null,
       name: null,
       fileIds: [],

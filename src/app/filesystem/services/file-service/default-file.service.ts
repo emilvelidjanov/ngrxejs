@@ -48,6 +48,7 @@ export class DefaultFileService implements FileService {
 
   public createDefault(partial: EntityPartial<File>): File {
     const file: File = {
+      id: null,
       path: null,
       name: null,
       extension: null,

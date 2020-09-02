@@ -42,6 +42,7 @@ export class DefaultProjectService implements ProjectService {
 
   public createDefault(partial: EntityPartial<Project>): Project {
     const project: Project = {
+      id: null,
       rootDirectoryId: null,
       ...partial,
     };

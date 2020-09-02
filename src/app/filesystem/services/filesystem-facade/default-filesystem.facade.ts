@@ -124,7 +124,6 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       tap(([selectDirectory, [files, dirs], [fileItems, dirItems]]) => {
         this.fileService.addMany(files);
         this.directoryService.addMany(dirs);
-        // TODO: move sort into update method
         const sortedFiles = this.fileService.sort(files);
         const sortedDirs = this.directoryService.sort(dirs);
         this.directoryService.updateLoaded(selectDirectory, sortedFiles, sortedDirs);

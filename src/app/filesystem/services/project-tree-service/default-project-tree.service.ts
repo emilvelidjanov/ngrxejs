@@ -21,6 +21,7 @@ export class DefaultProjectTreeService implements ProjectTreeService {
 
   public createDefault(partial: EntityPartial<ProjectTree>): ProjectTree {
     const projectTree: ProjectTree = {
+      id: null,
       projectId: null,
       rootDirectoryItemId: null,
       contextMenuId: null,

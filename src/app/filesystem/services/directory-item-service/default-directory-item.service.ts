@@ -78,6 +78,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
 
   public createDefault(partial: EntityPartial<DirectoryItem>): DirectoryItem {
     const directoryItem: DirectoryItem = {
+      id: null,
       directoryId: null,
       directoryItemIds: [],
       fileItemIds: [],
