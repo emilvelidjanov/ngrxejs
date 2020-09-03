@@ -33,40 +33,40 @@ export class DefaultMenuFacade implements MenuFacade {
   ) {}
 
   public addMenuItemsConfig(partials: EntityPartial<MenuItem>[]): void {
-    const menuItems = partials.map((partial) => this.menuItemService.createFromPartial(partial));
+    const menuItems = partials.map((partial) => this.menuItemService.createDefault(partial));
     this.menuItemService.addMany(menuItems);
   }
 
   public addMenuBarsConfig(partials: EntityPartial<MenuBar>[]): void {
-    const menuBars = partials.map((partial) => this.menuBarService.createFromPartial(partial));
+    const menuBars = partials.map((partial) => this.menuBarService.createDefault(partial));
     this.menuBarService.addMany(menuBars);
   }
 
   public addContextMenusConfig(partials: EntityPartial<ContextMenu>[]): void {
-    const contextMenus = partials.map((partial) => this.contextMenuService.createFromPartial(partial));
+    const contextMenus = partials.map((partial) => this.contextMenuService.createDefault(partial));
     this.contextMenuService.addMany(contextMenus);
   }
 
   public addTabBarsConfig(partials: EntityPartial<TabBar>[]): void {
-    const tabBars = partials.map((partial) => this.tabBarService.createFromPartial(partial));
+    const tabBars = partials.map((partial) => this.tabBarService.createDefault(partial));
     this.tabBarService.addMany(tabBars);
   }
 
   public addTabItemsConfig(partials: EntityPartial<TabItem>[]): void {
-    const tabItems = partials.map((partial) => this.tabItemService.createFromPartial(partial));
+    const tabItems = partials.map((partial) => this.tabItemService.createDefault(partial));
     this.tabItemService.addMany(tabItems);
   }
 
   public createTabItem(): Observable<TabItem> {
-    return this.tabItemService.createDefault();
+    return this.tabItemService.createOne({});
   }
 
   public selectTabBar(id: Id): Observable<TabBar> {
-    return this.tabBarService.select(id);
+    return this.tabBarService.selectOne(id);
   }
 
   public selectTabItem(id: Id): Observable<TabItem> {
-    return this.tabItemService.select(id);
+    return this.tabItemService.selectOne(id);
   }
 
   public addTabItemsToTabBar(tabItems: TabItem[], tabBar: TabBar): void {
@@ -83,6 +83,7 @@ export class DefaultMenuFacade implements MenuFacade {
 
   public onClickMenuItem(menuItem: MenuItem): void {
     if (!menuItem.isDisabled) {
+      // TODO: service method
       this.menuItemService.closeAll();
       this.contextMenuService.closeAll();
       this.menuItemService.open(menuItem);
@@ -105,7 +106,7 @@ export class DefaultMenuFacade implements MenuFacade {
   public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextProps: Prop): void {
     this.contextMenuService.closeAll();
     this.contextMenuService.updateContextProps(contextProps, contextMenu);
-    const menuItems$ = this.menuItemService.selectByIds(contextMenu.menuItemIds).pipe(take(1));
+    const menuItems$ = this.menuItemService.selectMany(contextMenu.menuItemIds).pipe(take(1)); // TODO: method
     const nestedMenuItems$ = menuItems$.pipe(switchMap((menuItems) => this.menuItemService.selectAllNested(menuItems).pipe(take(1))));
     const allMenuItems$ = forkJoin([menuItems$, nestedMenuItems$]).pipe(map(([menuItems, nestedMenuItems]) => [...menuItems, ...nestedMenuItems]));
     const updateContext$ = allMenuItems$.pipe(tap((menuItems) => this.menuItemService.upsertOnClickActionProps(contextProps, menuItems)));
