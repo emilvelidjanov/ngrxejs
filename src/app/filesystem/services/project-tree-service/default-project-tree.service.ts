@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
+import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
+import { uuidGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 
 import { DirectoryItem } from '../../store/directory-item/directory-item.state';
 import { projectTreeActions } from '../../store/project-tree/project-tree.actions';
@@ -13,7 +15,7 @@ import { ProjectTreeService } from './project-tree.service';
 
 @Injectable()
 export class DefaultProjectTreeService implements ProjectTreeService {
-  constructor(private store: Store<ProjectTrees>) {}
+  constructor(private store: Store<ProjectTrees>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
   public selectOneByDirectoryItem(directoryItem: DirectoryItem): Observable<ProjectTree> {
     return this.selectOne(directoryItem.projectTreeId);
@@ -32,13 +34,18 @@ export class DefaultProjectTreeService implements ProjectTreeService {
     return projectTree;
   }
 
-  // TODO: UUID implementation
   public createOne(partial: IdLessPartial<ProjectTree>): Observable<ProjectTree> {
-    throw new Error('Method not implemented.');
+    const uuid = this.idGeneratorService.nextId();
+    return of(this.createDefault({ id: uuid, ...partial }));
   }
 
   public createMany(partials: IdLessPartial<ProjectTree>[]): Observable<ProjectTree[]> {
-    throw new Error('Method not implemented.');
+    const uuids = this.idGeneratorService.nextNIds(partials.length);
+    const entities = uuids.map((uuid, index) => {
+      const partial = partials[index];
+      return this.createDefault({ id: uuid, ...partial });
+    });
+    return of(entities);
   }
 
   public addOne(entity: ProjectTree): void {
