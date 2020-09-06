@@ -1,14 +1,12 @@
 import { Observable } from 'rxjs';
-import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { EntityService } from 'src/app/core/ngrx/services/entity.service';
 import { File } from 'src/app/filesystem/store/file/file.state';
 import { TabItem } from 'src/app/menu/store/tab-item/tab-item.state';
 
 import { Editor } from '../../store/editor/editor.state';
 
-export interface EditorService {
+export interface EditorService extends EntityService<Editor> {
   isOpenedFile(file: File, editor: Editor): boolean;
-  createFromPartial(partial: EntityPartial<Editor>): Editor;
-  addMany(editors: Editor[]): void;
   focus(editor: Editor): void;
   selectFocused(): Observable<Editor>;
   addOpenedFiles(files: File[], editor: Editor): void;

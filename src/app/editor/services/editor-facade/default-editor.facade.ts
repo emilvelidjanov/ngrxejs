@@ -22,7 +22,7 @@ export class DefaultEditorFacade implements EditorFacade {
   ) {}
 
   public addEditorsConfig(partials: EntityPartial<Editor>[]): void {
-    const editors = partials.map((partial) => this.editorService.createFromPartial(partial));
+    const editors = partials.map((partial) => this.editorService.createDefault(partial));
     this.editorService.addMany(editors);
   }
 

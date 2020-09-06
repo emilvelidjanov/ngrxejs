@@ -1,7 +1,10 @@
+import { Inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EntityPartial } from 'src/app/core/ngrx/entity/entity';
+import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
+import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
+import { uuidGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { File } from 'src/app/filesystem/store/file/file.state';
 import { TabItem } from 'src/app/menu/store/tab-item/tab-item.state';
 
@@ -12,10 +15,11 @@ import { Editor, Editors } from '../../store/editor/editor.state';
 import { EditorService } from './editor.service';
 
 export class DefaultEditorService implements EditorService {
-  constructor(private store: Store<Editors>) {}
+  constructor(private store: Store<Editors>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
-  public createFromPartial(partial: EntityPartial<Editor>): Editor {
+  public createDefault(partial: EntityPartial<Editor>): Editor {
     const editor: Editor = {
+      id: null,
       focusedFileId: null,
       openedFileIds: [],
       isFocused: false,
@@ -25,28 +29,47 @@ export class DefaultEditorService implements EditorService {
     return editor;
   }
 
-  public addMany(editors: Editor[]): void {
-    if (editors && editors.length) {
-      this.store.dispatch(editorActions.addMany({ entities: editors }));
+  public createOne(partial: IdLessPartial<Editor>): Observable<Editor> {
+    const uuid = this.idGeneratorService.nextId();
+    return of(this.createDefault({ id: uuid, ...partial }));
+  }
+
+  public createMany(partials: IdLessPartial<Editor>[]): Observable<Editor[]> {
+    const uuids = this.idGeneratorService.nextNIds(partials.length);
+    const entities = uuids.map((uuid, index) => {
+      const partial = partials[index];
+      return this.createDefault({ id: uuid, ...partial });
+    });
+    return of(entities);
+  }
+
+  public addOne(entity: Editor): void {
+    if (entity) {
+      this.store.dispatch(editorActions.addOne({ entity }));
     }
+  }
+
+  public addMany(entities: Editor[]): void {
+    if (entities && entities.length) {
+      this.store.dispatch(editorActions.addMany({ entities }));
+    }
+  }
+
+  public selectOne(id: Id): Observable<Editor> {
+    return this.store.pipe(select(editorSelectors.selectEntityById, { id }));
+  }
+
+  public selectMany(ids: Id[]): Observable<Editor[]> {
+    return this.store.pipe(select(editorSelectors.selectEntitiesByIds, { ids }));
   }
 
   public focus(editor: Editor): void {
     if (!editor.isFocused) {
       this.store.dispatch(
-        editorActions.updateAll({
-          partial: {
-            isFocused: false,
-          },
-        }),
-      );
-      this.store.dispatch(
-        editorActions.updateOne({
-          update: {
-            id: editor.id,
-            changes: {
-              isFocused: true,
-            },
+        editorActions.map({
+          entityMap: (entity) => {
+            entity.isFocused = entity.id === editor.id;
+            return entity;
           },
         }),
       );
@@ -127,33 +150,25 @@ export class DefaultEditorService implements EditorService {
       const toRemove = files.filter((file) => editor.openedFileIds.includes(file.id)).map((file) => file.id);
       if (toRemove.length) {
         const newOpenedFileIds = editor.openedFileIds.filter((id) => !toRemove.includes(id));
-        this.store.dispatch(
-          editorActions.updateOne({
-            update: {
-              id: editor.id,
-              changes: {
-                openedFileIds: newOpenedFileIds,
-              },
-            },
-          }),
-        );
+        const partial: Partial<Editor> = {
+          openedFileIds: newOpenedFileIds,
+        };
         if (toRemove.includes(editor.focusedFileId)) {
           let index = editor.openedFileIds.indexOf(editor.focusedFileId);
           if (index >= newOpenedFileIds.length) {
             index = newOpenedFileIds.length - 1;
           }
           const newFocusedFileId = newOpenedFileIds[index] ? newOpenedFileIds[index] : null;
-          this.store.dispatch(
-            editorActions.updateOne({
-              update: {
-                id: editor.id,
-                changes: {
-                  focusedFileId: newFocusedFileId,
-                },
-              },
-            }),
-          );
+          partial.focusedFileId = newFocusedFileId;
         }
+        this.store.dispatch(
+          editorActions.updateOne({
+            update: {
+              id: editor.id,
+              changes: partial,
+            },
+          }),
+        );
       }
     }
   }
