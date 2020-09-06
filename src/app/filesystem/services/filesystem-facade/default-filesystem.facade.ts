@@ -80,20 +80,16 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       switchMap((directory) => this.projectService.createOneFromEntities(directory)),
       take(1),
     );
-    const dispatchNew$ = forkJoin([createRootDirectory$, createRootDirectoryItem$, createProject$]).pipe(
-      tap(([directory, directoryItem, project]) => {
-        this.directoryService.addOne(directory);
-        this.directoryItemService.addOne(directoryItem);
-        this.projectService.addOne(project);
-        this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem);
-        this.openDirectoryItem(directoryItem);
-      }),
-    );
-    const dispatchExisting$ = forkJoin([selectExistingProject$, selectExistingRootDirectoryItem$]).pipe(
-      tap(([project, directoryItem]) => this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem)),
-    );
-    dispatchNew$.subscribe();
-    dispatchExisting$.subscribe();
+    forkJoin([createRootDirectory$, createRootDirectoryItem$, createProject$]).subscribe(([directory, directoryItem, project]) => {
+      this.directoryService.addOne(directory);
+      this.directoryItemService.addOne(directoryItem);
+      this.projectService.addOne(project);
+      this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem);
+      this.openDirectoryItem(directoryItem);
+    });
+    forkJoin([selectExistingProject$, selectExistingRootDirectoryItem$]).subscribe(([project, directoryItem]) => {
+      this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem);
+    });
   }
 
   public openDirectoryItem(directoryItem: DirectoryItem): void {
@@ -120,8 +116,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         ]),
       ),
     );
-    const dispatch$ = forkJoin([selectDirectory$, selectOrCreateFilesAndDirs$, selectOrCreateItems$]).pipe(
-      tap(([selectDirectory, [files, dirs], [fileItems, dirItems]]) => {
+    forkJoin([selectDirectory$, selectOrCreateFilesAndDirs$, selectOrCreateItems$]).subscribe(
+      ([selectDirectory, [files, dirs], [fileItems, dirItems]]) => {
         this.fileService.addMany(files);
         this.directoryService.addMany(dirs);
         const sortedFiles = this.fileService.sort(files);
@@ -132,9 +128,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         const sortedFileItems = this.fileItemService.sortByFiles(fileItems, sortedFiles);
         const sortedDirItems = this.directoryItemService.sortByDirectories(dirItems, sortedDirs);
         this.directoryItemService.updateLoaded(directoryItem, sortedFileItems, sortedDirItems);
-      }),
+      },
     );
-    dispatch$.subscribe();
     this.directoryItemService.toggleOpened(directoryItem);
   }
 
@@ -168,8 +163,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const currentDirectories$ = directory$.pipe(switchMap((directory) => this.directoryService.selectManyByParentDirectory(directory).pipe(take(1))));
     const currentDirectoryItems$ = this.directoryItemService.selectManyByParentDirectoryItem(directoryItem).pipe(take(1));
-    const dispatch$ = forkJoin([createDirectory$, createDirectoryItem$, directory$, currentDirectories$, currentDirectoryItems$]).pipe(
-      tap(([newDirectory, newDirectoryItem, directory, directories, directoryItems]) => {
+    forkJoin([createDirectory$, createDirectoryItem$, directory$, currentDirectories$, currentDirectoryItems$]).subscribe(
+      ([newDirectory, newDirectoryItem, directory, directories, directoryItems]) => {
         this.directoryService.addOne(newDirectory);
         this.directoryItemService.addOne(newDirectoryItem);
         const combinedSorted = this.directoryService.sort([...directories, newDirectory]);
@@ -177,9 +172,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         const sortedDirItems = this.directoryItemService.sortByDirectories([...directoryItems, newDirectoryItem], combinedSorted);
         this.directoryItemService.updateDirectoryItems(sortedDirItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
-      }),
+      },
     );
-    dispatch$.subscribe();
   }
 
   public createNewFile(directoryItem: DirectoryItem, name: string): void {
@@ -200,8 +194,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const currentFiles$ = directory$.pipe(switchMap((directory) => this.fileService.selectManyByParentDirectory(directory).pipe(take(1))));
     const currentFileItems$ = this.fileItemService.selectManyByParentDirectoryItem(directoryItem).pipe(take(1));
-    const dispatch$ = forkJoin([createFile$, createFileItem$, directory$, currentFiles$, currentFileItems$]).pipe(
-      tap(([newFile, newFileItem, directory, files, fileItems]) => {
+    forkJoin([createFile$, createFileItem$, directory$, currentFiles$, currentFileItems$]).subscribe(
+      ([newFile, newFileItem, directory, files, fileItems]) => {
         this.fileService.addOne(newFile);
         this.fileItemService.addOne(newFileItem);
         const combinedSorted = this.fileService.sort([...files, newFile]);
@@ -209,8 +203,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         const sortedFileItems = this.fileItemService.sortByFiles([...fileItems, newFileItem], combinedSorted);
         this.directoryItemService.updateFileItems(sortedFileItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
-      }),
+      },
     );
-    dispatch$.subscribe();
   }
 }

@@ -110,10 +110,9 @@ export class DefaultMenuFacade implements MenuFacade {
       switchMap((menuItems) => this.menuItemService.selectNested(menuItems)),
       take(1),
     );
-    const updateContext$ = forkJoin([menuItems$, nestedMenuItems$]).pipe(
-      tap(([menuItems, nestedMenuItems]) => this.menuItemService.upsertOnClickActionProps(contextProps, [...menuItems, ...nestedMenuItems])),
-    );
-    updateContext$.subscribe();
+    forkJoin([menuItems$, nestedMenuItems$]).subscribe(([menuItems, nestedMenuItems]) => {
+      this.menuItemService.upsertOnClickActionProps(contextProps, [...menuItems, ...nestedMenuItems]);
+    });
     this.contextMenuService.open(contextMenu, xPosition, yPosition);
   }
 
