@@ -9,6 +9,7 @@ import { actionDescriptorServiceDep } from 'src/app/core/ngrx/services/action-de
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { uuidGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 
+import { ContextMenu } from '../../store/context-menu/context-menu.state';
 import { menuItemActions } from '../../store/menu-item/menu-item.actions';
 import { menuItemSelectors } from '../../store/menu-item/menu-item.selectors';
 import { MenuItem, MenuItems } from '../../store/menu-item/menu-item.state';
@@ -22,6 +23,14 @@ export class DefaultMenuItemService implements MenuItemService {
     @Inject(actionDescriptorServiceDep.getToken()) private actionDescriptorService: ActionDescriptorService,
     @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {}
+
+  public selectManyByContextMenu(contextMenu: ContextMenu): Observable<MenuItem[]> {
+    return this.selectMany(contextMenu.menuItemIds);
+  }
+
+  public isDisabled(menuItem: MenuItem): boolean {
+    return menuItem && menuItem.isDisabled;
+  }
 
   public createDefault(partial: EntityPartial<MenuItem>): MenuItem {
     const menuItem: MenuItem = {
@@ -74,7 +83,7 @@ export class DefaultMenuItemService implements MenuItemService {
     return this.store.pipe(select(menuItemSelectors.selectEntitiesByIds, { ids }));
   }
 
-  public selectAllNested(menuItems: MenuItem[]): Observable<MenuItem[]> {
+  public selectNested(menuItems: MenuItem[]): Observable<MenuItem[]> {
     const ids = menuItems.map((menuItem) => menuItem.menuItemIds).flat();
     if (!ids.length) {
       return of([]);
@@ -82,7 +91,7 @@ export class DefaultMenuItemService implements MenuItemService {
     const menuItems$ = this.selectMany(ids);
     const nested$ = menuItems$.pipe(
       filter((menuItems) => !!menuItems.length),
-      switchMap((menuItems) => this.selectAllNested(menuItems)),
+      switchMap((menuItems) => this.selectNested(menuItems)),
     );
     const combine$ = combineLatest([menuItems$, nested$]).pipe(map(([menuItems, nested]) => [...menuItems, ...nested]));
     return combine$;

@@ -82,8 +82,7 @@ export class DefaultMenuFacade implements MenuFacade {
   }
 
   public onClickMenuItem(menuItem: MenuItem): void {
-    if (!menuItem.isDisabled) {
-      // TODO: service method
+    if (!this.menuItemService.isDisabled(menuItem)) {
       this.menuItemService.closeAll();
       this.contextMenuService.closeAll();
       this.menuItemService.open(menuItem);
@@ -106,10 +105,14 @@ export class DefaultMenuFacade implements MenuFacade {
   public openContextMenu(contextMenu: ContextMenu, xPosition: number, yPosition: number, contextProps: Prop): void {
     this.contextMenuService.closeAll();
     this.contextMenuService.updateContextProps(contextProps, contextMenu);
-    const menuItems$ = this.menuItemService.selectMany(contextMenu.menuItemIds).pipe(take(1)); // TODO: method
-    const nestedMenuItems$ = menuItems$.pipe(switchMap((menuItems) => this.menuItemService.selectAllNested(menuItems).pipe(take(1))));
-    const allMenuItems$ = forkJoin([menuItems$, nestedMenuItems$]).pipe(map(([menuItems, nestedMenuItems]) => [...menuItems, ...nestedMenuItems]));
-    const updateContext$ = allMenuItems$.pipe(tap((menuItems) => this.menuItemService.upsertOnClickActionProps(contextProps, menuItems)));
+    const menuItems$ = this.menuItemService.selectManyByContextMenu(contextMenu).pipe(take(1));
+    const nestedMenuItems$ = menuItems$.pipe(
+      switchMap((menuItems) => this.menuItemService.selectNested(menuItems)),
+      take(1),
+    );
+    const updateContext$ = forkJoin([menuItems$, nestedMenuItems$]).pipe(
+      tap(([menuItems, nestedMenuItems]) => this.menuItemService.upsertOnClickActionProps(contextProps, [...menuItems, ...nestedMenuItems])),
+    );
     updateContext$.subscribe();
     this.contextMenuService.open(contextMenu, xPosition, yPosition);
   }
