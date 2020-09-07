@@ -8,6 +8,7 @@ import { LoadFileChannel } from './electron/ipc/filesystem/load-file-channel';
 import { StatPathChannel } from './electron/ipc/filesystem/stat-path-channel';
 import { CreateDirectoryChannel } from './electron/ipc/filesystem/create-directory-channel';
 import { CreateFileChannel } from './electron/ipc/filesystem/create-file-channel';
+import { DeleteFileChannel } from './electron/ipc/filesystem/delete-file-channel';
 
 class Main {
   private readonly PROD_SWITCH: string = 'prod';
@@ -62,7 +63,8 @@ class Main {
     const statPathChannel = new StatPathChannel();
     const createDirectoryChannel = new CreateDirectoryChannel();
     const createFileChannel = new CreateFileChannel();
-    return [openDialogChannel, loadDirectoryChannel, loadFileChannel, statPathChannel, createDirectoryChannel, createFileChannel];
+    const deleteFileChannel = new DeleteFileChannel();
+    return [openDialogChannel, loadDirectoryChannel, loadFileChannel, statPathChannel, createDirectoryChannel, createFileChannel, deleteFileChannel];
   }
 
   private windowOnClosed(): void {

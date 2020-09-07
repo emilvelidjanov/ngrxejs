@@ -27,4 +27,14 @@ export class FileItemEffects {
       ),
     { dispatch: false },
   );
+
+  public delete$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fileItemActions.delete),
+        switchMap((action) => this.filesystemFacade.selectFile(action.id).pipe(take(1))),
+        tap((file) => this.filesystemFacade.deleteFile(file)),
+      ),
+    { dispatch: false },
+  );
 }

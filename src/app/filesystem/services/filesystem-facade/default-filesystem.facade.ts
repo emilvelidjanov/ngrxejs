@@ -206,4 +206,9 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       },
     );
   }
+
+  public deleteFile(file: File): void {
+    const deleteFile$ = this.filesystemService.deleteFile(file.path).pipe(take(1));
+    deleteFile$.subscribe();
+  }
 }

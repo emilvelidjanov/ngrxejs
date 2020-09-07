@@ -9,6 +9,6 @@
   },
   {
     "id": "htmlFileItemContextMenu",
-    "menuItemIds": ["a"]
+    "menuItemIds": ["a", "deleteFile"]
   }
 ]

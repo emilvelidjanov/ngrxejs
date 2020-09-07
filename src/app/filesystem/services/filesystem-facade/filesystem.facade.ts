@@ -16,4 +16,5 @@ export interface FilesystemFacade {
   showCreateNewInputDirectoryItem(directoryItem: DirectoryItem, createNewInputType: CreateNewInputType): void;
   createNewDirectory(directoryItem: DirectoryItem, name: string): void;
   createNewFile(directoryItem: DirectoryItem, name: string): void;
+  deleteFile(file: File): void;
 }
