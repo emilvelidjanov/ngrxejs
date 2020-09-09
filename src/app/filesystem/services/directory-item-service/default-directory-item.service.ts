@@ -3,6 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, share, switchMap, take } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
+import { UpdateId } from 'src/app/core/ngrx/entity/entity-domain-state/props';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
 import { SortService } from 'src/app/core/services/sort-service/sort.service';
@@ -31,6 +32,48 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     @Inject(directoryServiceDep.getToken()) private directoryService: DirectoryService,
   ) {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
+  }
+
+  public removeFileItemsFromMany(fileItems: FileItem[], directoryItems: DirectoryItem[]): void {
+    if (fileItems && directoryItems && fileItems.length && directoryItems.length) {
+      const fileItemIds = fileItems.map((fileItem) => fileItem.id);
+      const parentDirectoryItems = directoryItems.filter((directoryItem) => directoryItem.fileItemIds.some((id) => fileItemIds.includes(id)));
+      if (parentDirectoryItems.length) {
+        const updates = parentDirectoryItems.map((directoryItem) => {
+          const update: UpdateId<DirectoryItem> = {
+            id: directoryItem.id,
+            changes: {
+              fileItemIds: directoryItem.fileItemIds.filter((id) => !fileItemIds.includes(id)),
+            },
+          };
+          return update;
+        });
+        this.store.dispatch(directoryItemActions.updateMany({ updates }));
+      }
+    }
+  }
+
+  public selectManyByContainFileItems(fileItems: FileItem[]): Observable<DirectoryItem[]> {
+    const fileItemIds = fileItems.map((fileItem) => fileItem.id);
+    const directoryItems$ = this.store.pipe(
+      select(directoryItemSelectors.selectEntitiesByPredicate, {
+        predicate: (entity) => entity.fileItemIds.some((id) => fileItemIds.includes(id)),
+      }),
+    );
+    return directoryItems$;
+  }
+
+  public removeOne(entity: DirectoryItem): void {
+    if (entity) {
+      this.store.dispatch(directoryItemActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: DirectoryItem[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(directoryItemActions.removeMany({ ids }));
+    }
   }
 
   public selectManyByParentDirectoryItem(directoryItem: DirectoryItem): Observable<DirectoryItem[]> {
@@ -131,7 +174,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
       select(directoryItemSelectors.selectEntitiesByPredicate, {
         predicate: (entity) => entity.directoryId === directory.id,
       }),
-      map((directoryItems) => directoryItems[0]),
+      map((directoryItems) => (directoryItems.length ? directoryItems[0] : null)),
     );
     return directoryItem$;
   }

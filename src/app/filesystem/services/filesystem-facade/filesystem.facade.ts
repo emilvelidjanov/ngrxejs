@@ -2,11 +2,13 @@ import { Observable } from 'rxjs';
 import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/directory-item.state';
+import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 
 export interface FilesystemFacade {
   selectFile(id: Id): Observable<File>;
+  selectFileItem(id: Id): Observable<FileItem>;
   selectProjectTree(id: Id): Observable<ProjectTree>;
   selectDirectoryItem(id: Id): Observable<DirectoryItem>;
   addProjectTreesConfig(partials: EntityPartial<ProjectTree>[]): void;

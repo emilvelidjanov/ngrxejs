@@ -24,6 +24,19 @@ export class DefaultMenuItemService implements MenuItemService {
     @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {}
 
+  public removeOne(entity: MenuItem): void {
+    if (entity) {
+      this.store.dispatch(menuItemActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: MenuItem[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(menuItemActions.removeMany({ ids }));
+    }
+  }
+
   public selectManyByContextMenu(contextMenu: ContextMenu): Observable<MenuItem[]> {
     return this.selectMany(contextMenu.menuItemIds);
   }
@@ -145,6 +158,7 @@ export class DefaultMenuItemService implements MenuItemService {
     );
   }
 
+  // TODO: map action?
   public updateIsDisabled(isDisabled: boolean, menuItem: MenuItem): void {
     if (menuItem.isDisabled !== isDisabled) {
       this.store.dispatch(

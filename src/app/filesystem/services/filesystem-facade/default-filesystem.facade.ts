@@ -5,6 +5,7 @@ import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
 import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/directory-item.state';
+import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 import { DirectoryItemService } from '../directory-item-service/directory-item.service';
@@ -38,6 +39,10 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
 
   public selectFile(id: Id): Observable<File> {
     return this.fileService.selectOne(id);
+  }
+
+  public selectFileItem(id: Id): Observable<FileItem> {
+    return this.fileItemService.selectOne(id);
   }
 
   public selectProjectTree(id: Id): Observable<ProjectTree> {
@@ -208,7 +213,19 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
   }
 
   public deleteFile(file: File): void {
+    const fileItems$ = this.fileItemService.selectManyByFile(file).pipe(take(1), share());
+    const directory$ = this.directoryService.selectOneByContainsFile(file).pipe(take(1));
+    const directoryItems$ = fileItems$.pipe(
+      switchMap((fileItems) => this.directoryItemService.selectManyByContainFileItems(fileItems)),
+      take(1),
+    );
     const deleteFile$ = this.filesystemService.deleteFile(file.path).pipe(take(1));
-    deleteFile$.subscribe();
+    forkJoin([fileItems$, directory$, directoryItems$, deleteFile$]).subscribe(([fileItems, directory, directoryItems]) => {
+      // TODO: what to do with editor references?
+      this.directoryService.removeFile(file, directory);
+      this.directoryItemService.removeFileItemsFromMany(fileItems, directoryItems);
+      this.fileItemService.removeMany(fileItems);
+      this.fileService.removeOne(file);
+    });
   }
 }

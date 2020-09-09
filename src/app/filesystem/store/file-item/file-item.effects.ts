@@ -32,7 +32,8 @@ export class FileItemEffects {
     () =>
       this.actions$.pipe(
         ofType(fileItemActions.delete),
-        switchMap((action) => this.filesystemFacade.selectFile(action.id).pipe(take(1))),
+        switchMap((action) => this.filesystemFacade.selectFileItem(action.id).pipe(take(1))),
+        switchMap((fileItem) => this.filesystemFacade.selectFile(fileItem.fileId).pipe(take(1))),
         tap((file) => this.filesystemFacade.deleteFile(file)),
       ),
     { dispatch: false },

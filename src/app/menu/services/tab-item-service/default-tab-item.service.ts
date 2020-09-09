@@ -26,6 +26,12 @@ export class DefaultTabItemService implements TabItemService {
     this.tabItemIds$ = this.store.pipe(select(tabItemSelectors.selectIds));
   }
 
+  public removeOne(entity: TabItem): void {
+    if (entity) {
+      this.store.dispatch(tabItemActions.removeOne({ id: entity.id }));
+    }
+  }
+
   public createDefault(partial: EntityPartial<TabItem>): TabItem {
     const tabItem: TabItem = {
       id: null,

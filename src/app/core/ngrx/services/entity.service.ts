@@ -10,4 +10,6 @@ export interface EntityService<T extends Entity> {
   addMany(entities: T[]): void;
   selectOne(id: Id): Observable<T>;
   selectMany(ids: Id[]): Observable<T[]>;
+  removeOne(entity: T): void;
+  removeMany(entities: T[]): void;
 }

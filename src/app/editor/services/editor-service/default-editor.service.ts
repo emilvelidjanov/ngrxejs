@@ -17,6 +17,19 @@ import { EditorService } from './editor.service';
 export class DefaultEditorService implements EditorService {
   constructor(private store: Store<Editors>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public removeOne(entity: Editor): void {
+    if (entity) {
+      this.store.dispatch(editorActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: Editor[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(editorActions.removeMany({ ids }));
+    }
+  }
+
   public createDefault(partial: EntityPartial<Editor>): Editor {
     const editor: Editor = {
       id: null,
@@ -84,7 +97,7 @@ export class DefaultEditorService implements EditorService {
   }
 
   public isOpenedFile(file: File, editor: Editor): boolean {
-    return editor.openedFileIds.includes(file.id);
+    return file && editor && editor.openedFileIds.includes(file.id);
   }
 
   public addOpenedFiles(files: File[], editor: Editor): void {
@@ -106,7 +119,7 @@ export class DefaultEditorService implements EditorService {
   }
 
   public focusFile(file: File, editor: Editor): void {
-    if (editor.focusedFileId !== file.id) {
+    if (file && editor && editor.focusedFileId !== file.id) {
       this.store.dispatch(
         editorActions.updateOne({
           update: {

@@ -1,5 +1,6 @@
 import { IpcChannel, IpcRequest, IpcChannelName } from '../ipc';
 import { IpcMainEvent } from 'electron';
+import { TrashUtils } from '../../../electron/utils/trash.utils';
 
 export class DeleteFileChannel implements IpcChannel<string> {
   constructor() {}
@@ -10,7 +11,8 @@ export class DeleteFileChannel implements IpcChannel<string> {
 
   public handle(event: IpcMainEvent, request: IpcRequest<string>): void {
     const path = request.params;
-    console.log(path);
-    event.reply(request.responseChannel, null);
+    TrashUtils.trash(path).subscribe(() => {
+      event.reply(request.responseChannel, null);
+    }, console.error);
   }
 }
