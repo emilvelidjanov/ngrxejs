@@ -27,6 +27,10 @@ export class DefaultProjectService implements ProjectService {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
+  public selectAll(): Observable<Project[]> {
+    return this.store.pipe(select(projectSelectors.selectAll));
+  }
+
   public removeOne(entity: Project): void {
     if (entity) {
       this.store.dispatch(projectActions.removeOne({ id: entity.id }));

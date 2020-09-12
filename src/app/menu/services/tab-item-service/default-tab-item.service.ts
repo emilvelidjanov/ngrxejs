@@ -26,6 +26,10 @@ export class DefaultTabItemService implements TabItemService {
     this.tabItemIds$ = this.store.pipe(select(tabItemSelectors.selectIds));
   }
 
+  public selectAll(): Observable<TabItem[]> {
+    return this.store.pipe(select(tabItemSelectors.selectAll));
+  }
+
   public removeOne(entity: TabItem): void {
     if (entity) {
       this.store.dispatch(tabItemActions.removeOne({ id: entity.id }));

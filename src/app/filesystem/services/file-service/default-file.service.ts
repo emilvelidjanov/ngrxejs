@@ -28,6 +28,16 @@ export class DefaultFileService implements FileService {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
+  public selectAll(): Observable<File[]> {
+    return this.store.pipe(select(fileSelectors.selectAll));
+  }
+
+  public dispatchDeletedEvent(file: File): void {
+    if (file) {
+      this.store.dispatch(fileActions.deleted({ entity: file }));
+    }
+  }
+
   public removeOne(entity: File): void {
     if (entity) {
       this.store.dispatch(fileActions.removeOne({ id: entity.id }));

@@ -24,6 +24,10 @@ export class DefaultMenuItemService implements MenuItemService {
     @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService,
   ) {}
 
+  public selectAll(): Observable<MenuItem[]> {
+    return this.store.pipe(select(menuItemSelectors.selectAll));
+  }
+
   public removeOne(entity: MenuItem): void {
     if (entity) {
       this.store.dispatch(menuItemActions.removeOne({ id: entity.id }));

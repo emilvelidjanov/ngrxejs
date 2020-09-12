@@ -17,6 +17,10 @@ import { ProjectTreeService } from './project-tree.service';
 export class DefaultProjectTreeService implements ProjectTreeService {
   constructor(private store: Store<ProjectTrees>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public selectAll(): Observable<ProjectTree[]> {
+    return this.store.pipe(select(projectTreeSelectors.selectAll));
+  }
+
   public removeOne(entity: ProjectTree): void {
     if (entity) {
       this.store.dispatch(projectTreeActions.removeOne({ id: entity.id }));

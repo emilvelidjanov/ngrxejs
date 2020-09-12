@@ -17,6 +17,10 @@ import { EditorService } from './editor.service';
 export class DefaultEditorService implements EditorService {
   constructor(private store: Store<Editors>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public selectAll(): Observable<Editor[]> {
+    return this.store.pipe(select(editorSelectors.selectAll));
+  }
+
   public removeOne(entity: Editor): void {
     if (entity) {
       this.store.dispatch(editorActions.removeOne({ id: entity.id }));

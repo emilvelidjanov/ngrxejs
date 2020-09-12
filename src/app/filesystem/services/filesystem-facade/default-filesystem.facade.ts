@@ -221,11 +221,11 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     );
     const deleteFile$ = this.filesystemService.deleteFile(file.path).pipe(take(1));
     forkJoin([fileItems$, directory$, directoryItems$, deleteFile$]).subscribe(([fileItems, directory, directoryItems]) => {
-      // TODO: what to do with editor references?
       this.directoryService.removeFile(file, directory);
       this.directoryItemService.removeFileItemsFromMany(fileItems, directoryItems);
       this.fileItemService.removeMany(fileItems);
       this.fileService.removeOne(file);
+      this.fileService.dispatchDeletedEvent(file);
     });
   }
 }

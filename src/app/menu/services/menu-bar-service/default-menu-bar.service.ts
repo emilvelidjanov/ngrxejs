@@ -15,6 +15,10 @@ import { MenuBarService } from './menu-bar.service';
 export class DefaultMenuBarService implements MenuBarService {
   constructor(private store: Store<MenuBars>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public selectAll(): Observable<MenuBar[]> {
+    return this.store.pipe(select(menuBarSelectors.selectAll));
+  }
+
   public removeOne(entity: MenuBar): void {
     if (entity) {
       this.store.dispatch(menuBarActions.removeOne({ id: entity.id }));

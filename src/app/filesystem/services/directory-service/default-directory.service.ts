@@ -30,6 +30,10 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
 
+  public selectAll(): Observable<Directory[]> {
+    return this.store.pipe(select(directorySelectors.selectAll));
+  }
+
   public removeFile(file: File, directory: Directory): void {
     if (file && directory && directory.fileIds.includes(file.id)) {
       this.store.dispatch(

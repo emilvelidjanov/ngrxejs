@@ -17,6 +17,7 @@ export class FileItemEffects {
     @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
   ) {}
 
+  // TODO: move to editor effects!
   public onClick$ = createEffect(
     () =>
       this.actions$.pipe(

@@ -29,6 +29,10 @@ export class DefaultFileItemService implements FileItemService {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
+  public selectAll(): Observable<FileItem[]> {
+    return this.store.pipe(select(fileItemSelectors.selectAll));
+  }
+
   public removeOne(entity: FileItem): void {
     if (entity) {
       this.store.dispatch(fileItemActions.removeOne({ id: entity.id }));

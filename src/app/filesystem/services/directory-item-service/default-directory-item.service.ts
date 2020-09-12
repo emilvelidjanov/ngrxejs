@@ -34,6 +34,10 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
   }
 
+  public selectAll(): Observable<DirectoryItem[]> {
+    return this.store.pipe(select(directoryItemSelectors.selectAll));
+  }
+
   public removeFileItemsFromMany(fileItems: FileItem[], directoryItems: DirectoryItem[]): void {
     if (fileItems && directoryItems && fileItems.length && directoryItems.length) {
       const fileItemIds = fileItems.map((fileItem) => fileItem.id);

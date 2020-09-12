@@ -16,6 +16,10 @@ import { TabBarService } from './tab-bar.service';
 export class DefaultTabBarService implements TabBarService {
   constructor(private store: Store<TabBars>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public selectAll(): Observable<TabBar[]> {
+    return this.store.pipe(select(tabBarSelectors.selectAll));
+  }
+
   public removeOne(entity: TabBar): void {
     if (entity) {
       this.store.dispatch(tabBarActions.removeOne({ id: entity.id }));

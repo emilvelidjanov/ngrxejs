@@ -66,4 +66,9 @@ export class DefaultEditorFacade implements EditorFacade {
       });
     }
   }
+
+  public closeFileAllEditors(file: File): void {
+    const editors$ = this.editorService.selectAll().pipe(take(1));
+    editors$.subscribe((editors) => editors.forEach((editor) => this.closeFile(file, editor)));
+  }
 }
