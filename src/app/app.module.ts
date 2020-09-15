@@ -33,7 +33,7 @@ import { metaReducers, reducers } from './store';
     }),
     EffectsModule.forRoot(),
     StoreDevtoolsModule.instrument({
-      maxAge: 50,
+      maxAge: 100,
       logOnly: environment.production,
     }),
     CoreModule.forRoot(),

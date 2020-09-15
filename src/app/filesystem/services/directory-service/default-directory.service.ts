@@ -30,6 +30,28 @@ export class DefaultDirectoryService implements DirectoryService {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
   }
 
+  public removeDirectory(directory: Directory, parentDirectory: Directory): void {
+    if (directory && parentDirectory && parentDirectory.directoryIds.includes(directory.id)) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: parentDirectory.id,
+            changes: {
+              directoryIds: parentDirectory.directoryIds.filter((id) => id !== directory.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public selectOneByContainsDirectory(directory: Directory): Observable<Directory> {
+    return this.store.pipe(
+      select(directorySelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.directoryIds.includes(directory.id) }),
+      map((directories) => (directories.length ? directories[0] : null)),
+    );
+  }
+
   public selectAll(): Observable<Directory[]> {
     return this.store.pipe(select(directorySelectors.selectAll));
   }

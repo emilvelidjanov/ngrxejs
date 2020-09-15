@@ -34,6 +34,36 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     this.directoryItemIds$ = this.store.pipe(select(directoryItemSelectors.selectIds));
   }
 
+  public removeDirectoryItemsFromMany(directoryItems: DirectoryItem[], parentDirectoryItems: DirectoryItem[]): void {
+    if (directoryItems && parentDirectoryItems && directoryItems.length && parentDirectoryItems.length) {
+      const directoryItemIds = directoryItems.map((directoryItem) => directoryItem.id);
+      const validParentDirectoryItems = parentDirectoryItems.filter((directoryItem) =>
+        directoryItem.directoryItemIds.some((id) => directoryItemIds.includes(id)),
+      );
+      if (validParentDirectoryItems.length) {
+        const updates = validParentDirectoryItems.map((directoryItem) => {
+          const update: UpdateId<DirectoryItem> = {
+            id: directoryItem.id,
+            changes: {
+              directoryItemIds: directoryItem.directoryItemIds.filter((id) => !directoryItemIds.includes(id)),
+            },
+          };
+          return update;
+        });
+        this.store.dispatch(directoryItemActions.updateMany({ updates }));
+      }
+    }
+  }
+
+  public selectByDirectory(directory: Directory): Observable<DirectoryItem[]> {
+    const directoryItems$ = this.store.pipe(
+      select(directoryItemSelectors.selectEntitiesByPredicate, {
+        predicate: (entity) => entity.directoryId === directory.id,
+      }),
+    );
+    return directoryItems$;
+  }
+
   public selectAll(): Observable<DirectoryItem[]> {
     return this.store.pipe(select(directoryItemSelectors.selectAll));
   }
@@ -100,7 +130,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
 
   public selectRootOfProject(project: Project): Observable<DirectoryItem> {
     const selectDirectory$ = this.directoryService.selectRootOfProject(project);
-    const selectDirectoryItem$ = selectDirectory$.pipe(switchMap((directory) => (directory ? this.selectByDirectory(directory) : of(null))));
+    const selectDirectoryItem$ = selectDirectory$.pipe(switchMap((directory) => (directory ? this.selectOneByDirectory(directory) : of(null))));
     return selectDirectoryItem$;
   }
 
@@ -173,7 +203,7 @@ export class DefaultDirectoryItemService implements DirectoryItemService {
     return this.store.pipe(select(directoryItemSelectors.selectEntitiesByIds, { ids }));
   }
 
-  public selectByDirectory(directory: Directory): Observable<DirectoryItem> {
+  public selectOneByDirectory(directory: Directory): Observable<DirectoryItem> {
     const directoryItem$ = this.store.pipe(
       select(directoryItemSelectors.selectEntitiesByPredicate, {
         predicate: (entity) => entity.directoryId === directory.id,

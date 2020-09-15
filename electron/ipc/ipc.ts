@@ -17,5 +17,5 @@ export enum IpcChannelName {
   STAT_PATH = 'stat-path',
   CREATE_DIRECTORY = 'create-directory',
   CREATE_FILE = 'create-file',
-  DELETE_FILE = 'delete-file',
+  DELETE_PATH = 'delete-path',
 }

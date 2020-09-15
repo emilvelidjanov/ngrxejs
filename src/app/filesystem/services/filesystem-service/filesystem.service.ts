@@ -8,7 +8,7 @@ export interface FilesystemService {
   partitionLoadDirectoryResults(results: StatResult[]): [StatResult[], StatResult[]];
   createDirectory(path: string, name: string): Observable<StatResult>;
   createFile(path: string, name: string): Observable<StatResult>;
-  deleteFile(path: string): Observable<void>;
+  deletePath(path: string): Observable<void>;
 }
 
 export interface OpenDialogResult {

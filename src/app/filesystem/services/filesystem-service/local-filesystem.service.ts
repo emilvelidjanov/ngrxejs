@@ -11,11 +11,11 @@ import { FilesystemService, OpenDialogResult, PathAndName, StatResult } from './
 export class LocalFilesystemService implements FilesystemService {
   constructor(@Inject(ipcServiceDep.getToken()) private ipcService: IpcService) {}
 
-  public deleteFile(path: string): Observable<void> {
+  public deletePath(path: string): Observable<void> {
     const request: IpcRequest<string> = {
       params: path,
     };
-    const response$ = this.ipcService.send<string, void>(IpcChannelName.DELETE_FILE, request);
+    const response$ = this.ipcService.send<string, void>(IpcChannelName.DELETE_PATH, request);
     return response$;
   }
 

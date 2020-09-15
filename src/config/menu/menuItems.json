@@ -30,6 +30,14 @@
     "isContextAware": true
   },
   {
+    "id": "deleteDirectory",
+    "label": "Delete",
+    "clickAction": {
+      "type": "[Effect][DirectoryItem] Delete"
+    },
+    "isContextAware": true
+  },
+  {
     "id": "editor",
     "label": "Editor",
     "menuItemIds": ["a", "b", "c", "nested"]

@@ -9,10 +9,12 @@ import { Project } from '../../store/project/project.state';
 
 export interface DirectoryItemService extends EntityService<DirectoryItem> {
   removeFileItemsFromMany(fileItems: FileItem[], directoryItems: DirectoryItem[]): void;
+  removeDirectoryItemsFromMany(directoryItems: DirectoryItem[], parentDirectoryItems: DirectoryItem[]): void;
   selectManyByContainFileItems(fileItems: FileItem[]): Observable<DirectoryItem[]>;
   createOneFromEntities(directory: Directory, projectTree: ProjectTree): Observable<DirectoryItem>;
   createManyFromEntities(directories: Directory[], projectTree: ProjectTree): Observable<DirectoryItem[]>;
-  selectByDirectory(directory: Directory): Observable<DirectoryItem>;
+  selectByDirectory(directory: Directory): Observable<DirectoryItem[]>;
+  selectOneByDirectory(directory: Directory): Observable<DirectoryItem>; // TODO: remove
   toggleOpened(directoryItem: DirectoryItem): void;
   updateLoaded(directoryItem: DirectoryItem, fileItems: FileItem[], directoryItems: DirectoryItem[]): void;
   selectByDirectories(directories: Directory[]): Observable<DirectoryItem[]>;

@@ -8,7 +8,7 @@ import { LoadFileChannel } from './electron/ipc/filesystem/load-file-channel';
 import { StatPathChannel } from './electron/ipc/filesystem/stat-path-channel';
 import { CreateDirectoryChannel } from './electron/ipc/filesystem/create-directory-channel';
 import { CreateFileChannel } from './electron/ipc/filesystem/create-file-channel';
-import { DeleteFileChannel } from './electron/ipc/filesystem/delete-file-channel';
+import { DeletePathChannel } from './electron/ipc/filesystem/delete-path-channel';
 
 class Main {
   private readonly PROD_SWITCH: string = 'prod';
@@ -63,8 +63,8 @@ class Main {
     const statPathChannel = new StatPathChannel();
     const createDirectoryChannel = new CreateDirectoryChannel();
     const createFileChannel = new CreateFileChannel();
-    const deleteFileChannel = new DeleteFileChannel();
-    return [openDialogChannel, loadDirectoryChannel, loadFileChannel, statPathChannel, createDirectoryChannel, createFileChannel, deleteFileChannel];
+    const deletePathChannel = new DeletePathChannel();
+    return [openDialogChannel, loadDirectoryChannel, loadFileChannel, statPathChannel, createDirectoryChannel, createFileChannel, deletePathChannel];
   }
 
   private windowOnClosed(): void {
@@ -92,9 +92,15 @@ class Main {
       ipcMain.on(channel.getName(), (event, args) => channel.handle(event, args));
     });
   }
+
+  public isProdEnvironment(): boolean {
+    return this.isProd;
+  }
 }
 
-if (!app.commandLine.hasSwitch(this.PROD_SWITCH)) {
+const main: Main = new Main();
+
+if (!main.isProdEnvironment()) {
   const rootPath = PathUtils.getDirname(__dirname);
   const distPath = PathUtils.joinPath(rootPath, 'dist');
   const electronPath = PathUtils.joinPath(rootPath, 'node_modules', 'electron');
@@ -106,5 +112,4 @@ if (!app.commandLine.hasSwitch(this.PROD_SWITCH)) {
   });
 }
 
-const main: Main = new Main();
 main.init();

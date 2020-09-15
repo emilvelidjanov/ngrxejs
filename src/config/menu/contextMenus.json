@@ -5,7 +5,7 @@
   },
   {
     "id": "directoryItemContextMenu",
-    "menuItemIds": ["new", "a", "b"]
+    "menuItemIds": ["new", "a", "b", "deleteDirectory"]
   },
   {
     "id": "htmlFileItemContextMenu",

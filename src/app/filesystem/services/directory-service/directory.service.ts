@@ -9,7 +9,9 @@ import { StatResult } from '../filesystem-service/filesystem.service';
 
 export interface DirectoryService extends EntityService<Directory> {
   removeFile(file: File, directory: Directory): void;
+  removeDirectory(directory: Directory, parentDirectory: Directory): void;
   selectOneByContainsFile(file: File): Observable<Directory>;
+  selectOneByContainsDirectory(directory: Directory): Observable<Directory>;
   selectByPaths(paths: string[]): Observable<Directory[]>;
   createOneFromStatResult(statResult: StatResult): Observable<Directory>;
   createManyFromStatResults(statResult: StatResult[]): Observable<Directory[]>;
