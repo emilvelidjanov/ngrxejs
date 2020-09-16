@@ -5,6 +5,8 @@ import { EntityPartial, Id } from 'src/app/core/ngrx/entity/entity';
 
 import openProjectOptions from '../../config/openProjectOptions.json';
 import { CreateNewInputType, DirectoryItem } from '../../store/directory-item/directory-item.state';
+import { Directory } from '../../store/directory/directory.state';
+import { FileItem } from '../../store/file-item/file-item.state';
 import { File } from '../../store/file/file.state';
 import { ProjectTree } from '../../store/project-tree/project-tree.state';
 import { DirectoryItemService } from '../directory-item-service/directory-item.service';
@@ -40,8 +42,16 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     return this.fileService.selectOne(id);
   }
 
+  public selectFileItem(id: Id): Observable<FileItem> {
+    return this.fileItemService.selectOne(id);
+  }
+
   public selectProjectTree(id: Id): Observable<ProjectTree> {
     return this.projectTreeService.selectOne(id);
+  }
+
+  public selectDirectory(id: Id): Observable<Directory> {
+    return this.directoryService.selectOne(id);
   }
 
   public selectDirectoryItem(id: Id): Observable<DirectoryItem> {
@@ -61,6 +71,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       take(1),
       share(),
     );
+    // TODO: select root of projectTree
     const selectExistingRootDirectoryItem$ = selectExistingProject$.pipe(
       switchMap((project) => this.directoryItemService.selectRootOfProject(project)),
       take(1),
@@ -89,6 +100,7 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
     });
     forkJoin([selectExistingProject$, selectExistingRootDirectoryItem$]).subscribe(([project, directoryItem]) => {
       this.projectTreeService.updateOpenedProject(projectTree, project, directoryItem);
+      // TODO: open directoryItem if not opened
     });
   }
 
@@ -203,6 +215,53 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
         const sortedFileItems = this.fileItemService.sortByFiles([...fileItems, newFileItem], combinedSorted);
         this.directoryItemService.updateFileItems(sortedFileItems, directoryItem);
         this.directoryItemService.showCreateNewInput(directoryItem, 'none');
+      },
+    );
+  }
+
+  public deleteFile(file: File): void {
+    const deleteFile$ = this.filesystemService.deletePath(file.path).pipe(take(1));
+    deleteFile$.subscribe(() => this.deleteFileEntities(file));
+  }
+
+  private deleteFileEntities(file: File): void {
+    const fileItems$ = this.fileItemService.selectManyByFile(file).pipe(take(1), share());
+    const directory$ = this.directoryService.selectOneByContainsFile(file).pipe(take(1));
+    const directoryItems$ = fileItems$.pipe(
+      switchMap((fileItems) => this.directoryItemService.selectManyByContainFileItems(fileItems)),
+      take(1),
+    );
+    forkJoin([fileItems$, directory$, directoryItems$]).subscribe(([fileItems, directory, directoryItems]) => {
+      this.directoryService.removeFile(file, directory);
+      this.directoryItemService.removeFileItemsFromMany(fileItems, directoryItems);
+      this.fileItemService.removeMany(fileItems);
+      this.fileService.removeOne(file);
+      this.fileService.dispatchDeletedEvent(file);
+    });
+  }
+
+  public deleteDirectory(directory: Directory): void {
+    const deleteDirectory$ = this.filesystemService.deletePath(directory.path).pipe(take(1));
+    deleteDirectory$.subscribe(() => this.deleteDirectoryEntities(directory));
+  }
+
+  private deleteDirectoryEntities(directory: Directory): void {
+    const directoryItems$ = this.directoryItemService.selectByDirectory(directory).pipe(take(1));
+    const parentDirectory$ = this.directoryService.selectOneByContainsDirectory(directory).pipe(take(1), share());
+    const parentDirectoryItems$ = parentDirectory$.pipe(
+      switchMap((directory) => this.directoryItemService.selectByDirectory(directory)),
+      take(1),
+    );
+    const childDirectories$ = this.directoryService.selectManyByParentDirectory(directory).pipe(take(1));
+    const childFiles$ = this.fileService.selectManyByParentDirectory(directory).pipe(take(1));
+    forkJoin([directoryItems$, parentDirectory$, parentDirectoryItems$, childDirectories$, childFiles$]).subscribe(
+      ([directoryItems, parentDirectory, parentDirectoryItems, childDirectories, childFiles]) => {
+        childDirectories.forEach((directory) => this.deleteDirectoryEntities(directory));
+        childFiles.forEach((file) => this.deleteFileEntities(file));
+        this.directoryService.removeDirectory(directory, parentDirectory);
+        this.directoryItemService.removeDirectoryItemsFromMany(directoryItems, parentDirectoryItems);
+        this.directoryItemService.removeMany(directoryItems);
+        this.directoryService.removeOne(directory);
       },
     );
   }

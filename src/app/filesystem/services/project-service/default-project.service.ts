@@ -27,6 +27,23 @@ export class DefaultProjectService implements ProjectService {
     this.projectIds$ = this.store.pipe(select(projectSelectors.selectIds));
   }
 
+  public selectAll(): Observable<Project[]> {
+    return this.store.pipe(select(projectSelectors.selectAll));
+  }
+
+  public removeOne(entity: Project): void {
+    if (entity) {
+      this.store.dispatch(projectActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: Project[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(projectActions.removeMany({ ids }));
+    }
+  }
+
   public selectByRootDirectoryPath(path: string): Observable<Project> {
     const selectDirectory$ = this.directoryService.selectByPath(path);
     const selectProject$ = selectDirectory$.pipe(switchMap((directory) => (directory ? this.selectByRootDirectory(directory) : of(null))));

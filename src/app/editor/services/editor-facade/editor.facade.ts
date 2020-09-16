@@ -10,4 +10,5 @@ export interface EditorFacade {
   selectFocusedEditor(): Observable<Editor>;
   openFile(file: File, editor: Editor): void;
   closeFile(file: File, editor: Editor): void;
+  closeFileAllEditors(file: File): void;
 }

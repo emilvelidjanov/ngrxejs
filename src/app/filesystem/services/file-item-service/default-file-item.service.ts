@@ -29,6 +29,27 @@ export class DefaultFileItemService implements FileItemService {
     this.fileItemIds$ = this.store.pipe(select(fileItemSelectors.selectIds));
   }
 
+  public selectAll(): Observable<FileItem[]> {
+    return this.store.pipe(select(fileItemSelectors.selectAll));
+  }
+
+  public removeOne(entity: FileItem): void {
+    if (entity) {
+      this.store.dispatch(fileItemActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: FileItem[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(fileItemActions.removeMany({ ids }));
+    }
+  }
+
+  public selectManyByFile(file: File): Observable<FileItem[]> {
+    return this.store.pipe(select(fileItemSelectors.selectEntitiesByPredicate, { predicate: (fileItem) => file.id === fileItem.id }));
+  }
+
   public selectManyByParentDirectoryItem(directoryItem: DirectoryItem): Observable<FileItem[]> {
     return this.selectMany(directoryItem.fileItemIds);
   }

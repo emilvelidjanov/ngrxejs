@@ -16,6 +16,23 @@ import { ContextMenuService } from './context-menu.service';
 export class DefaultContextMenuService implements ContextMenuService {
   constructor(private store: Store<ContextMenus>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
 
+  public selectAll(): Observable<ContextMenu[]> {
+    return this.store.pipe(select(contextMenuSelectors.selectAll));
+  }
+
+  public removeOne(entity: ContextMenu): void {
+    if (entity) {
+      this.store.dispatch(contextMenuActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: ContextMenu[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(contextMenuActions.removeMany({ ids }));
+    }
+  }
+
   public createDefault(partial: EntityPartial<ContextMenu>): ContextMenu {
     const contextMenu: ContextMenu = {
       id: null,

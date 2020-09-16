@@ -12,4 +12,5 @@ export interface FileService extends EntityService<File> {
   sort(files: File[]): File[];
   selectOrCreateManyFromStatResults(statResults: StatResult[]): Observable<File[]>;
   selectManyByParentDirectory(directory: Directory): Observable<File[]>;
+  dispatchDeletedEvent(file: File): void;
 }

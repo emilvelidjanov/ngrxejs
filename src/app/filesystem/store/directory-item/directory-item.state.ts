@@ -22,7 +22,7 @@ const initialState: DirectoryItems = {
   entities: {},
 };
 
-export const directoryDomainStateConfig: EntityDomainStateConfigurer<DirectoryItem, DirectoryItems> = new EntityDomainStateConfigurer(
+export const directoryItemDomainStateConfig: EntityDomainStateConfigurer<DirectoryItem, DirectoryItems> = new EntityDomainStateConfigurer(
   entityName,
   initialState,
 );

@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { FilesystemFacade } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade';
 import { filesystemFacadeDep } from 'src/app/filesystem/services/filesystem-facade/filesystem.facade.dependency';
+import { fileActions } from 'src/app/filesystem/store/file/file.actions';
 
 import { EditorFacade } from '../../services/editor-facade/editor.facade';
 import { editorFacadeDep } from '../../services/editor-facade/editor.facade.dependency';
@@ -44,6 +45,15 @@ export class EditorEffects {
         switchMap((action) => this.filesystemFacade.selectFile(action.id).pipe(take(1))),
         withLatestFrom(this.editorFacade.selectFocusedEditor()), // TODO: focused can be wrong here with multiple editors
         tap(([file, editor]) => this.editorFacade.closeFile(file, editor)),
+      ),
+    { dispatch: false },
+  );
+
+  public closeDeletedFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fileActions.deleted),
+        tap((action) => this.editorFacade.closeFileAllEditors(action.entity)),
       ),
     { dispatch: false },
   );

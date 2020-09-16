@@ -1,8 +1,8 @@
 import { selectDirectoryItems } from '..';
 
-import { directoryDomainStateConfig } from './directory-item.state';
+import { directoryItemDomainStateConfig } from './directory-item.state';
 
-const defSelectors = { ...directoryDomainStateConfig.getSelectors(selectDirectoryItems) };
+const defSelectors = { ...directoryItemDomainStateConfig.getSelectors(selectDirectoryItems) };
 
 export const directoryItemSelectors = {
   ...defSelectors,

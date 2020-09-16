@@ -48,4 +48,15 @@ export class DirectoryItemEffects {
       ),
     { dispatch: false },
   );
+
+  public delete$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(directoryItemActions.delete),
+        switchMap((action) => this.filesystemFacade.selectDirectoryItem(action.id).pipe(take(1))),
+        switchMap((directoryItem) => this.filesystemFacade.selectDirectory(directoryItem.directoryId).pipe(take(1))),
+        tap((directory) => this.filesystemFacade.deleteDirectory(directory)),
+      ),
+    { dispatch: false },
+  );
 }

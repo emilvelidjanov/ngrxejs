@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { forkJoin, Observable } from 'rxjs';
-import { map, share, switchMap, take } from 'rxjs/operators';
+import { filter, map, share, switchMap, take } from 'rxjs/operators';
 import { EntityPartial, Id, IdLessPartial } from 'src/app/core/ngrx/entity/entity';
 import { IdGeneratorService } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service';
 import { numberIdGeneratorServiceDep } from 'src/app/core/ngrx/services/id-generator-service/id-generator.service.dependency';
@@ -28,6 +28,69 @@ export class DefaultDirectoryService implements DirectoryService {
     @Inject(sortServiceDep.getToken()) private sortService: SortService,
   ) {
     this.directoryIds$ = this.store.pipe(select(directorySelectors.selectIds));
+  }
+
+  public removeDirectory(directory: Directory, parentDirectory: Directory): void {
+    if (directory && parentDirectory && parentDirectory.directoryIds.includes(directory.id)) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: parentDirectory.id,
+            changes: {
+              directoryIds: parentDirectory.directoryIds.filter((id) => id !== directory.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public selectOneByContainsDirectory(directory: Directory): Observable<Directory> {
+    return this.store.pipe(
+      select(directorySelectors.selectEntitiesByPredicate, { predicate: (entity) => entity.directoryIds.includes(directory.id) }),
+      map((directories) => (directories.length ? directories[0] : null)),
+    );
+  }
+
+  public selectAll(): Observable<Directory[]> {
+    return this.store.pipe(select(directorySelectors.selectAll));
+  }
+
+  public removeFile(file: File, directory: Directory): void {
+    if (file && directory && directory.fileIds.includes(file.id)) {
+      this.store.dispatch(
+        directoryActions.updateOne({
+          update: {
+            id: directory.id,
+            changes: {
+              fileIds: directory.fileIds.filter((id) => id !== file.id),
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  public selectOneByContainsFile(file: File): Observable<Directory> {
+    return this.store.pipe(
+      select(directorySelectors.selectEntitiesByPredicate, {
+        predicate: (directory) => directory.fileIds.includes(file.id),
+      }),
+      map((directories) => (directories.length ? directories[0] : null)),
+    );
+  }
+
+  public removeOne(entity: Directory): void {
+    if (entity) {
+      this.store.dispatch(directoryActions.removeOne({ id: entity.id }));
+    }
+  }
+
+  public removeMany(entities: Directory[]): void {
+    if (entities && entities.length) {
+      const ids = entities.map((entity) => entity.id);
+      this.store.dispatch(directoryActions.removeMany({ ids }));
+    }
   }
 
   public selectManyByParentDirectory(directory: Directory): Observable<Directory[]> {

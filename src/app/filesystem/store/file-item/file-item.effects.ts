@@ -17,6 +17,7 @@ export class FileItemEffects {
     @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
   ) {}
 
+  // TODO: move to editor effects!
   public onClick$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -24,6 +25,17 @@ export class FileItemEffects {
         switchMap((action) => this.filesystemFacade.selectFile(action.entity.fileId).pipe(take(1))),
         withLatestFrom(this.editorFacade.selectFocusedEditor()),
         tap(([file, editor]) => this.editorFacade.openFile(file, editor)),
+      ),
+    { dispatch: false },
+  );
+
+  public delete$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fileItemActions.delete),
+        switchMap((action) => this.filesystemFacade.selectFileItem(action.id).pipe(take(1))),
+        switchMap((fileItem) => this.filesystemFacade.selectFile(fileItem.fileId).pipe(take(1))),
+        tap((file) => this.filesystemFacade.deleteFile(file)),
       ),
     { dispatch: false },
   );

@@ -38,6 +38,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     this.reducers = this.initReducerFunctions();
   }
 
+  // TODO: rename selectors: "selectOne" -> "One"
   public getSelectors(entityStateSelector: (state: object) => D): EntityDomainSelectors<T> {
     const defSelectors = this.adapter.getSelectors(entityStateSelector);
     const selectEntityById = createSelector(defSelectors.selectEntities, (entities: Dictionary<T>, props: PropId) => entities[props.id]);
@@ -80,6 +81,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     return `[Domain][${this.entityName}] ${type}`;
   }
 
+  // TODO: rename to "Event"?
   public getEffectActionType(type: string) {
     return `[Effect][${this.entityName}] ${type}`;
   }
