@@ -57,4 +57,13 @@ export class EditorEffects {
       ),
     { dispatch: false },
   );
+
+  public syncContentToFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.syncContentToFile),
+        tap((action) => this.filesystemFacade.updateFileContent(action.entity, action.content)),
+      ),
+    { dispatch: false },
+  );
 }

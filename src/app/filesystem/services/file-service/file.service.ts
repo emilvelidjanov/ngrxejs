@@ -6,6 +6,7 @@ import { File } from '../../store/file/file.state';
 import { StatResult } from '../filesystem-service/filesystem.service';
 
 export interface FileService extends EntityService<File> {
+  updateContent(file: File, content: string);
   selectByPaths(paths: string[]): Observable<File[]>;
   createManyFromStatResults(statResults: StatResult[]): Observable<File[]>;
   updateLoaded(file: File, content: string): void;

@@ -80,6 +80,7 @@ export class DefaultEditorService implements EditorService {
     return this.store.pipe(select(editorSelectors.selectEntitiesByIds, { ids }));
   }
 
+  // TODO: make a single focusedEditorId instead?
   public focus(editor: Editor): void {
     if (!editor.isFocused) {
       this.store.dispatch(
