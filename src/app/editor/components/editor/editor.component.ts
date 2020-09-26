@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter, map, share, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, filter, map, share, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
+import { DomService } from 'src/app/core/services/DOM-service/dom.service';
+import { domServiceDep } from 'src/app/core/services/DOM-service/dom.service.dependency';
 import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
 import { File } from 'src/app/filesystem/store/file/file.state';
 
@@ -17,22 +19,35 @@ import { Editor, Editors } from '../../store/editor/editor.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent implements OnInit {
+  @ViewChild('textarea') public textareaRef: ElementRef<HTMLDivElement>;
+
   @Input() public editorId: Id;
   public editor$: Observable<Editor>;
   public focusedFile$: Observable<File>;
-  public whiteSpace: string;
   public inputSyncSubject$: Subject<string>;
   public inputSync$: Observable<void>;
+  public whiteSpace$: Observable<string>;
+  public updateInnerHTML$: Observable<void>;
 
-  constructor(private store: Store<Editors>) {}
+  constructor(private store: Store<Editors>, @Inject(domServiceDep.getToken()) private domService: DomService) {}
 
   public ngOnInit(): void {
     this.editor$ = this.store.pipe(select(editorSelectors.selectEntityById, { id: this.editorId }), share());
     this.focusedFile$ = this.editor$.pipe(
       filter((editor) => !!editor),
       switchMap((editor) => this.store.pipe(select(fileSelectors.selectEntityById, { id: editor.focusedFileId }))),
-      tap((file) => (this.whiteSpace = file && file.extension.includes('html') ? 'initial' : 'pre-wrap')),
       share(),
+    );
+    this.whiteSpace$ = this.focusedFile$.pipe(map((file) => (file && file.extension && file.extension.includes('html') ? 'initial' : 'pre-wrap')));
+    this.updateInnerHTML$ = this.focusedFile$.pipe(
+      map((file) => (file ? file.content : '')),
+      map((content) => {
+        try {
+          this.domService.updateInnerHTMLWithCurrentSelection(this.textareaRef.nativeElement, content);
+        } catch {
+          /* ignore */
+        }
+      }),
     );
     this.inputSyncSubject$ = new Subject();
     this.inputSync$ = this.inputSyncSubject$.asObservable().pipe(
