@@ -4,7 +4,13 @@ import { DomService, NodeSelection } from './dom.service';
 
 @Injectable()
 export class DefaultDomService implements DomService {
-  public updateInnerHTMLWithCurrentSelection(element: HTMLElement, innerHTML: string): void {
+  public setTextContentWithCurrentSelection(node: Node, textContent: string): void {
+    const selection = this.getSelection(node);
+    node.textContent = textContent;
+    this.setSelection(node, selection);
+  }
+
+  public setInnerHTMLWithCurrentSelection(element: HTMLElement, innerHTML: string): void {
     const selection = this.getSelection(element);
     element.innerHTML = innerHTML;
     this.setSelection(element, selection);

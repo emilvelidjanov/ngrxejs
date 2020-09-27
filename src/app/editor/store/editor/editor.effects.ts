@@ -66,4 +66,14 @@ export class EditorEffects {
       ),
     { dispatch: false },
   );
+
+  public updateRenderMode$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.updateRenderMode),
+        withLatestFrom(this.editorFacade.selectFocusedEditor()),
+        tap(([action, editor]) => this.editorFacade.updateEditorRenderMode(editor, action.renderMode)),
+      ),
+    { dispatch: false },
+  );
 }

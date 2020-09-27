@@ -4,7 +4,8 @@ export interface DomService {
   setSelection(parent: Node, selection: NodeSelection): void;
   getChildNodeIndexPath(parent: Node, child: Node): number[];
   getChildNodeByIndexPath(parent: Node, indexPath: number[]): Node;
-  updateInnerHTMLWithCurrentSelection(node: Node, innerHTML: string): void;
+  setInnerHTMLWithCurrentSelection(element: HTMLElement, innerHTML: string): void;
+  setTextContentWithCurrentSelection(node: Node, textContent: string): void;
 }
 
 export interface NodeSelection {

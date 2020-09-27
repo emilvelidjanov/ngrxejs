@@ -40,7 +40,34 @@
   {
     "id": "editor",
     "label": "Editor",
-    "menuItemIds": ["a", "b", "c", "nested"]
+    "menuItemIds": ["view", "a", "b", "c", "nested"]
+  },
+  {
+    "id": "view",
+    "label": "View...",
+    "menuItemIds": ["renderHTML", "plainText"],
+    "openType": "hover",
+    "postSymbol": "25B6"
+  },
+  {
+    "id": "renderHTML",
+    "label": "Render HTML",
+    "clickAction": {
+      "type": "[Effect][Editor] Update Render Mode",
+      "props": {
+        "renderMode": "html"
+      }
+    }
+  },
+  {
+    "id": "plainText",
+    "label": "Show plain text",
+    "clickAction": {
+      "type": "[Effect][Editor] Update Render Mode",
+      "props": {
+        "renderMode": "plain"
+      }
+    }
   },
   {
     "id": "nested",

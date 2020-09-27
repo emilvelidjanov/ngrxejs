@@ -7,9 +7,9 @@
     class="textarea"
     contenteditable="true"
     [style.white-space]="whiteSpace$ | async"
-    [hidden]="(focusedFile$ | async) === (null || undefined)"
+    [hidden]="hidden$ | async"
     (input)="onInput($event)"
   ></div>
-  <ng-container *ngIf="updateInnerHTML$ | async"><!-- empty --></ng-container>
+  <ng-container *ngIf="updateContent$ | async"><!-- empty --></ng-container>
   <ng-container *ngIf="inputSync$ | async"><!-- empty --></ng-container>
 </ng-container>
