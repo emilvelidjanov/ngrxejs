@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { debounceTime, filter, map, share, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, filter, map, share, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { Id } from 'src/app/core/ngrx/entity/entity';
-import { DomService } from 'src/app/core/services/DOM-service/dom.service';
-import { domServiceDep } from 'src/app/core/services/DOM-service/dom.service.dependency';
 import { fileSelectors } from 'src/app/filesystem/store/file/file.selectors';
 import { File } from 'src/app/filesystem/store/file/file.state';
 
+import { EditorViewService } from '../../services/editor-view-service/editor-view.service';
+import { editorViewServiceDep } from '../../services/editor-view-service/editor-view.service.dependency';
 import { editorActions } from '../../store/editor/editor.actions';
 import { editorSelectors } from '../../store/editor/editor.selectors';
 import { Editor, Editors } from '../../store/editor/editor.state';
@@ -30,7 +30,7 @@ export class EditorComponent implements OnInit {
   public updateContent$: Observable<void>;
   public hidden$: Observable<boolean>;
 
-  constructor(private store: Store<Editors>, @Inject(domServiceDep.getToken()) private domService: DomService) {}
+  constructor(private store: Store<Editors>, @Inject(editorViewServiceDep.getToken()) private editorViewService: EditorViewService) {}
 
   public ngOnInit(): void {
     this.editor$ = this.store.pipe(select(editorSelectors.selectEntityById, { id: this.editorId }), share());
@@ -40,30 +40,23 @@ export class EditorComponent implements OnInit {
       share(),
     );
     this.whiteSpace$ = combineLatest([this.focusedFile$, this.editor$]).pipe(
-      map(([file, editor]) => (editor.renderMode === 'html' && file && file.extension && file.extension.includes('html') ? 'initial' : 'pre-wrap')),
+      map(([file, editor]) => this.editorViewService.getWhiteSpaceCSS(file, editor)),
     );
     this.updateContent$ = combineLatest([this.focusedFile$, this.editor$]).pipe(
       map(([file, editor]) => [editor, file ? file.content : ''] as [Editor, string]),
-      map(([editor, content]) => {
-        try {
-          if (editor.renderMode === 'html') {
-            this.domService.setInnerHTMLWithCurrentSelection(this.textareaRef.nativeElement, content);
-          } else {
-            this.domService.setTextContentWithCurrentSelection(this.textareaRef.nativeElement, content);
-          }
-        } catch {
-          /* ignore */
-        }
-      }),
+      map(([editor, content]) => this.editorViewService.setContentWithCurrentSelection(this.textareaRef.nativeElement, content, editor)),
     );
     this.inputSyncSubject$ = new Subject();
     this.inputSync$ = this.inputSyncSubject$.asObservable().pipe(
+      debounceTime(500),
       withLatestFrom(this.focusedFile$),
       filter(([, file]) => !!file),
-      debounceTime(500),
       map(([content, file]) => this.store.dispatch(editorActions.syncContentToFile({ entity: file, content }))),
     );
-    this.hidden$ = this.focusedFile$.pipe(map((file) => !file));
+    this.hidden$ = this.focusedFile$.pipe(
+      map((file) => !file),
+      startWith(true),
+    );
   }
 
   @HostListener('click')
@@ -71,8 +64,16 @@ export class EditorComponent implements OnInit {
     this.editor$.pipe(take(1)).subscribe((editor) => this.store.dispatch(editorActions.onClick({ entity: editor })));
   }
 
-  public onInput($event: KeyboardEvent) {
-    const target = $event.target as HTMLElement;
-    this.inputSyncSubject$.next(target.innerHTML);
+  public onInput($event: InputEvent) {
+    if (this.textareaRef) {
+      this.editorViewService.executeInputEventStrategies($event, this.textareaRef.nativeElement);
+      this.inputSyncSubject$.next(this.textareaRef.nativeElement.innerHTML);
+    }
+  }
+
+  public onKeydown($event: KeyboardEvent) {
+    if (this.textareaRef) {
+      this.editorViewService.executeKeyboardEventStrategies($event, this.textareaRef.nativeElement);
+    }
   }
 }

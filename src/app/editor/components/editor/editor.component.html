@@ -9,6 +9,7 @@
     [style.white-space]="whiteSpace$ | async"
     [hidden]="hidden$ | async"
     (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
   ></div>
   <ng-container *ngIf="updateContent$ | async"><!-- empty --></ng-container>
   <ng-container *ngIf="inputSync$ | async"><!-- empty --></ng-container>

@@ -1,17 +1,59 @@
 import { Injectable } from '@angular/core';
 
-import { DomService, NodeSelection } from './dom.service';
+import { DomService, NodeSelection, TagName } from './dom.service';
 
 @Injectable()
 export class DefaultDomService implements DomService {
+  public canContainChildren(element: HTMLElement): boolean {
+    return element.outerHTML.indexOf('/') !== -1;
+  }
+
+  public createEmptySelectableElement(tagName: TagName): HTMLElement {
+    const element = document.createElement(tagName);
+    if (this.canContainChildren(element)) {
+      const breakElement = document.createElement('br');
+      element.appendChild(breakElement);
+    }
+    return element;
+  }
+
+  public insertNodeAtCurrentRange(node: Node): boolean {
+    const range = this.getSelectionRange();
+    if (range) {
+      range.insertNode(node);
+      return true;
+    }
+    return false;
+  }
+
+  public selectNode(parent: Node, child: Node): void {
+    const nodeSelection: NodeSelection = {
+      childNodeIndexPath: this.getChildNodeIndexPath(parent, child),
+      offset: 0,
+    };
+    this.setSelection(parent, nodeSelection);
+  }
+
+  public getSelectionRange(): Range {
+    const selection = this.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      return selection.getRangeAt(0);
+    }
+    return null;
+  }
+
+  public getSelection(): Selection {
+    return window.getSelection();
+  }
+
   public setTextContentWithCurrentSelection(node: Node, textContent: string): void {
-    const selection = this.getSelection(node);
+    const selection = this.getNodeSelection(node);
     node.textContent = textContent;
     this.setSelection(node, selection);
   }
 
   public setInnerHTMLWithCurrentSelection(element: HTMLElement, innerHTML: string): void {
-    const selection = this.getSelection(element);
+    const selection = this.getNodeSelection(element);
     element.innerHTML = innerHTML;
     this.setSelection(element, selection);
   }
@@ -22,30 +64,26 @@ export class DefaultDomService implements DomService {
       if (focusNode) {
         const range = document.createRange();
         range.setStart(focusNode, nodeSelection.offset);
-        const selection = window.getSelection();
+        const selection = this.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
       }
     }
   }
 
-  public getSelection(node: Node): NodeSelection {
+  public getNodeSelection(node: Node): NodeSelection {
     if (node) {
-      const selection = window.getSelection();
-      if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
+      const range = this.getSelectionRange();
+      if (range) {
         const indexPath = this.getChildNodeIndexPath(node, range.startContainer);
         const nodeSelection: NodeSelection = {
           childNodeIndexPath: indexPath,
           offset: range.startOffset,
         };
         return nodeSelection;
-      } else {
-        return null;
       }
-    } else {
-      return null;
     }
+    return null;
   }
 
   public containsOrIsEqual(parent: Node, child: Node): boolean {
@@ -60,9 +98,8 @@ export class DefaultDomService implements DomService {
         return true;
       }
       return this.containsOrIsEqual(parent, child.parentElement);
-    } else {
-      return false;
     }
+    return false;
   }
 
   public getChildNodeIndexPath(parent: Node, child: Node): number[] {
@@ -76,12 +113,9 @@ export class DefaultDomService implements DomService {
       if (childRef.parentNode && parent.isEqualNode(childRef.parentNode)) {
         path.push(Array.prototype.indexOf.call(parent.childNodes, childRef));
         return path.reverse();
-      } else {
-        return [];
       }
-    } else {
-      return [];
     }
+    return [];
   }
 
   public getChildNodeByIndexPath(parent: Node, indexPath: number[]): Node {
@@ -104,8 +138,7 @@ export class DefaultDomService implements DomService {
         }
       }
       return target;
-    } else {
-      return null;
     }
+    return null;
   }
 }

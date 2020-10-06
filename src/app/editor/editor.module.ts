@@ -10,6 +10,8 @@ import { MenuModule } from '../menu/menu.module';
 import { EditorComponent } from './components/editor/editor.component';
 import { editorFacadeDep } from './services/editor-facade/editor.facade.dependency';
 import { editorServiceDep } from './services/editor-service/editor.service.dependency';
+import { editorViewServiceDep } from './services/editor-view-service/editor-view.service.dependency';
+import { inputEventStrategiesDep, keyboardEventStrategiesDep } from './services/event-strategy/event.strategy.dependency';
 import { editorFeatureKey, metaReducers, reducers } from './store';
 import { EditorEffects } from './store/editor/editor.effects';
 
@@ -23,7 +25,7 @@ import { EditorEffects } from './store/editor/editor.effects';
     StoreModule.forFeature(editorFeatureKey, reducers, { metaReducers }),
     EffectsModule.forFeature([EditorEffects]),
   ],
-  providers: [],
+  providers: [editorViewServiceDep.getProvider(), keyboardEventStrategiesDep.getProvider(), inputEventStrategiesDep.getProvider()],
   exports: [EditorComponent],
 })
 export class EditorModule {
