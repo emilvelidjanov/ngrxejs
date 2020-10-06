@@ -51,7 +51,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.12.32",
     "codelyzer": "^5.2.2",
-    "electron": "^8.2.0",
+    "electron": "^8.5.2",
     "electron-devtools-installer": "^2.2.4",
     "electron-reload": "^1.5.0",
     "husky": "^4.2.5",
