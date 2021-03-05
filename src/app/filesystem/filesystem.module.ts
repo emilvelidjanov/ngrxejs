@@ -34,7 +34,7 @@ import { ProjectTreeEffects } from './store/project-tree/project-tree.effects';
   exports: [ProjectTreeComponent],
 })
 export class FilesystemModule {
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<FilesystemModule> {
     return {
       ngModule: FilesystemModule,
       providers: [

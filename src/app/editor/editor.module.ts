@@ -29,7 +29,7 @@ import { EditorEffects } from './store/editor/editor.effects';
   exports: [EditorComponent],
 })
 export class EditorModule {
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<EditorModule> {
     return {
       ngModule: EditorModule,
       providers: [editorServiceDep.getProvider(), editorFacadeDep.getProvider()],

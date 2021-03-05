@@ -18,7 +18,7 @@ import { sortServiceDep } from './services/sort-service/sort.service.dependency'
   exports: [OffClickDirective, PrePostSymbolsComponent, FocusInputComponent],
 })
 export class CoreModule {
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
       providers: [

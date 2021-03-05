@@ -34,7 +34,7 @@ import { TabItemEffects } from './store/tab-item/tab-item.effects';
   exports: [MenuBarComponent, ContextMenuComponent, ContextMenuTriggerDirective, TabBarComponent],
 })
 export class MenuModule {
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<MenuModule> {
     return {
       ngModule: MenuModule,
       providers: [
