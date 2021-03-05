@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { Dictionary, Update, UpdateNum, UpdateStr } from '@ngrx/entity/src/models';
-import { createAction, createSelector, on, On, props } from '@ngrx/store';
+import { createAction, createSelector, on, props, ReducerTypes } from '@ngrx/store';
 
 import { Entity, Id } from '../entity';
 
@@ -25,7 +25,8 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
   private initialState: D;
   private entityName: string;
   private actions: EntityDomainActions<T>;
-  private reducers: On<D>[];
+  // TODO: correct typing?
+  private reducers: ReducerTypes<D, any>[];
 
   constructor(entityName: string, initialState: D) {
     this.adapter = createEntityAdapter<T>();
@@ -61,7 +62,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     return this.actions;
   }
 
-  public getReducerFunctions(): On<D>[] {
+  public getReducerFunctions(): ReducerTypes<D, any>[] {
     return this.reducers;
   }
 
@@ -106,7 +107,7 @@ export class EntityDomainStateConfigurer<T extends Entity, D extends EntityDomai
     };
   }
 
-  private initReducerFunctions(): On<D>[] {
+  private initReducerFunctions(): ReducerTypes<D, any>[] {
     return [
       on(this.actions.addOne, (state: D, props: PropEntity<T>) => {
         const isNew = !state.entities[props.entity.id];
