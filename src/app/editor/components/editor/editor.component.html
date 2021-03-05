@@ -2,7 +2,15 @@
   <ng-container *ngIf="editor.tabBarId">
     <app-tab-bar [tabBarId]="editor.tabBarId"></app-tab-bar>
   </ng-container>
-  <ng-container *ngIf="focusedFile$ | async as focusedFile">
-    <div class="textarea" contenteditable="true" [innerHTML]="focusedFile.content" [style.white-space]="whiteSpace"></div>
-  </ng-container>
+  <div
+    #textarea
+    class="textarea"
+    contenteditable="true"
+    [style.white-space]="whiteSpace$ | async"
+    [hidden]="hidden$ | async"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+  ></div>
+  <ng-container *ngIf="updateContent$ | async"><!-- empty --></ng-container>
+  <ng-container *ngIf="inputSync$ | async"><!-- empty --></ng-container>
 </ng-container>

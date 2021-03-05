@@ -4,11 +4,14 @@ import { EntityDomainStateConfigurer } from 'src/app/core/ngrx/entity/entity-dom
 
 export interface Editors extends EntityDomainState<Editor> {}
 
+export type RenderMode = 'html' | 'plain';
+
 export interface Editor extends Entity {
   focusedFileId: Id;
   openedFileIds: Id[];
   isFocused: boolean;
   tabBarId: string;
+  renderMode: RenderMode;
 }
 
 export const entityName = 'Editor';

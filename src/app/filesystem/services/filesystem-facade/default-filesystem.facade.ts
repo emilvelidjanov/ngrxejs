@@ -265,4 +265,8 @@ export class DefaultFilesystemFacade implements FilesystemFacade {
       },
     );
   }
+
+  public updateFileContent(file: File, content: string): void {
+    this.fileService.updateContent(file, content);
+  }
 }

@@ -57,4 +57,23 @@ export class EditorEffects {
       ),
     { dispatch: false },
   );
+
+  public syncContentToFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.syncContentToFile),
+        tap((action) => this.filesystemFacade.updateFileContent(action.entity, action.content)),
+      ),
+    { dispatch: false },
+  );
+
+  public updateRenderMode$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(editorActions.updateRenderMode),
+        withLatestFrom(this.editorFacade.selectFocusedEditor()),
+        tap(([action, editor]) => this.editorFacade.updateEditorRenderMode(editor, action.renderMode)),
+      ),
+    { dispatch: false },
+  );
 }

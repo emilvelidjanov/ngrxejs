@@ -8,7 +8,7 @@ import { File } from 'src/app/filesystem/store/file/file.state';
 import { MenuFacade } from 'src/app/menu/services/menu-facade/menu.facade';
 import { menuFacadeDep } from 'src/app/menu/services/menu-facade/menu.facade.dependency';
 
-import { Editor } from '../../store/editor/editor.state';
+import { Editor, RenderMode } from '../../store/editor/editor.state';
 import { EditorService } from '../editor-service/editor.service';
 import { editorServiceDep } from '../editor-service/editor.service.dependency';
 
@@ -20,6 +20,10 @@ export class DefaultEditorFacade implements EditorFacade {
     @Inject(filesystemFacadeDep.getToken()) private filesystemFacade: FilesystemFacade,
     @Inject(menuFacadeDep.getToken()) private menuFacade: MenuFacade,
   ) {}
+
+  public updateEditorRenderMode(editor: Editor, renderMode: RenderMode): void {
+    this.editorService.updateRenderMode(editor, renderMode);
+  }
 
   public addEditorsConfig(partials: EntityPartial<Editor>[]): void {
     const editors = partials.map((partial) => this.editorService.createDefault(partial));

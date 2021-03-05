@@ -28,6 +28,21 @@ export class DefaultFileService implements FileService {
     this.fileIds$ = this.store.pipe(select(fileSelectors.selectIds));
   }
 
+  public updateContent(file: File, content: string) {
+    if (file && (content || content === '')) {
+      this.store.dispatch(
+        fileActions.updateOne({
+          update: {
+            id: file.id,
+            changes: {
+              content,
+            },
+          },
+        }),
+      );
+    }
+  }
+
   public selectAll(): Observable<File[]> {
     return this.store.pipe(select(fileSelectors.selectAll));
   }

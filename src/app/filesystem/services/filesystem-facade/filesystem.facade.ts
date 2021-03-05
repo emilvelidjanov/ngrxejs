@@ -22,4 +22,5 @@ export interface FilesystemFacade {
   createNewFile(directoryItem: DirectoryItem, name: string): void;
   deleteFile(file: File): void;
   deleteDirectory(directory: Directory): void;
+  updateFileContent(file: File, content: string): void;
 }

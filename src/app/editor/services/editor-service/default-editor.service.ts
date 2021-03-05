@@ -10,12 +10,27 @@ import { TabItem } from 'src/app/menu/store/tab-item/tab-item.state';
 
 import { editorActions } from '../../store/editor/editor.actions';
 import { editorSelectors } from '../../store/editor/editor.selectors';
-import { Editor, Editors } from '../../store/editor/editor.state';
+import { Editor, Editors, RenderMode } from '../../store/editor/editor.state';
 
 import { EditorService } from './editor.service';
 
 export class DefaultEditorService implements EditorService {
   constructor(private store: Store<Editors>, @Inject(uuidGeneratorServiceDep.getToken()) private idGeneratorService: IdGeneratorService) {}
+
+  public updateRenderMode(editor: Editor, renderMode: RenderMode): void {
+    if (editor && renderMode && editor.renderMode !== renderMode) {
+      this.store.dispatch(
+        editorActions.updateOne({
+          update: {
+            id: editor.id,
+            changes: {
+              renderMode,
+            },
+          },
+        }),
+      );
+    }
+  }
 
   public selectAll(): Observable<Editor[]> {
     return this.store.pipe(select(editorSelectors.selectAll));
@@ -41,6 +56,7 @@ export class DefaultEditorService implements EditorService {
       openedFileIds: [],
       isFocused: false,
       tabBarId: null,
+      renderMode: 'html',
       ...partial,
     };
     return editor;
@@ -80,6 +96,7 @@ export class DefaultEditorService implements EditorService {
     return this.store.pipe(select(editorSelectors.selectEntitiesByIds, { ids }));
   }
 
+  // TODO: make a single focusedEditorId instead?
   public focus(editor: Editor): void {
     if (!editor.isFocused) {
       this.store.dispatch(
